@@ -1,4 +1,4 @@
-# DHS SBIR 2016 Phase I - Linked Data Ledgers Proof of Concept
+# Linked Data Ledgers Proof of Concept
 
 This source code repository includes a proof-of-concept Linked
 Data ledger. On start-up, the ledger does the following:
@@ -40,6 +40,15 @@ npm start
 ```
 
 then, direct a web browser to `https://dhs2016ledger.dev:18443/`
+
+## Disclaimer
+
+This proof of concept, a part of the "Credentials on Public/Private 
+Linked Ledgers" project, has been funded in part by the United States 
+Department of Homeland Security's Science and Technology Directorate 
+under contract HSHQDC-16-C-00058. The content of this specification 
+does not necessarily reflect the position or the policy of the U.S. 
+Government and no official endorsement should be inferred.
 
 [host file entry]:http://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/
 [Flex Ledger]:https://digitalbazaar.github.io/flex-ledger/
