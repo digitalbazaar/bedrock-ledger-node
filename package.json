@@ -1,0 +1,22 @@
+{
+  "name": "dhs2016-phase1-poc",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "postinstall": "bower install && node index.js compile-less"
+  },
+  "dependencies": {
+    "bedrock": "^1.2.4",
+    "bedrock-express": "^2.0.4",
+    "bedrock-requirejs": "^2.0.2",
+    "bedrock-server": "^2.1.2",
+    "bedrock-views": "^4.2.1",
+    "bower": "^1.7.9"
+  },
+  "engines": {
+    "node": ">=6.3.0"
+  },
+  "directories": {},
+  "main": "index.js"
+}
