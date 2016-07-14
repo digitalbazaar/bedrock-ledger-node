@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node index.js",
-    "postinstall": "bower install && node index.js compile-less"
+    "start": "node flex-ledger.digitalbazaar.com.js",
+    "postinstall": "bower install && node flex-ledger.digitalbazaar.com.js compile-less"
   },
   "dependencies": {
     "bedrock": "^1.2.4",
@@ -19,5 +19,5 @@
     "node": ">=6.3.0"
   },
   "directories": {},
-  "main": "index.js"
+  "main": "flex-ledger.digitalbazaar.com.js"
 }
