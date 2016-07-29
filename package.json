@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node flex-ledger.digitalbazaar.com.js",
     "test": "node dhs2016ledger.dev test",
-    "postinstall": "bower install && node flex-ledger.digitalbazaar.com.js compile-less"
+    "postinstall": "bower install && node dhs2016ledger.dev.js compile-less"
   },
   "dependencies": {
     "bedrock": "^1.2.4",
