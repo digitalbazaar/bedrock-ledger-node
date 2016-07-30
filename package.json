@@ -1,9 +1,9 @@
 {
-  "name": "dhs2016-phase1-poc",
-  "version": "1.0.0",
+  "name": "dhs2016ledger",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
-    "start": "node flex-ledger.digitalbazaar.com.js",
+    "start": "node dhs2016ledger.digitalbazaar.com.js",
     "test": "node dhs2016ledger.dev test",
     "postinstall": "bower install && node dhs2016ledger.dev.js compile-less"
   },
@@ -34,5 +34,5 @@
     "node": ">=6.3.0"
   },
   "directories": {},
-  "main": "flex-ledger.digitalbazaar.com.js"
+  "main": "dhs2016ledger.digitalbazaar.com.js"
 }
