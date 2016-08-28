@@ -12,7 +12,7 @@
     "bedrock-docs": "^2.0.1",
     "bedrock-express": "^2.0.4",
     "bedrock-identity": "^4.2.2",
-    "bedrock-identity-http": "^0.6.0",
+    "bedrock-identity-http": "^1.0.0",
     "bedrock-key": "^3.1.2",
     "bedrock-key-http": "^2.1.1",
     "bedrock-mail": "^2.0.1",
