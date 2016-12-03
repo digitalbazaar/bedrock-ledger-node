@@ -1,54 +1,120 @@
-# Linked Data Ledgers Proof of Concept
+# Bedrock Ledger
 
-This source code repository includes a proof-of-concept Linked
-Data ledger. On start-up, the ledger does the following:
+A [bedrock][] module for the creation and management of decentralized ledgers.
 
-* initializes itself by writing a basic configuration block 
-  to the ledger (if one doesn't already exist)
-* enables writes to the ledger given a set of pre-authorized keys
+## Requirements
 
-The ledger in this demo has the following features:
+- npm v3+
 
-* writes via digital signatures from pre-authorized keys to an
-  append-only ledger
-* exposes ledger internals via the [Flex Ledger][] data model 
-  specification
-* disk-only read/write protocol (no mirroring)
-* public readability of ledger contents
-
-To exercise the proof of concepts, a test suite is included
-that tests:
-
-* a node reading and applying the ledger configuration to grant
-  or deny write authorization to the ledger
-* writes of identity credentials/verifiable claims to blocks
-
-## Installation
+## Quick Examples
 
 ```
-npm install
+npm install bedrock-ledger
 ```
 
-**Note**: This proof of concept requires a [host file entry][] 
-for `dhs2016ledger.dev` pointing to `127.0.0.1` (localhost)
-or the public IP address of your computer.
+```js
+var actor = 'admin';
+var ledgerConfigEvent = {
+  '@context': 'https://w3id.org/flex/v1',
+  id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/1',
+  type: 'LedgerConfigurationEvent',
+  ledgerConfig: {
+    id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3',
+    type: 'LedgerConfiguration',
+    name: 'test-ledger',
+    description: 'A test ledger',
+    storageMechanism: 'SequentialList',
+    consensusAlgorithm: {
+      type: 'ProofOfSignature2016',
+      approvedSigner: [ 'https://example.org/keys/authorized-1' ],
+      minimumSignaturesRequired: 1
+    },
+  },
+  previousEvent: {
+    hash: 'urn:sha256:0000000000000000000000000000000000000000000000000000000000000000';
+  }
+};
 
-## Running the demo
-
+ledger.createLedger(actor, ledgerConfigEvent, {}, function(err, ledgerUrl) {
+  if(err) {
+    console.log('Ledger creation failed:', err);
+  } else {
+    console.log('Ledger created:', ledgerUrl);
+  }
+});
 ```
-npm start
-```
 
-then, direct a web browser to `https://dhs2016ledger.dev:18443/`
+## Configuration
 
-## Disclaimer
+For documentation on configuration, see [config.js](./lib/config.js).
 
-This proof of concept, a part of the "Credentials on Public/Private 
-Linked Ledgers" project, has been funded in part by the United States 
-Department of Homeland Security's Science and Technology Directorate 
-under contract HSHQDC-16-C-00058. The content of this specification 
-does not necessarily reflect the position or the policy of the U.S. 
-Government and no official endorsement should be inferred.
+## API
 
-[host file entry]:http://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/
-[Flex Ledger]:https://digitalbazaar.github.io/flex-ledger/
+### createLedger(actor, ledgerConfigEvent, options, callback)
+
+Creates a ledger.
+
+ * actor the Identity performing the action.
+ * ledgerConfigEvent the ledger configuration.
+ * options ledger creation options
+ * callback(err, record) called once the operation completes.
+
+### writeLedgerEvent(actor, ledgerName, ledgerEvent, options, callback)
+
+Writes an event to a given ledger.
+
+ * actor the Identity performing the action.
+ * ledgerName the name of the ledger.
+ * ledgerEvent the ledger event to write to the ledger.
+ * options ledger write options
+ * callback(err, record) called once the operation completes.
+
+### getLedgerMetadata(actor, ledgerName, options, callback)
+
+Gets metadata about a specific ledger in the system.
+
+ * actor the Identity performing the action.
+ * ledgerName the name of the ledger.
+ * options ledger metadata query options
+ * callback(err, record) called once the operation completes.
+ */
+
+### getAllLedgerMetadata(actor, options, callback)
+
+Gets metadata about all ledgers in the system.
+
+ * actor the Identity performing the action.
+ * options ledger metadata query options
+ * callback(err, record) called once the operation completes.
+
+### getLedgerEvent(actor, ledgerName, eventId, options, callback)
+
+Get ledger event metadata.
+
+ * actor the Identity performing the action.
+ * ledgerName the name of the ledger.
+ * eventId the name of the ledger.
+ * options ledger event query options
+ * callback(err, record) called once the operation completes.
+
+### getStateMachineObject(actor, ledgerName, objectId, options, callback)
+
+Retrieves an object from the current state machine.
+
+ * actor the Identity performing the action.
+ * ledgerName the name of the ledger associated with the state machine.
+ * objectId the id of the object to retrieve.
+ * options ledger state machine query options
+ * callback(err, record) called once the operation completes.
+
+### calculateLedgerEventHash(ledgerEvent, options, callback)
+
+Calculate a ledger event hash value.
+
+ * actor the Identity performing the action.
+ * ledgerEvent the ledger event.
+ * options hash value generation options
+ *    (algorithm) the digest algorithm to use. Defaults to 'sha256'.
+ * callback(err, record) called once the operation completes.
+
+[bedrock]: https://github.com/digitalbazaar/bedrock
