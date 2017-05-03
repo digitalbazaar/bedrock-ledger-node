@@ -16,6 +16,9 @@
     "url": "https://github.com/digitalbazaar/bedrock-ledger/issues"
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger",
+  "dependencies": {
+    "async": "^1.5.2"
+  },
   "peerDependencies": {
     "bedrock": "^1.2.4",
     "bedrock-mongodb": "^3.0.0",
