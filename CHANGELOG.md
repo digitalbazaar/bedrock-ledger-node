@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 0.3.2 - 2017-05-03
+## 0.3.3 - 2017-05-03
 - fix version of async used
 
 ## 0.3.1 - 2017-05-02
