@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 0.3.5 - 2017-05-08
+
+### Fixed
+- Remove node_modules folder from repo.
+
 ## 0.3.4 - 2017-05-08
 
 ### Changed
@@ -8,10 +13,14 @@
 - Add test suite.
 
 ## 0.3.3 - 2017-05-03
-- fix version of async used
+
+### Fixed
+- Fix version of async used.
 
 ## 0.3.1 - 2017-05-02
-- fix bad version information
+
+### Fixed
+- Fix bad version information.
 
 ## 0.2.0 - 2016-12-03
 
