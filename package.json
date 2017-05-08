@@ -1,6 +1,6 @@
 {
   "name": "bedrock-ledger",
-  "version": "0.3.5-0",
+  "version": "0.3.5",
   "description": "Bedrock ledger",
   "main": "./lib",
   "repository": {
