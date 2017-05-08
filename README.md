@@ -1,3 +1,5 @@
+[![Build Status](http://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger)](http://ci.digitalbazaar.com/job/bedrock-ledger)
+
 # Bedrock Ledger
 
 A [bedrock][] module for the creation and management of decentralized ledgers.
