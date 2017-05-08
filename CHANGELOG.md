@@ -1,5 +1,12 @@
 # bedrock-ledger ChangeLog
 
+## 0.3.4 - 2017-05-08
+
+### Changed
+- Upgrade to async@2.
+- Utilize ES6 syntax.
+- Add test suite.
+
 ## 0.3.3 - 2017-05-03
 - fix version of async used
 
