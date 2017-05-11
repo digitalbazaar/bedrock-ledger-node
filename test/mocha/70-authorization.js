@@ -27,22 +27,80 @@ describe('authorizeBlock API', () => {
     helpers.removeCollection('ledger_testLedger', done);
   });
   describe('multisignature (RSA)', () => {
-    it.skip('allows a multisignature that is exactly the threshold', done => {
-      done();
+    const mockIdentity = mockData.identities.regularUser;
+    let actor;
+    const events = [];
+    before(done => {
+      brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        actor = result;
+        done(err);
+      });
     });
-    it.skip('allows a multisignature above the threshold', done => {
-      done();
+    it('allows a multisignature that is exactly the threshold', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.authorizeBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
-    it.skip('denies a multisignature below the threshold', done => {
-      done();
+    it('allows a multisignature above the threshold', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.authorizeBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
+    });
+    it('denies a multisignature below the threshold', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.authorizeBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
   });
   describe('proof of work (argon2d)', () => {
-    it.skip('allows a valid proof of work', done => {
-      done();
+    const mockIdentity = mockData.identities.regularUser;
+    let actor;
+    const events = [];
+    before(done => {
+      brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        actor = result;
+        done(err);
+      });
     });
-    it.skip('denies an invalid proof of work', done => {
-      done();
+    it('allows a valid proof of work', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.authorizeBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
+    });
+    it('denies an invalid proof of work', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.authorizeBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
   });
 });

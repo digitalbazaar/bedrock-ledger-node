@@ -27,23 +27,80 @@ describe('consentToBlock API', () => {
     helpers.removeCollection('ledger_testLedger', done);
   });
   describe('non-forking consensus (continuity)', () => {
-    it.skip('accepts a well-formed block', done => {
-      done();
+    const mockIdentity = mockData.identities.regularUser;
+    let actor;
+    const events = [];
+    before(done => {
+      brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        actor = result;
+        done(err);
+      });
     });
-    it.skip('rejects a block with an invalid transaction', done => {
-      done();
+    it('accepts a well-formed block', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.consentToBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
-    it.skip('rejects a block on an incorrect fork', done => {
-      done();
+    it('rejects a block with an invalid transaction', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.consentToBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
-    it.skip('retries until consensus is reached', done => {
-      done();
+    it('rejects a block on an incorrect fork', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.consentToBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
-    it.skip('accepts the correct block when a fork occurs', done => {
-      done();
+    it('retries until consensus is reached', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.consentToBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
-    it.skip('accepts the right block on a network partition', done => {
-      done();
+    it('accepts the correct block when a fork is possible', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.consentToBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
+    });
+    it('accepts the right block on a network partition', done => {
+      const mockLedger = mockData.ledgers.alpha;
+      async.auto({
+        authorizeBlock: callback => {
+          const ledgerId = '';
+          const block = {};
+          const options = {};
+          brLedger.consentToBlock(actor, ledgerId, block, options, callback);
+        },
+      }, done);
     });
   });
 });
