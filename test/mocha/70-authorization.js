@@ -26,7 +26,7 @@ describe('authorizeBlock API', () => {
   beforeEach(done => {
     helpers.removeCollection('ledger_testLedger', done);
   });
-  describe('multisignature', () => {
+  describe('multisignature (RSA)', () => {
     it.skip('allows a multisignature that is exactly the threshold', done => {
       done();
     });
@@ -37,7 +37,7 @@ describe('authorizeBlock API', () => {
       done();
     });
   });
-  describe('argon2d proof of work', () => {
+  describe('proof of work (argon2d)', () => {
     it.skip('allows a valid proof of work', done => {
       done();
     });
