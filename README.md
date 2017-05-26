@@ -11,7 +11,7 @@ A [bedrock][] module for the creation and management of decentralized ledgers.
 ## Quick Examples
 
 ```
-npm install bedrock-ledger bedrock-ledger-storage-mongodb
+npm install bedrock-ledger bedrock-ledger-storage-mongodb bedrock-ledger-authz-signature
 ```
 
 ```js
