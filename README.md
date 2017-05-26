@@ -1,4 +1,4 @@
-[![Build Status](http://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger)](http://ci.digitalbazaar.com/job/bedrock-ledger)
+[![Build Status](https://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger)](https://ci.digitalbazaar.com/job/bedrock-ledger)
 
 # Bedrock Ledger
 
@@ -11,38 +11,57 @@ A [bedrock][] module for the creation and management of decentralized ledgers.
 ## Quick Examples
 
 ```
-npm install bedrock-ledger
+npm install bedrock-ledger bedrock-ledger-storage-mongodb
 ```
 
 ```js
-var actor = 'admin';
-var ledgerConfigEvent = {
-  '@context': 'https://w3id.org/flex/v1',
-  id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/1',
-  type: 'LedgerConfigurationEvent',
-  ledgerConfig: {
-    id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3',
-    type: 'LedgerConfiguration',
-    name: 'test-ledger',
-    description: 'A test ledger',
-    storageMechanism: 'SequentialList',
-    consensusAlgorithm: {
+const bLedger = require('bedrock-ledger');
+require('bedrock-ledger-storage-mongodb');
+require('bedrock-ledger-authz-signature');
+
+const actor = 'admin';
+const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
+const configBlock = {
+    id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
+    type: 'WebLedgerConfigurationBlock',
+    consensusMethod: {
+      type: 'Continuity2017'
+    },
+    configurationAuthorizationMethod: {
       type: 'ProofOfSignature2016',
-      approvedSigner: [ 'https://example.org/keys/authorized-1' ],
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
       minimumSignaturesRequired: 1
     },
-  },
-  previousEvent: {
-    hash: 'urn:sha256:0000000000000000000000000000000000000000000000000000000000000000';
+    writeAuthorizationMethod: {
+      type: 'ProofOfSignature2016',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    },
+    signature: {
+      type: 'RsaSignature2017',
+      created: '2017-10-24T05:33:31Z',
+      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+      domain: 'example.com',
+      signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
+    }
   }
 };
 
-ledger.createLedger(actor, ledgerConfigEvent, {}, function(err, ledgerUrl) {
+const options = {
+  storage: 'mongodb' // select the mongodb storage backend
+};
+
+bLedger.create(actor, ledgerId, configBlock, options, (err, ledgerNode) => {
   if(err) {
-    console.log('Ledger creation failed:', err);
-  } else {
-    console.log('Ledger created:', ledgerUrl);
+    throw new Error("Failed to create ledger:", err);
   }
+  
+  ledgerNode.events.create( /* create a new ledger event */);
+  /* ... do other operations on the ledger */
 });
 ```
 
@@ -50,73 +69,146 @@ ledger.createLedger(actor, ledgerConfigEvent, {}, function(err, ledgerUrl) {
 
 For documentation on configuration, see [config.js](./lib/config.js).
 
-## API
+## Ledger Node API
 
-### createLedger(actor, ledgerConfigEvent, options, callback)
+### Create a Ledger
 
-Creates a ledger.
+Create a new ledger given a set of options to create the new
+ledger. A Ledger Node API is returned that can then be used 
+to operate on the ledger.
 
- * actor the Identity performing the action.
- * ledgerConfigEvent the ledger configuration.
- * options ledger creation options
- * callback(err, record) called once the operation completes.
+* actor - the actor performing the action.
+* options - a set of options used when creating the ledger.
+* callback(err, ledger) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise
+  * ledgerNode - A ledger node API that can be used to
+    perform actions on the newly created ledger.
 
-### writeLedgerEvent(actor, ledgerName, ledgerEvent, options, callback)
+```javascript
+const bLedger = require('bedrock-ledger');
 
-Writes an event to a given ledger.
+const options = {
+  ledgerId: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  storage: 'mongodb',
+  configBlock: {
+    id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
+    type: 'WebLedgerConfigurationBlock',
+    consensusMethod: {
+      type: 'Continuity2017'
+    },
+    configurationAuthorizationMethod: {
+      type: 'ProofOfSignature2016',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    },
+    writeAuthorizationMethod: {
+      type: 'ProofOfSignature2016',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    },
+    signature: {
+      type: 'RsaSignature2017',
+      created: '2017-10-24T05:33:31Z',
+      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+      domain: 'example.com',
+      signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
+    }
+  }
+};
 
- * actor the Identity performing the action.
- * ledgerName the name of the ledger.
- * ledgerEvent the ledger event to write to the ledger.
- * options ledger write options
- * callback(err, record) called once the operation completes.
+bLedger.create(actor, options, (err, ledgerNode) => {
+  if(err) {
+    throw new Error("Failed to create ledger:", err);
+  }
+  
+  console.log("Ledger created", ledgerNode);
+});
+```
 
-### getLedgerMetadata(actor, ledgerName, options, callback)
+### Get a Ledger
 
-Gets metadata about a specific ledger in the system.
+Get an existing ledger node API given the ledger ID and a set of 
+options. A Ledger Node API is returned that can then be used 
+to operate on the ledger.
 
- * actor the Identity performing the action.
- * ledgerName the name of the ledger.
- * options ledger metadata query options
- * callback(err, record) called once the operation completes.
- */
+* actor - the actor performing the action.
+* options - a set of options used when creating the ledger.
+* callback(err, ledgerNode) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise
+  * ledgerNode - A ledger node API that can be used to
+    perform actions on the newly created ledger.
 
-### getAllLedgerMetadata(actor, options, callback)
+```javascript
+const bLedger = require('bedrock-ledger');
 
-Gets metadata about all ledgers in the system.
+const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
+const options = {
+  storage: 'mongodb'
+};
 
- * actor the Identity performing the action.
- * options ledger metadata query options
- * callback(err, record) called once the operation completes.
+bLedger.get(actor, ledgerId, options, (err, ledgerNode) => {
+  if(err) {
+    throw new Error('Failed to retrieve ledger node API:', err);
+  }
+  
+  ledgerNode.events.create( /* create a new ledger event */);
+});
+```
 
-### getLedgerEvent(actor, ledgerName, eventId, options, callback)
+### Delete a Ledger
 
-Get ledger event metadata.
+Delete an existing ledger given a set of options.
 
- * actor the Identity performing the action.
- * ledgerName the name of the ledger.
- * eventId the name of the ledger.
- * options ledger event query options
- * callback(err, record) called once the operation completes.
+* actor - the actor performing the action.
+* options - a set of options used when deleting the ledger.
+* callback(err) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise
 
-### getStateMachineObject(actor, ledgerName, objectId, options, callback)
+```javascript
+const bLedger = require('bedrock-ledger');
 
-Retrieves an object from the current state machine.
+const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
+const options = {
+  storage: 'mongodb'
+};
 
- * actor the Identity performing the action.
- * ledgerName the name of the ledger associated with the state machine.
- * objectId the id of the object to retrieve.
- * options ledger state machine query options
- * callback(err, record) called once the operation completes.
+bLedger.get(actor, ledgerId, options, (err, ledgerNode) => {
+  if(err) {
+    throw new Error('Failed to retrieve ledger node API:', err);
+  }
+  
+  ledgerNode.delete(actor, options, err => {
+    console.log('Ledger deleted.');
+  });
+});
+```
 
-### calculateLedgerEventHash(ledgerEvent, options, callback)
+## Blocks API
 
-Calculate a ledger event hash value.
+### Get a Ledger Block
 
- * actor the Identity performing the action.
- * ledgerEvent the ledger event.
- * options hash value generation options
- *    (algorithm) the digest algorithm to use. Defaults to 'sha256'.
- * callback(err, record) called once the operation completes.
+node.blocks.get(blockId, options, callback)
+
+## Events API
+
+### Create a Ledger Event
+
+node.events.create(event, options, callback)
+
+### Get a Ledger Event
+
+node.events.get(eventId, options, callback)
+
+## Metadata API
+
+node.meta.get(options, callback)
+
+### Ledger Plugin Registration
+
+ledgers.use(algorithmName, api)
 
 [bedrock]: https://github.com/digitalbazaar/bedrock
