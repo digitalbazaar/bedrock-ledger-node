@@ -7,8 +7,9 @@ A [bedrock][] module for the creation and management of decentralized ledgers.
 ## The Ledger API
 
 * Ledger API
-  * bLedger.create(actor, options, (err, ledgerNode))
-  * bLedger.get(actor, options, (err, ledgerNode))
+  * api.getLedgers(actor, query, options, callback(err, ledgerNodeIds))
+  * api.getLedgerNode(actor, ledgerId, options, (err, ledgerNode))
+  * ledgerNode.create(actor, configBlock, options, (err))
   * ledgerNode.delete(actor, options, callback(err))
   * ledgerNode.meta.get(actor, options, (err, ledger))
 * Blocks API
@@ -26,15 +27,21 @@ npm install bedrock-ledger bedrock-ledger-storage-mongodb bedrock-ledger-authz-s
 ```
 
 ```js
-const bLedger = require('bedrock-ledger');
+const bedrockLedger = require('bedrock-ledger');
 require('bedrock-ledger-storage-mongodb');
 require('bedrock-ledger-authz-signature');
 
 const actor = 'admin';
-const options = {
-  ledgerId: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-  storage: 'mongodb',
-  configBlock: {
+// ID of the new ledger that is being created
+const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
+// do not attempt to connect to non-existant ledger
+const ledgerNodeOptions = {
+  connect: false,
+  storage: 'mongodb'
+};
+
+bedrockLedger.getLedgerNode(actor,  ledgerId, ledgerNodeOptions, (err, ledgerNode) => {
+  const configBlock = {
     id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
     type: 'WebLedgerConfigurationBlock',
     ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
@@ -62,16 +69,17 @@ const options = {
       domain: 'example.com',
       signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
     }
-  }
-};
+  };
+  const createOptions = {};
 
-bLedger.create(actor, options, (err, ledgerNode) => {
-  if(err) {
-    throw new Error("Failed to create ledger:", err);
-  }
-  
-  ledgerNode.events.create( /* create a new ledger event */);
-  /* ... do other operations on the ledger */
+  ledgerNode.create(actor, configBlock, createOptions, (err) => {
+    if(err) {
+      throw new Error("Failed to create ledger:", err);
+    }
+
+    ledgerNode.events.create( /* create a new ledger event */);
+    /* ... do other operations on the ledger */
+  });
 });
 ```
 
@@ -81,60 +89,61 @@ For documentation on configuration, see [config.js](./lib/config.js).
 
 ## Ledger Node API
 
-### Create a Ledger
+### Get a List of All Ledgers
 
-Create a new ledger given a set of options to create the new
-ledger. A Ledger Node API is returned that can then be used 
-to operate on the ledger.
+Gets all of the known Ledger Nodes in the system.
 
 * actor - the actor performing the action.
+* query - a set of query parameters used to retrieve the 
+  list of ledger nodes.
+  * storage - filter by storage subsystem (e.g. 'mongodb').
+* options - a set of options to use when retrieving the list.
+* callback(err, ledgerNodeIds) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise
+  * ledgerNodeIds - An array of all ledger nodes matching the query.
+
+```javascript
+const actor = 'admin';
+const query = {
+  storage: 'mongodb'
+};
+const options = {};
+
+bedrockLedger.getLedgers(actor, query, options, (err, ledgerNodeIds) => {
+  if(err) {
+    throw new Error("Failed to fetch ledgers:", err);
+  }
+  
+  console.log("Ledgers:", ledgerNodeIds);
+});
+```
+
+### Get a Specific Ledger Node
+
+Gets the API for a ledger node given a ledgerId and a set
+of options.
+
+* actor - the actor performing the action.
+* ledgerId - the URI of the ledger.
 * options - a set of options used when creating the ledger.
-  * ledgerId (required) - the URI of the ledger.
   * storage (required) - the storage subsystem for the ledger.
-  * configBlock (required) - the configuration block for the ledger.
-* callback(err, ledger) - the callback to call when finished.
+  * connect - if false, do not attempt to connect to the ledger (default: true)
+* callback(err, ledgerNode) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise
   * ledgerNode - A ledger node API that can be used to
     perform actions on the newly created ledger.
 
 ```javascript
-const bLedger = require('bedrock-ledger');
-
+const actor = 'admin';
+// ID of the new ledger that is being created
+const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
+// do not attempt to connect to non-existant ledger
 const options = {
-  ledgerId: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-  storage: 'mongodb',
-  configBlock: {
-    id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
-    type: 'WebLedgerConfigurationBlock',
-    ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-    consensusMethod: {
-      type: 'Continuity2017'
-    },
-    configurationAuthorizationMethod: {
-      type: 'ProofOfSignature2016',
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      ],
-      minimumSignaturesRequired: 1
-    },
-    writeAuthorizationMethod: {
-      type: 'ProofOfSignature2016',
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      ],
-      minimumSignaturesRequired: 1
-    },
-    signature: {
-      type: 'RsaSignature2017',
-      created: '2017-10-24T05:33:31Z',
-      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-      domain: 'example.com',
-      signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
-    }
-  }
+  connect: false,
+  storage: 'mongodb'
 };
 
-bLedger.create(actor, options, (err, ledgerNode) => {
+bedrockLedger.getLedgerNode(actor,  ledgerId, options, (err, ledgerNode) => {
   if(err) {
     throw new Error("Failed to create ledger:", err);
   }
@@ -143,35 +152,76 @@ bLedger.create(actor, options, (err, ledgerNode) => {
 });
 ```
 
-### Get a Ledger
+### Create a Ledger
 
-Get an existing ledger node API given a set of options. 
-A Ledger Node API is returned that can then be used 
-to operate on the ledger.
+Create a new ledger given a set of options to create the new
+ledger.
 
 * actor - the actor performing the action.
+* configBlock (required) - the configuration block for the ledger.
 * options - a set of options used when creating the ledger.
-  * ledgerId (required) - the URI of the ledger.
-  * storage (required) - the storage subsystem for the ledger.
-* callback(err, ledgerNode) - the callback to call when finished.
+* callback(err, ledger) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise
-  * ledgerNode - A ledger node API that can be used to
-    perform actions on the newly created ledger.
 
 ```javascript
-const bLedger = require('bedrock-ledger');
+const configBlock = {
+  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
+  type: 'WebLedgerConfigurationBlock',
+  ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  consensusMethod: {
+    type: 'Continuity2017'
+  },
+  configurationAuthorizationMethod: {
+    type: 'ProofOfSignature2016',
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+    ],
+    minimumSignaturesRequired: 1
+  },
+  writeAuthorizationMethod: {
+    type: 'ProofOfSignature2016',
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+    ],
+    minimumSignaturesRequired: 1
+  },
+  signature: {
+    type: 'RsaSignature2017',
+    created: '2017-10-24T05:33:31Z',
+    creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+    domain: 'example.com',
+    signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
+  }
+}
+const options = {};
 
-const options = {
-  ledgerId: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
-  storage: 'mongodb'
-};
-
-bLedger.get(actor, options, (err, ledgerNode) => {
+ledgerNode.create(actor, configBlock, options, (err) => {
   if(err) {
-    throw new Error('Failed to retrieve ledger node API:', err);
+    throw new Error("Failed to create ledger:", err);
   }
   
-  ledgerNode.events.create( /* create a new ledger event */);
+  console.log("Ledger created.");
+});
+```
+
+### Delete a Ledger Metadata
+
+Gets metadata associated with the ledger, such as most recent
+configuration block and latest consensus block, 
+given a set of options.
+
+* actor - the actor performing the action.
+* options - a set of options used when retrieving the ledger metadata.
+* callback(err) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise.
+
+```javascript
+ledgerNode.meta.get(actor, options, (err, ledger) => {
+  if(err) {
+    throw new Error('Ledger metadata retrieval failed:', err);
+  }
+  
+  console.log('Ledger metadata:', ledger);
 });
 ```
 
@@ -286,25 +336,6 @@ ledgerNode.events.get(actor, eventId, options, (err, event) => {
   }
   
   console.log('Event retrieval successful:', events);
-});
-```
-
-## LedgerMetadata API
-
-Gets metadata associated with the ledger given a set of options.
-
-* actor - the actor performing the action.
-* options - a set of options used when retrieving the ledger metadata.
-* callback(err) - the callback to call when finished.
-  * err - An Error if an error occurred, null otherwise.
-
-```javascript
-ledgerNode.meta.get(actor, options, (err, ledger) => {
-  if(err) {
-    throw new Error('Ledger metadata retrieval failed:', err);
-  }
-  
-  console.log('Ledger metadata:', ledger);
 });
 ```
 
