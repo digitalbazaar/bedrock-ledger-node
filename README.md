@@ -25,7 +25,7 @@ blocks, and events.
   * ledgerNode.events.create(actor, event, options, (err, event))
   * ledgerNode.events.get(actor, eventId, options, (err, event))
 * Plugin API
-  * bLedger.use(options, mongodbStorageApi)
+  * api.use(options, mongodbStorageApi)
 
 ## Quick Examples
 
