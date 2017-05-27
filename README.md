@@ -48,35 +48,7 @@ const ledgerNodeOptions = {
 };
 
 bedrockLedger.getLedgerNode(actor,  ledgerId, ledgerNodeOptions, (err, ledgerNode) => {
-  const configBlock = {
-    id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
-    type: 'WebLedgerConfigurationBlock',
-    ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-    consensusMethod: {
-      type: 'Continuity2017'
-    },
-    configurationAuthorizationMethod: {
-      type: 'ProofOfSignature2016',
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      ],
-      minimumSignaturesRequired: 1
-    },
-    writeAuthorizationMethod: {
-      type: 'ProofOfSignature2016',
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      ],
-      minimumSignaturesRequired: 1
-    },
-    signature: {
-      type: 'RsaSignature2017',
-      created: '2017-10-24T05:33:31Z',
-      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-      domain: 'example.com',
-      signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
-    }
-  };
+  const configBlock = { /* configuration block details go here */ };
   const createOptions = {};
 
   ledgerNode.create(actor, configBlock, createOptions, (err) => {
@@ -84,7 +56,7 @@ bedrockLedger.getLedgerNode(actor,  ledgerId, ledgerNodeOptions, (err, ledgerNod
       throw new Error("Failed to create ledger:", err);
     }
 
-    ledgerNode.events.create( /* create a new ledger event */);
+    ledgerNode.events.create( /* new ledger event details go here */);
     /* ... do other operations on the ledger */
   });
 });
