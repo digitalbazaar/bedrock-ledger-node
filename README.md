@@ -9,11 +9,15 @@ A [bedrock][] module for the creation and management of decentralized ledgers.
 * Ledger API
   * bLedger.create(actor, options, (err, ledgerNode))
   * bLedger.get(actor, options, (err, ledgerNode))
+  * ledgerNode.delete(actor, options, callback(err))
+  * ledgerNode.meta.get(actor, options, (err, ledger))
 * Blocks API
-  * ledgerNode.
+  * ledgerNode.blocks.get(actor, blockId, options, callback(err, block))
 * Events API
-  * 
-
+  * ledgerNode.events.create(actor, event, options, (err, event))
+  * ledgerNode.events.get(actor, eventId, options, (err, event))
+* Plugin API
+  * bLedger.use(options, mongodbStorageApi)
 
 ## Quick Examples
 
@@ -285,7 +289,7 @@ ledgerNode.events.get(actor, eventId, options, (err, event) => {
 });
 ```
 
-## Metadata API
+## LedgerMetadata API
 
 Gets metadata associated with the ledger given a set of options.
 
@@ -304,13 +308,15 @@ ledgerNode.meta.get(actor, options, (err, ledger) => {
 });
 ```
 
-### Ledger Plugin Registration API
+## Ledger Plugin Registration API
 
 Enables plugins to register with the ledger such that they may be
 used to extend the capabilities of the ledger subsystem by adding
 new storage, consensus, and authorization mechanisms.
 
 * options - a set of options used when retrieving the ledger metadata.
+  * capabilityName (required) - the name of the capability
+  * capabilityValue (required) - the value of the capability
 * callback(err) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise.
 
@@ -318,7 +324,12 @@ new storage, consensus, and authorization mechanisms.
 // this code would be executed in a plugin
 const bLedger = require('bedrock-ledger');
 
-bLedger.use('storage', 'mongodb', mongodbStorageApi);
+const options = {
+  capabilityName: 'storage',
+  capabilityValue: 'mongodb'
+};
+
+bLedger.use(options, mongodbStorageApi);
 ```
 
 [bedrock]: https://github.com/digitalbazaar/bedrock
