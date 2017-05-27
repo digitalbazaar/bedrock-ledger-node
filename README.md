@@ -2,7 +2,14 @@
 
 # Bedrock Ledger
 
-A [bedrock][] module for the creation and management of decentralized ledgers.
+A [bedrock][] module for the creation and management of 
+[Web Ledgers](https://w3c.github.io/web-ledger/).
+The Web Ledger ecosystem consists of Ledger Agents, 
+Ledger Nodes, Ledgers, Blocks, and Events. This API
+enables the management of ledger nodes, ledgers,
+blocks, and events.
+
+![An image of the Web Ledger ecosystem](https://w3c.github.io/web-ledger/diagrams/ecosystem.svg)
 
 ## The Ledger API
 
