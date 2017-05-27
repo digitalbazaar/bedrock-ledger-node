@@ -183,7 +183,7 @@ ledgerNode.create(actor, configBlock, options, (err) => {
 });
 ```
 
-### Delete a Ledger Metadata
+### Get Ledger Metadata
 
 Gets metadata associated with the ledger, such as most recent
 configuration block and latest consensus block, 
@@ -193,6 +193,7 @@ given a set of options.
 * options - a set of options used when retrieving the ledger metadata.
 * callback(err) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise.
+  * ledger - metadata about the ledger.
 
 ```javascript
 ledgerNode.meta.get(actor, options, (err, ledger) => {
