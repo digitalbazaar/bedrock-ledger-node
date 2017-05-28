@@ -333,14 +333,14 @@ new storage, consensus, and authorization mechanisms.
 
 ```javascript
 // this code would be executed in a plugin
-const bLedger = require('bedrock-ledger');
+const bedrockLedger = require('bedrock-ledger');
 
 const options = {
   capabilityName: 'storage',
   capabilityValue: 'mongodb'
 };
 
-bLedger.use(options, mongodbStorageApi);
+bedrockLedger.use(options, mongodbStorageApi);
 ```
 
 [bedrock]: https://github.com/digitalbazaar/bedrock
