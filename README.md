@@ -14,11 +14,12 @@ blocks, and events.
 ## The Ledger API
 
 * Ledger API
-  * api.getLedgers(actor, query, options, callback(err, ledgerNodeIds))
-  * api.getLedgerNode(actor, ledgerId, options, (err, ledgerNode))
-  * ledgerNode.create(actor, configBlock, options, (err))
-  * ledgerNode.delete(actor, options, callback(err))
-  * ledgerNode.meta.get(actor, options, (err, ledger))
+  * api.create(actor, configBlock, options, (err, ledgerNode))
+  * api.get(actor, ledgerId, options, (err, ledgerNode))
+  * api.delete(actor, ledgerId, options, callback(err))
+  * api.getNodeIterator(actor, options, callback(err, iterator))
+* Metadata API
+  * ledgerNode.meta.get(actor, options, (err, ledgerMeta))
 * Blocks API
   * ledgerNode.blocks.get(actor, blockId, options, callback(err, block))
 * Events API
