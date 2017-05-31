@@ -2,9 +2,9 @@
 
 # Bedrock Ledger
 
-A [bedrock][] module for the creation and management of 
+A [bedrock][] module for the creation and management of
 [Web Ledgers](https://w3c.github.io/web-ledger/).
-The Web Ledger ecosystem consists of Ledger Agents, 
+The Web Ledger ecosystem consists of Ledger Agents,
 Ledger Nodes, Ledgers, Blocks, and Events. This API
 enables the management of ledger nodes, ledgers,
 blocks, and events.
@@ -57,7 +57,7 @@ For documentation on configuration, see [config.js](./lib/config.js).
 
 ### Create a Ledger
 
-Create a new ledger given a configuration block and a set 
+Create a new ledger given a configuration block and a set
 of options.
 
 * actor - the actor performing the action.
@@ -102,10 +102,10 @@ const options = {};
 
 ledger.create(actor, configBlock, options, (err, ledgerNode) => {
   if(err) {
-    throw new Error("Failed to create ledger:", err);
+    throw new Error('Failed to create ledger:', err);
   }
-  
-  console.log("Ledger created:", ledgerNode.ledgerId);
+
+  console.log('Ledger created:', ledgerNode.ledgerId);
 });
 ```
 
@@ -129,10 +129,10 @@ const options = {};
 
 ledger.get(actor,  ledgerId, options, (err, ledgerNode) => {
   if(err) {
-    throw new Error("Failed to create ledger:", err);
+    throw new Error('Failed to create ledger:', err);
   }
-  
-  console.log("Ledger created", ledgerNode.ledgerId);
+
+  console.log('Ledger created', ledgerNode.ledgerId);
 });
 ```
 
@@ -154,14 +154,14 @@ ledger.delete(actor, ledgerId, options, err => {
   if(err) {
     throw new Error('Failed to delete ledger:', err);
   }
-  
+
   console.log('Ledger deleted.');
 });
 ```
 
 ### Iterate Through All Ledgers
 
-Gets an iterator that will iterate over all ledgers in the system. 
+Gets an iterator that will iterate over all ledgers in the system.
 The iterator will return a ledgerNodeMeta which contains an
 id that can be passed to the api.get() call to fetch an
 instance of the ledgerNode storage for the associated ledger.
@@ -178,11 +178,11 @@ const options = {};
 
 bedrockLedger.getNodeIterator(actor, options, (err, iterator) => {
   if(err) {
-    throw new Error("Failed to fetch iterator for ledger nodes:", err);
+    throw new Error('Failed to fetch iterator for ledger nodes:', err);
   }
-  
-  for(let ledgerNodeMeta of iterator) { 
-    console.log('Ledger node:',  ledgerNodeMeta); 
+
+  for(let ledgerNodeMeta of iterator) {
+    console.log('Ledger node:',  ledgerNodeMeta);
   }
 });
 ```
@@ -192,7 +192,7 @@ bedrockLedger.getNodeIterator(actor, options, (err, iterator) => {
 ### Get Ledger Metadata
 
 Gets metadata associated with the ledger, such as most recent
-configuration block and latest consensus block, 
+configuration block and latest consensus block,
 given a set of options.
 
 * actor - the actor performing the action.
@@ -206,7 +206,7 @@ ledgerNode.meta.get(actor, options, (err, ledgerMeta) => {
   if(err) {
     throw new Error('Ledger metadata retrieval failed:', err);
   }
-  
+
   console.log('Ledger metadata:', ledgerMeta);
 });
 ```
@@ -229,10 +229,10 @@ const options = {};
 
 ledgerNode.blocks.get(actor, blockId, options, (err, block) => {
   if(err) {
-    throw new Error("Block retrieval failed:", err);
+    throw new Error('Block retrieval failed:', err);
   }
-  
-  console.log("Retrieved block:", blocks);
+
+  console.log('Retrieved block:', blocks);
 });
 ```
 
@@ -240,7 +240,7 @@ ledgerNode.blocks.get(actor, blockId, options, (err, block) => {
 
 ### Create a Ledger Event
 
-Creates an event to associate with a ledger given an 
+Creates an event to associate with a ledger given an
 event and a set of options.
 
 * actor - the actor performing the action.
@@ -275,9 +275,9 @@ const options = {};
 
 ledgerNode.events.create(actor, event, options, (err, event) => {
   if(err) {
-    throw new Error("Failed to create the event:", err);
+    throw new Error('Failed to create the event:', err);
   }
-  
+
   console.log('Event creation successful:', event.id);
 });
 ```
@@ -301,7 +301,7 @@ ledgerNode.events.get(actor, eventId, options, (err, event) => {
   if(err) {
     throw new Error('Event retrieval failed:', err);
   }
-  
+
   console.log('Event retrieval successful:', events);
 });
 ```
