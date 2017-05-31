@@ -295,7 +295,7 @@ and a set of options.
   * event - the event that was retrieved from the database.
 
 ```javascript
-const eventId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/events/76b17d64-abb1-4d19-924f-427a743489f0';
+const eventId = 'urn:uuid:76b17d64-abb1-4d19-924f-427a743489f0';
 
 ledgerNode.events.get(actor, eventId, options, (err, event) => {
   if(err) {
