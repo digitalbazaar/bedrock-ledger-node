@@ -23,7 +23,6 @@
     "bedrock": "^1.2.4",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
-    "jsonld": "^0.4.11",
     "jsonld-signatures": "^1.1.5"
   },
   "engines": {
