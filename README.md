@@ -76,14 +76,14 @@ const configBlock = {
   consensusMethod: {
     type: 'Continuity2017'
   },
-  configurationAuthorizationMethod: {
+  configurationBlockAuthorizationMethod: {
     type: 'ProofOfSignature2016',
     approvedSigner: [
       'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
     ],
     minimumSignaturesRequired: 1
   },
-  writeAuthorizationMethod: {
+  eventBlockAuthorizationMethod: {
     type: 'ProofOfSignature2016',
     approvedSigner: [
       'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
