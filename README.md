@@ -64,6 +64,7 @@ of options.
 * configBlock - the configuration block for the ledger.
 * options - a set of options used when creating the ledger.
   * storage - the storage subsystem for the ledger (default: 'mongodb').
+  * owner - the owner of the ledger node (default: none, anyone can access the node).
 * callback(err, ledger) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise
   * ledgerNode - the ledger node associated with the ledger.
@@ -98,7 +99,9 @@ const configBlock = {
     signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
   }
 }
-const options = {};
+const options = {
+  owner: 'https://example.com/i/123'
+};
 
 ledger.create(actor, configBlock, options, (err, ledgerNode) => {
   if(err) {
