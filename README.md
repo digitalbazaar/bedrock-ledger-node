@@ -13,19 +13,19 @@ blocks, and events.
 
 ## The Ledger API
 
-* Ledger API
+* Ledger Node API
   * api.create(actor, configBlock, options, (err, ledgerNode))
   * api.get(actor, ledgerId, options, (err, ledgerNode))
   * api.delete(actor, ledgerId, options, callback(err))
   * api.getNodeIterator(actor, options, callback(err, iterator))
-* Metadata API
+* Ledger Node Metadata API
   * ledgerNode.meta.get(options, (err, ledgerMeta))
-* Blocks API
+* Ledger Node Blocks API
   * ledgerNode.blocks.get(blockId, options, callback(err, block))
-* Events API
+* Ledger Node Events API
   * ledgerNode.events.create(event, options, (err, event))
   * ledgerNode.events.get(eventId, options, (err, event))
-* Plugin API
+* Ledger Node Plugin API
   * api.use(options, mongodbStorageApi)
 
 ## Quick Examples
