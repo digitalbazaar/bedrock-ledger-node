@@ -19,12 +19,12 @@ blocks, and events.
   * api.delete(actor, ledgerId, options, callback(err))
   * api.getNodeIterator(actor, options, callback(err, iterator))
 * Metadata API
-  * ledgerNode.meta.get(actor, options, (err, ledgerMeta))
+  * ledgerNode.meta.get(options, (err, ledgerMeta))
 * Blocks API
-  * ledgerNode.blocks.get(actor, blockId, options, callback(err, block))
+  * ledgerNode.blocks.get(blockId, options, callback(err, block))
 * Events API
-  * ledgerNode.events.create(actor, event, options, (err, event))
-  * ledgerNode.events.get(actor, eventId, options, (err, event))
+  * ledgerNode.events.create(event, options, (err, event))
+  * ledgerNode.events.get(eventId, options, (err, event))
 * Plugin API
   * api.use(options, mongodbStorageApi)
 
@@ -42,7 +42,7 @@ require('bedrock-ledger-authz-signature');
 const actor = 'admin';
 const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
 
-ledger.get(actor,  ledgerId, options, (err, ledgerNode) => {
+ledger.get(actor, ledgerId, options, (err, ledgerNode) => {
   ledgerNode.events.create( /* new ledger event details go here */);
     /* ... do other operations on the ledger */
   });
@@ -195,14 +195,13 @@ Gets metadata associated with the ledger, such as most recent
 configuration block and latest consensus block,
 given a set of options.
 
-* actor - the actor performing the action.
 * options - a set of options used when retrieving the ledger metadata.
 * callback(err) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise.
   * ledgerMeta - metadata about the ledger.
 
 ```javascript
-ledgerNode.meta.get(actor, options, (err, ledgerMeta) => {
+ledgerNode.meta.get(options, (err, ledgerMeta) => {
   if(err) {
     throw new Error('Ledger metadata retrieval failed:', err);
   }
@@ -217,7 +216,6 @@ ledgerNode.meta.get(actor, options, (err, ledgerMeta) => {
 
 Gets a block from the ledger given a blockID and a set of options.
 
-* actor - the actor performing the action.
 * blockId - the URI of the block to fetch.
 * options - a set of options used when retrieving the block.
 * callback(err) - the callback to call when finished.
@@ -227,7 +225,7 @@ Gets a block from the ledger given a blockID and a set of options.
 const blockId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1';
 const options = {};
 
-ledgerNode.blocks.get(actor, blockId, options, (err, block) => {
+ledgerNode.blocks.get(blockId, options, (err, block) => {
   if(err) {
     throw new Error('Block retrieval failed:', err);
   }
@@ -243,7 +241,6 @@ ledgerNode.blocks.get(actor, blockId, options, (err, block) => {
 Creates an event to associate with a ledger given an
 event and a set of options.
 
-* actor - the actor performing the action.
 * event - the event to associate with a ledger.
 * options - a set of options used when creating the event.
 * callback(err) - the callback to call when finished.
@@ -251,7 +248,6 @@ event and a set of options.
   * event - the event that was written to the database.
 
 ```javascript
-const actor = 'admin';
 const event = {
   '@context': 'https://schema.org/',
   type: 'Event',
@@ -273,7 +269,7 @@ const event = {
 }
 const options = {};
 
-ledgerNode.events.create(actor, event, options, (err, event) => {
+ledgerNode.events.create(event, options, (err, event) => {
   if(err) {
     throw new Error('Failed to create the event:', err);
   }
@@ -287,7 +283,6 @@ ledgerNode.events.create(actor, event, options, (err, event) => {
 Gets an event associated with the ledger given an eventID
 and a set of options.
 
-* actor - the actor performing the action.
 * eventId - the event to fetch from the ledger.
 * options - a set of options used when retrieving the event.
 * callback(err) - the callback to call when finished.
@@ -297,7 +292,7 @@ and a set of options.
 ```javascript
 const eventId = 'urn:uuid:76b17d64-abb1-4d19-924f-427a743489f0';
 
-ledgerNode.events.get(actor, eventId, options, (err, event) => {
+ledgerNode.events.get(eventId, options, (err, event) => {
   if(err) {
     throw new Error('Event retrieval failed:', err);
   }
