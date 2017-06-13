@@ -25,8 +25,9 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger",
   "dependencies": {
     "async": "^2.4.0",
-    "bedrock": "^1.2.4",
+    "bedrock": "digitalbazaar/bedrock#updateTestDeps",
     "bedrock-identity": "^4.6.0",
+    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#master",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
     "bedrock-test": "^1.2.0",

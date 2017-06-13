@@ -7,7 +7,7 @@
 const async = require('async');
 const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
-const ledger = require('bedrock-ledger');
+const brLedger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
@@ -36,39 +36,11 @@ describe('Ledger API', () => {
         done(err);
       });
     });
-    it('should create a ledger', done => {
-      const configBlock = {
-        id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
-        type: 'WebLedgerConfigurationBlock',
-        ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-        consensusMethod: {
-          type: 'Continuity2017'
-        },
-        configurationAuthorizationMethod: {
-          type: 'ProofOfSignature2016',
-          approvedSigner: [
-            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-          ],
-          minimumSignaturesRequired: 1
-        },
-        writeAuthorizationMethod: {
-          type: 'ProofOfSignature2016',
-          approvedSigner: [
-            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-          ],
-          minimumSignaturesRequired: 1
-        },
-        signature: {
-          type: 'RsaSignature2017',
-          created: '2017-10-24T05:33:31Z',
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-          domain: 'example.com',
-          signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
-        }
-      };
-      const options = {};
-
-      ledger.create(actor, configBlock, options, (err, storage) => {
+    it.only('should create a ledger', done => {
+      brLedger.create(actor, mockData.configBlocks.alpha, (err, ledgerNode) => {
+        console.log('EEEEEEE', err, ledgerNode);
+        expect(err).not.to.be.ok;
+        expect(ledgerNode).to.be.ok;
         done();
       });
     });
