@@ -14,9 +14,9 @@ blocks, and events.
 ## The Ledger API
 
 * Ledger Node API
-  * api.create(actor, configBlock, options, (err, ledgerNode))
+  * api.add(actor, configBlock, options, (err, ledgerNode))
   * api.get(actor, ledgerId, options, (err, ledgerNode))
-  * api.delete(actor, ledgerId, options, callback(err))
+  * api.remove(actor, ledgerId, options, callback(err))
   * api.getNodeIterator(actor, options, callback(err, iterator))
 * Ledger Node Metadata API
   * ledgerNode.meta.get(options, (err, ledgerMeta))
@@ -153,7 +153,7 @@ Delete an existing ledger given a ledgerId and a set of options.
 const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
 const options = {};
 
-ledger.delete(actor, ledgerId, options, err => {
+ledger.remove(actor, ledgerId, options, err => {
   if(err) {
     throw new Error('Failed to delete ledger:', err);
   }

@@ -40,7 +40,7 @@ describe('Ledger API', () => {
       it('should create a ledger with no owner', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
-          create: callback => brLedger.create(
+          create: callback => brLedger.add(
             actor, configBlock, (err, ledgerNode) => {
               expect(err).not.to.be.ok;
               expect(ledgerNode).to.be.ok;
@@ -69,13 +69,13 @@ describe('Ledger API', () => {
       it('returns DuplicateError on same ledger and storage', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
-          create: callback => brLedger.create(
+          create: callback => brLedger.add(
             actor, configBlock, (err, ledgerNode) => {
               expect(err).not.to.be.ok;
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
-          createDuplicate: ['create', (results, callback) => brLedger.create(
+          createDuplicate: ['create', (results, callback) => brLedger.add(
             actor, configBlock, (err, ledgerNode) => {
               expect(err).to.be.ok;
               expect(ledgerNode).not.to.be.ok;
@@ -87,7 +87,7 @@ describe('Ledger API', () => {
       it('should create a ledger with an owner', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
-          create: callback => brLedger.create(
+          create: callback => brLedger.add(
             actor, configBlock, {owner: actor.id}, (err, ledgerNode) => {
               expect(err).not.to.be.ok;
               expect(ledgerNode).to.be.ok;
@@ -114,7 +114,7 @@ describe('Ledger API', () => {
       });
       it('returns PermissionDenied if actor is not owner', done => {
         const configBlock = mockData.configBlocks.alpha;
-        brLedger.create(
+        brLedger.add(
           actor, configBlock, {owner: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
@@ -140,7 +140,7 @@ describe('Ledger API', () => {
         });
       });
       it('gets a ledger with no owner', done => async.auto({
-        create: callback => brLedger.create(actor, configBlock, callback),
+        create: callback => brLedger.add(actor, configBlock, callback),
         get: ['create', (results, callback) =>
           brLedger.get(actor, configBlock.ledger, (err, result) => {
             expect(err).not.to.be.ok;
@@ -152,7 +152,7 @@ describe('Ledger API', () => {
           })]
       }, done));
       it('gets a ledger with actor as owner', done => async.auto({
-        create: callback => brLedger.create(
+        create: callback => brLedger.add(
           actor, configBlock, {owner: actor.id}, callback),
         get: ['create', (results, callback) =>
           brLedger.get(actor, configBlock.ledger, (err, result) => {
@@ -166,7 +166,7 @@ describe('Ledger API', () => {
       }, done));
       it('returns PermissionDenied if actor does not own the ledger', done =>
         async.auto({
-          create: callback => brLedger.create(
+          create: callback => brLedger.add(
             null, configBlock, {owner: uuid()}, callback),
           get: ['create', (results, callback) =>
             brLedger.get(actor, configBlock.ledger, (err, result) => {
@@ -187,8 +187,9 @@ describe('Ledger API', () => {
         });
       });
       it('returns NotFound on a deleted ledger', done => async.auto({
-        create: callback => brLedger.create(actor, configBlock, callback),
-        delete: ['create', (results, callback) => brLedger.delete(
+        create: callback => brLedger.add(
+          actor, configBlock, {owner: actor.id}, callback),
+        delete: ['create', (results, callback) => brLedger.remove(
           actor, configBlock.ledger, 'mongodb', callback)
         ],
         get: ['delete', (results, callback) =>
@@ -217,9 +218,9 @@ describe('Ledger API', () => {
         });
       });
       it('should delete a ledger if actor is owner', done => async.auto({
-        create: callback => brLedger.create(
+        create: callback => brLedger.add(
           actor, configBlock, {owner: actor.id}, callback),
-        delete: ['create', (results, callback) => brLedger.delete(
+        delete: ['create', (results, callback) => brLedger.remove(
           actor, configBlock.ledger, 'mongodb', err => {
             expect(err).not.to.be.ok;
             callback();
@@ -236,9 +237,18 @@ describe('Ledger API', () => {
           })]
       }, done));
       it('returns PermissionDenied if actor is not owner', done => async.auto({
-        create: callback => brLedger.create(
+        create: callback => brLedger.add(
           null, configBlock, {owner: uuid()}, callback),
-        delete: ['create', (results, callback) => brLedger.delete(
+        delete: ['create', (results, callback) => brLedger.remove(
+          actor, configBlock.ledger, 'mongodb', err => {
+            expect(err).to.be.ok;
+            err.name.should.equal('PermissionDenied');
+            callback();
+          })]
+      }, done));
+      it('returns PermissionDenied if there is no owner', done => async.auto({
+        create: callback => brLedger.add(null, configBlock, callback),
+        delete: ['create', (results, callback) => brLedger.remove(
           actor, configBlock.ledger, 'mongodb', err => {
             expect(err).to.be.ok;
             err.name.should.equal('PermissionDenied');
