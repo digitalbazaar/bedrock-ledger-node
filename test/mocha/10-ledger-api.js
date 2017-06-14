@@ -21,10 +21,10 @@ const baseUri = 'http://example.com';
 jsigs.use('jsonld', bedrock.jsonld);
 
 describe('Ledger API', () => {
-  describe('create API', () => {
-    before(done => {
-      helpers.prepareDatabase(mockData, done);
-    });
+  before(done => {
+    helpers.prepareDatabase(mockData, done);
+  });
+  describe.only('create API', () => {
     beforeEach(done => {
       helpers.removeCollection('ledgerNode', done);
     });
@@ -37,7 +37,7 @@ describe('Ledger API', () => {
           done(err);
         });
       });
-      it.only('should create a ledger with no owner', done => {
+      it('should create a ledger with no owner', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
           create: callback => brLedger.create(
@@ -58,6 +58,7 @@ describe('Ledger API', () => {
               ledgerNode.id.should.equal(results.create.id);
               ledgerNode.ledger.should.equal(configBlock.ledger);
               ledgerNode.storage.should.equal('mongodb');
+              ledgerNode.sysStatus.should.equal('active');
               // there should be no owner
               expect(ledgerNode.owner).not.to.exist;
               callback();
@@ -65,7 +66,7 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
-      it.only('returns DuplicateError on same ledger and storage', done => {
+      it('returns DuplicateError on same ledger and storage', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
           create: callback => brLedger.create(
@@ -83,7 +84,7 @@ describe('Ledger API', () => {
             })]
         }, done);
       });
-      it.only('should create a ledger with an owner', done => {
+      it('should create a ledger with an owner', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
           create: callback => brLedger.create(
@@ -105,12 +106,13 @@ describe('Ledger API', () => {
               ledgerNode.ledger.should.equal(configBlock.ledger);
               ledgerNode.owner.should.equal(actor.id);
               ledgerNode.storage.should.equal('mongodb');
+              ledgerNode.sysStatus.should.equal('active');
               callback();
             });
           }]
         }, done);
       });
-      it.only('returns PermissionDenied if actor is not owner', done => {
+      it('returns PermissionDenied if actor is not owner', done => {
         const configBlock = mockData.configBlocks.alpha;
         brLedger.create(
           actor, configBlock, {owner: uuid()}, (err, ledgerNode) => {
@@ -120,8 +122,41 @@ describe('Ledger API', () => {
             done();
           });
       });
-    }); // end create API
-
+    }); // end regularUser as actor
+  }); // end create API
+  describe.only('get API', () => {
+    beforeEach(done => {
+      helpers.removeCollection('ledgerNode', done);
+    });
+    describe('regularUser as actor', () => {
+      const mockIdentity = mockData.identities.regularUser;
+      const configBlock = mockData.configBlocks.alpha;
+      let actor;
+      before(done => {
+        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+          actor = result;
+          done(err);
+        });
+      });
+      it('gets a ledger with no owner', done => async.auto({
+        create: callback => brLedger.create(actor, configBlock, callback),
+        get: ['create', (results, callback) =>
+          brLedger.get(actor, configBlock.ledger, (err, result) => {
+            expect(err).not.to.be.ok;
+            expect(result).to.be.ok;
+            expect(result.meta).to.exist;
+            expect(result.blocks).to.exist;
+            expect(result.events).to.exist;
+            callback();
+          })]
+      }, done));
+      it('gets a ledger with actor as owner');
+      it('returns PermissionDenied if actor does not own the ledger');
+      it('returns NotFound on a non-exsistent ledger');
+      it('returns NotFound on a deleted ledger');
+    }); // end regularUser as actor
+  }); // end get API
+  describe('test stubs', () => {
     it.skip('should get their ledger', done => {
       done();
     });
