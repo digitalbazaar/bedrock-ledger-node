@@ -25,7 +25,7 @@ describe('Ledger API', () => {
     helpers.prepareDatabase(mockData, done);
   });
   beforeEach(done => {
-    helpers.removeCollection('ledger_testLedger', done);
+    helpers.removeCollection('ledgerNode', done);
   });
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
@@ -37,12 +37,48 @@ describe('Ledger API', () => {
       });
     });
     it.only('should create a ledger', done => {
-      brLedger.create(actor, mockData.configBlocks.alpha, (err, ledgerNode) => {
-        console.log('EEEEEEE', err, ledgerNode);
-        expect(err).not.to.be.ok;
-        expect(ledgerNode).to.be.ok;
-        done();
-      });
+      const configBlock = mockData.configBlocks.alpha;
+      async.auto({
+        create: callback => brLedger.create(
+          actor, configBlock, (err, ledgerNode) => {
+            expect(err).not.to.be.ok;
+            expect(ledgerNode).to.be.ok;
+            callback(null, ledgerNode);
+          }),
+        test: ['create', (results, callback) => {
+          database.collections.ledgerNode.findOne({
+            id: database.hash(results.create.id)
+          }, (err, result) => {
+            expect(err).not.to.be.ok;
+            result.id.should.equal(database.hash(results.create.id));
+            result.ledger.should.equal(database.hash(configBlock.ledger));
+            result.storage.should.equal(database.hash('mongodb'));
+            const ledgerNode = result.ledgerNode;
+            ledgerNode.id.should.equal(results.create.id);
+            ledgerNode.ledger.should.equal(configBlock.ledger);
+            ledgerNode.storage.should.equal('mongodb');
+            callback();
+          });
+        }]
+      }, done);
+    });
+    it.only('returns DuplicateError on same ledger and storage', done => {
+      const configBlock = mockData.configBlocks.alpha;
+      async.auto({
+        create: callback => brLedger.create(
+          actor, configBlock, (err, ledgerNode) => {
+            expect(err).not.to.be.ok;
+            expect(ledgerNode).to.be.ok;
+            callback(null, ledgerNode);
+          }),
+        createDuplicate: ['create', (results, callback) => brLedger.create(
+          actor, configBlock, (err, ledgerNode) => {
+            expect(err).to.be.ok;
+            expect(ledgerNode).not.to.be.ok;
+            err.name.should.equal('DuplicateError');
+            callback();
+          })]
+      }, done);
     });
     it.skip('should get their ledger', done => {
       done();
