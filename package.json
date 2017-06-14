@@ -23,8 +23,7 @@
   "peerDependencies": {
     "bedrock": "^1.2.4",
     "bedrock-mongodb": "^3.0.0",
-    "bedrock-permission": "^2.3.2",
-    "jsonld-signatures": "^1.1.5"
+    "bedrock-permission": "^2.3.2"
   },
   "engines": {
     "node": ">=6.3.0"
