@@ -122,7 +122,16 @@ describe('Ledger API', () => {
             done();
           });
       });
-      it('returns error if invalid storage plugin is specified');
+      it('returns error if invalid storage plugin is specified', done => {
+        const configBlock = mockData.configBlocks.alpha;
+        brLedger.add(
+          actor, configBlock, {storage: uuid()}, (err, ledgerNode) => {
+            expect(err).to.be.ok;
+            expect(ledgerNode).not.to.be.ok;
+            err.name.should.equal('InvalidStorage');
+            done();
+          });
+      });
     }); // end regularUser as actor
   }); // end create API
   describe.only('get API', () => {
