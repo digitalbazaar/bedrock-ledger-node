@@ -15,10 +15,10 @@ let userName;
 userName = 'regularUser';
 identities[userName] = {};
 identities[userName].identity = helpers.createIdentity(userName);
-// identities[userName].identity.sysResourceRole.push({
-//   sysRole: 'bedrock-ledger.test',
-//   generateResource: 'id'
-// });
+identities[userName].identity.sysResourceRole.push({
+  sysRole: 'bedrock-ledger.test',
+  generateResource: 'id'
+});
 
 // // identity with no permissions
 // userName = 'noPermission';
