@@ -122,6 +122,7 @@ describe('Ledger API', () => {
             done();
           });
       });
+      it('returns error if invalid storage plugin is specified');
     }); // end regularUser as actor
   }); // end create API
   describe.only('get API', () => {
@@ -150,23 +151,107 @@ describe('Ledger API', () => {
             callback();
           })]
       }, done));
-      it('gets a ledger with actor as owner');
-      it('returns PermissionDenied if actor does not own the ledger');
-      it('returns NotFound on a non-exsistent ledger');
-      it('returns NotFound on a deleted ledger');
+      it('gets a ledger with actor as owner', done => async.auto({
+        create: callback => brLedger.create(
+          actor, configBlock, {owner: actor.id}, callback),
+        get: ['create', (results, callback) =>
+          brLedger.get(actor, configBlock.ledger, (err, result) => {
+            expect(err).not.to.be.ok;
+            expect(result).to.be.ok;
+            expect(result.meta).to.exist;
+            expect(result.blocks).to.exist;
+            expect(result.events).to.exist;
+            callback();
+          })]
+      }, done));
+      it('returns PermissionDenied if actor does not own the ledger', done =>
+        async.auto({
+          create: callback => brLedger.create(
+            null, configBlock, {owner: uuid()}, callback),
+          get: ['create', (results, callback) =>
+            brLedger.get(actor, configBlock.ledger, (err, result) => {
+              expect(err).to.be.ok;
+              expect(result).not.to.be.ok;
+              err.name.should.equal('PermissionDenied');
+              callback();
+            })]
+        }, done));
+      it('returns NotFound on a non-exsistent ledger', done => {
+        const unknownLedger = 'did:v1:' + uuid();
+        brLedger.get(actor, unknownLedger, (err, result) => {
+          expect(err).to.be.ok;
+          expect(result).not.to.be.ok;
+          err.name.should.equal('NotFound');
+          err.details.ledger.should.equal(unknownLedger);
+          done();
+        });
+      });
+      it('returns NotFound on a deleted ledger', done => async.auto({
+        create: callback => brLedger.create(actor, configBlock, callback),
+        delete: ['create', (results, callback) => brLedger.delete(
+          actor, configBlock.ledger, 'mongodb', callback)
+        ],
+        get: ['delete', (results, callback) =>
+          brLedger.get(actor, configBlock.ledger, (err, result) => {
+            expect(err).to.be.ok;
+            expect(result).not.to.be.ok;
+            err.name.should.equal('NotFound');
+            err.details.ledger.should.equal(configBlock.ledger);
+            callback();
+          })]
+      }, done));
     }); // end regularUser as actor
   }); // end get API
-  describe('test stubs', () => {
-    it.skip('should get their ledger', done => {
-      done();
+  describe.only('delete API', () => {
+    beforeEach(done => {
+      helpers.removeCollection('ledgerNode', done);
     });
+    describe('regularUser as actor', () => {
+      const mockIdentity = mockData.identities.regularUser;
+      const configBlock = mockData.configBlocks.alpha;
+      let actor;
+      before(done => {
+        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+          actor = result;
+          done(err);
+        });
+      });
+      it('should delete a ledger if actor is owner', done => async.auto({
+        create: callback => brLedger.create(
+          actor, configBlock, {owner: actor.id}, callback),
+        delete: ['create', (results, callback) => brLedger.delete(
+          actor, configBlock.ledger, 'mongodb', err => {
+            expect(err).not.to.be.ok;
+            callback();
+          })],
+        test: ['delete', (results, callback) =>
+          database.collections.ledgerNode.findOne({
+            ledger: database.hash(configBlock.ledger),
+            storage: database.hash('mongodb')
+          }, (err, result) => {
+            expect(err).not.to.be.ok;
+            expect(result).to.be.ok;
+            result.ledgerNode.sysStatus.should.equal('deleted');
+            callback();
+          })]
+      }, done));
+      it('returns PermissionDenied if actor is not owner', done => async.auto({
+        create: callback => brLedger.create(
+          null, configBlock, {owner: uuid()}, callback),
+        delete: ['create', (results, callback) => brLedger.delete(
+          actor, configBlock.ledger, 'mongodb', err => {
+            expect(err).to.be.ok;
+            err.name.should.equal('PermissionDenied');
+            callback();
+          })]
+      }, done));
+    });
+  }); // end delete API
+  describe('test stubs', () => {
     it.skip('should iterate over their ledgers', done => {
       done();
     });
     it.skip('should delete their ledger', done => {
-      done();
-    });
-    it.skip('should not get non-owned ledger', done => {
       done();
     });
     it.skip('should not delete non-owned ledger', done => {
