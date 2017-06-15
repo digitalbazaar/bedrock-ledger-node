@@ -61,27 +61,28 @@ describe('Ledger API', () => {
               ledgerNode.storage.plugin.should.equal('mongodb');
               ledgerNode.sysStatus.should.equal('active');
               // there should be no owner
-              expect(ledgerNode.owner).not.to.exist;
+              expect(ledgerNode.owner).to.be.null;
               callback();
             });
           }]
         }, done);
       });
-      it('returns LedgerCreationFailed on duplicate ledger', done => {
+      it('returns existing ledger on attempt to create a duplicate', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
           create: callback => brLedger.add(
-            actor, configBlock, (err, ledgerNode) => {
+            actor, configBlock, (err, result) => {
               expect(err).not.to.be.ok;
-              expect(ledgerNode).to.be.ok;
-              callback(null, ledgerNode);
+              expect(result).to.be.ok;
+              callback(null, result);
             }),
           createDuplicate: ['create', (results, callback) => brLedger.add(
-            actor, configBlock, (err, ledgerNode) => {
-              expect(err).to.be.ok;
-              expect(ledgerNode).not.to.be.ok;
-              err.name.should.equal('LedgerCreationFailed');
-              err.details.ledgerId.should.equal(configBlock.ledger);
+            actor, configBlock, (err, result) => {
+              expect(err).not.to.be.ok;
+              expect(result).to.be.ok;
+              expect(result.meta).to.exist;
+              expect(result.blocks).to.exist;
+              expect(result.events).to.exist;
               callback();
             })]
         }, done);
