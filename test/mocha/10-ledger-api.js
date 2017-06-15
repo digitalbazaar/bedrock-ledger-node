@@ -26,7 +26,7 @@ describe('Ledger API', () => {
   });
   describe.only('create API', () => {
     beforeEach(done => {
-      helpers.removeCollection('ledgerNode', done);
+      helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
       const mockIdentity = mockData.identities.regularUser;
@@ -53,11 +53,12 @@ describe('Ledger API', () => {
               expect(err).not.to.be.ok;
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(database.hash(configBlock.ledger));
-              result.storage.should.equal(database.hash('mongodb'));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
               ledgerNode.ledger.should.equal(configBlock.ledger);
-              ledgerNode.storage.should.equal('mongodb');
+              ledgerNode.storage.should.be.an('object');
+              ledgerNode.storage.id.should.be.a('string');
+              ledgerNode.storage.plugin.should.equal('mongodb');
               ledgerNode.sysStatus.should.equal('active');
               // there should be no owner
               expect(ledgerNode.owner).not.to.exist;
@@ -66,7 +67,7 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
-      it('returns DuplicateError on same ledger and storage', done => {
+      it('returns LedgerCreationFailed on duplicate ledger', done => {
         const configBlock = mockData.configBlocks.alpha;
         async.auto({
           create: callback => brLedger.add(
@@ -79,7 +80,8 @@ describe('Ledger API', () => {
             actor, configBlock, (err, ledgerNode) => {
               expect(err).to.be.ok;
               expect(ledgerNode).not.to.be.ok;
-              err.name.should.equal('DuplicateError');
+              err.name.should.equal('LedgerCreationFailed');
+              err.details.ledgerId.should.equal(configBlock.ledger);
               callback();
             })]
         }, done);
@@ -100,12 +102,13 @@ describe('Ledger API', () => {
               expect(err).not.to.be.ok;
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(database.hash(configBlock.ledger));
-              result.storage.should.equal(database.hash('mongodb'));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
               ledgerNode.ledger.should.equal(configBlock.ledger);
               ledgerNode.owner.should.equal(actor.id);
-              ledgerNode.storage.should.equal('mongodb');
+              ledgerNode.storage.should.be.an('object');
+              ledgerNode.storage.id.should.be.a('string');
+              ledgerNode.storage.plugin.should.equal('mongodb');
               ledgerNode.sysStatus.should.equal('active');
               callback();
             });
@@ -136,7 +139,7 @@ describe('Ledger API', () => {
   }); // end create API
   describe.only('get API', () => {
     beforeEach(done => {
-      helpers.removeCollection('ledgerNode', done);
+      helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
       const mockIdentity = mockData.identities.regularUser;
@@ -214,7 +217,7 @@ describe('Ledger API', () => {
   }); // end get API
   describe.only('delete API', () => {
     beforeEach(done => {
-      helpers.removeCollection('ledgerNode', done);
+      helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
       const mockIdentity = mockData.identities.regularUser;
@@ -237,7 +240,7 @@ describe('Ledger API', () => {
         test: ['delete', (results, callback) =>
           database.collections.ledgerNode.findOne({
             ledger: database.hash(configBlock.ledger),
-            storage: database.hash('mongodb')
+            'ledgerNode.storage.plugin': 'mongodb'
           }, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;

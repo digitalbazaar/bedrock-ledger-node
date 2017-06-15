@@ -29,10 +29,14 @@ api.createIdentity = function(userName) {
   return newIdentity;
 };
 
-api.removeCollection = function(collection, callback) {
-  var collectionNames = [collection];
+// collections may be a string or array
+api.removeCollections = function(collections, callback) {
+  var collectionNames = [].concat(collections);
   database.openCollections(collectionNames, () => {
     async.each(collectionNames, function(collectionName, callback) {
+      if(!database.collections[collectionName]) {
+        return callback();
+      }
       database.collections[collectionName].remove({}, callback);
     }, function(err) {
       callback(err);
@@ -40,21 +44,24 @@ api.removeCollection = function(collection, callback) {
   });
 };
 
-api.removeCollections = function(callback) {
-  var collectionNames = ['identity', 'eventLog'];
-  database.openCollections(collectionNames, () => {
-    async.each(collectionNames, (collectionName, callback) => {
-      database.collections[collectionName].remove({}, callback);
-    }, function(err) {
-      callback(err);
-    });
-  });
-};
+// api.removeCollections = function(callback) {
+//   var collectionNames = ['identity', 'eventLog'];
+//   database.openCollections(collectionNames, () => {
+//     async.each(collectionNames, (collectionName, callback) => {
+//       database.collections[collectionName].remove({}, callback);
+//     }, function(err) {
+//       callback(err);
+//     });
+//   });
+// };
 
 api.prepareDatabase = function(mockData, callback) {
   async.series([
     callback => {
-      api.removeCollections(callback);
+      api.removeCollections([
+        'identity',
+        'eventLog'
+      ], callback);
     },
     callback => {
       insertTestData(mockData, callback);
