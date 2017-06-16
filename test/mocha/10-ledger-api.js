@@ -24,7 +24,7 @@ describe('Ledger API', () => {
   before(done => {
     helpers.prepareDatabase(mockData, done);
   });
-  describe.only('create API', () => {
+  describe('create API', () => {
     beforeEach(done => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
@@ -42,7 +42,7 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedger.add(
             actor, configBlock, (err, ledgerNode) => {
-              expect(err).not.to.be.ok;
+              should.not.exist(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
@@ -78,6 +78,7 @@ describe('Ledger API', () => {
             }),
           createDuplicate: ['create', (results, callback) => brLedger.add(
             actor, configBlock, (err, result) => {
+              console.log('EEEEEE', err);
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
               expect(result.meta).to.exist;
@@ -138,7 +139,7 @@ describe('Ledger API', () => {
       });
     }); // end regularUser as actor
   }); // end create API
-  describe.only('get API', () => {
+  describe.skip('get API', () => {
     beforeEach(done => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
@@ -231,7 +232,7 @@ describe('Ledger API', () => {
       }, done));
     }); // end regularUser as actor
   }); // end get API
-  describe.only('delete API', () => {
+  describe.skip('delete API', () => {
     beforeEach(done => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
@@ -298,7 +299,7 @@ describe('Ledger API', () => {
       }, done));
     });
   }); // end delete API
-  describe('test stubs', () => {
+  describe.skip('test stubs', () => {
     it.skip('should iterate over their ledgers', done => {
       done();
     });
@@ -312,7 +313,7 @@ describe('Ledger API', () => {
       done();
     });
   });
-  describe('admin as actor', () => {
+  describe.skip('admin as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
     let actor;
     before(done => {

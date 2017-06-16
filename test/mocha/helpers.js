@@ -4,16 +4,17 @@
 /* jshint node: true */
 'use strict';
 
-var async = require('async');
-var brIdentity = require('bedrock-identity');
-var database = require('bedrock-mongodb');
-var uuid = require('uuid').v4;
+const async = require('async');
+const brIdentity = require('bedrock-identity');
+const crypto = require('crypto');
+const database = require('bedrock-mongodb');
+const uuid = require('uuid/v4');
 
-var api = {};
+const api = {};
 module.exports = api;
 
 api.createIdentity = function(userName) {
-  var newIdentity = {
+  const newIdentity = {
     id: 'did:' + uuid(),
     type: 'Identity',
     sysSlug: userName,
@@ -31,7 +32,7 @@ api.createIdentity = function(userName) {
 
 // collections may be a string or array
 api.removeCollections = function(collections, callback) {
-  var collectionNames = [].concat(collections);
+  const collectionNames = [].concat(collections);
   database.openCollections(collectionNames, () => {
     async.each(collectionNames, function(collectionName, callback) {
       if(!database.collections[collectionName]) {
@@ -43,17 +44,6 @@ api.removeCollections = function(collections, callback) {
     });
   });
 };
-
-// api.removeCollections = function(callback) {
-//   var collectionNames = ['identity', 'eventLog'];
-//   database.openCollections(collectionNames, () => {
-//     async.each(collectionNames, (collectionName, callback) => {
-//       database.collections[collectionName].remove({}, callback);
-//     }, function(err) {
-//       callback(err);
-//     });
-//   });
-// };
 
 api.prepareDatabase = function(mockData, callback) {
   async.series([
@@ -71,6 +61,9 @@ api.prepareDatabase = function(mockData, callback) {
 api.getEventNumber = function(eventId) {
   return Number(eventId.substring(eventId.lastIndexOf('/') + 1));
 };
+
+api.hasher = (data, callback) => callback(
+  null, crypto.createHash('sha256').update(JSON.stringify(data)).digest());
 
 // Insert identities and public keys used for testing into database
 function insertTestData(mockData, callback) {

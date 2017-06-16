@@ -20,7 +20,7 @@ const baseUri = 'http://example.com';
 // use local JSON-LD processor for signatures
 jsigs.use('jsonld', bedrock.jsonld);
 
-describe.only('Events API', () => {
+describe.skip('Events API', () => {
   before(done => {
     helpers.prepareDatabase(mockData, done);
   });
@@ -47,14 +47,25 @@ describe.only('Events API', () => {
         }]
       }, done);
     });
-    it('should create event', done => ledgerNode.events.add(
-      {event: 'event'}, (err, result) => {
-        expect(err).not.to.be.ok;
-        console.log('RRRRRRR', JSON.stringify(result, null, 2));
-        done();
-      }));
-    it.skip('should get event', done => {
+    it('should create event', done => ledgerNode.events.add({
+      event: 'event'
+    }, (err, result) => {
+      expect(err).not.to.be.ok;
+      console.log('RRRRRRR', JSON.stringify(result, null, 2));
       done();
-    });
+    }));
+    it('should get event', done => async.auto({
+      addEvent: callback => ledgerNode.events.add({
+        event: 'event2'
+      }, callback),
+      getEvent: ['addEvent', (results, callback) => {
+        const eventHash = results.addEvent.meta.eventHash;
+        ledgerNode.events.get(eventHash, (err, result) => {
+          should.not.exist(err);
+          console.log('EEE', err, result);
+          callback();
+        });
+      }]
+    }, done));
   });
 });
