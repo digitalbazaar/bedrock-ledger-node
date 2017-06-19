@@ -15,12 +15,10 @@ const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
-const baseUri = 'http://example.com';
-
 // use local JSON-LD processor for signatures
 jsigs.use('jsonld', bedrock.jsonld);
 
-describe('Ledger API', () => {
+describe.only('Ledger API', () => {
   before(done => {
     helpers.prepareDatabase(mockData, done);
   });
@@ -78,7 +76,6 @@ describe('Ledger API', () => {
             }),
           createDuplicate: ['create', (results, callback) => brLedger.add(
             actor, configBlock, (err, result) => {
-              console.log('EEEEEE', err);
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
               expect(result.meta).to.exist;

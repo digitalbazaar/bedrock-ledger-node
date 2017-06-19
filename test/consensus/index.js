@@ -25,18 +25,17 @@ bedrock.events.on('bedrock.start', callback => {
 
 const blocks = api.blocks = {};
 
-blocks.setConfig = (nodeId, configBlock, callback) => {
+blocks.setConfig = (ledgerNode, configBlock, callback) => {
   async.auto({
-    getNode: callback => brLedger.get(null, nodeId, callback),
     hashBlock: callback => hasher(configBlock, callback),
-    writeConfig: ['getNode', 'hashBlock', (results, callback) => {
-      // FIXME: hash needs label
+    writeConfig: ['hashBlock', (results, callback) => {
+      // FIXME: hash needs label prefix? (e.g. sha256:)
       const meta = {
         blockHash: results.hashBlock,
         consensus: Date.now()
       };
       const options = {};
-      results.getNode.storage.blocks.add(configBlock, meta, options, callback);
+      ledgerNode.storage.blocks.add(configBlock, meta, options, callback);
     }]
   }, callback);
 };
