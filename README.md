@@ -23,7 +23,7 @@ blocks, and events.
 * Ledger Node Blocks API
   * ledgerNode.blocks.get(blockId, options, callback(err, block))
 * Ledger Node Events API
-  * ledgerNode.events.create(event, options, (err, event))
+  * ledgerNode.events.add(event, options, (err, event))
   * ledgerNode.events.get(eventId, options, (err, event))
 * Ledger Node Plugin API
   * api.use(options, mongodbStorageApi)
@@ -43,7 +43,7 @@ const actor = 'admin';
 const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
 
 ledger.get(actor, ledgerId, options, (err, ledgerNode) => {
-  ledgerNode.events.create( /* new ledger event details go here */);
+  ledgerNode.events.add( /* new ledger event details go here */);
     /* ... do other operations on the ledger */
   });
 });
@@ -103,7 +103,7 @@ const options = {
   owner: 'https://example.com/i/123'
 };
 
-ledger.create(actor, configBlock, options, (err, ledgerNode) => {
+ledger.add(actor, configBlock, options, (err, ledgerNode) => {
   if(err) {
     throw new Error('Failed to create ledger:', err);
   }
@@ -272,7 +272,7 @@ const event = {
 }
 const options = {};
 
-ledgerNode.events.create(event, options, (err, event) => {
+ledgerNode.events.add(event, options, (err, event) => {
   if(err) {
     throw new Error('Failed to create the event:', err);
   }
