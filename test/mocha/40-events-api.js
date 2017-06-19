@@ -20,7 +20,7 @@ const baseUri = 'http://example.com';
 // use local JSON-LD processor for signatures
 jsigs.use('jsonld', bedrock.jsonld);
 
-describe.skip('Events API', () => {
+describe.only('Events API', () => {
   before(done => {
     helpers.prepareDatabase(mockData, done);
   });
@@ -47,25 +47,33 @@ describe.skip('Events API', () => {
         }]
       }, done);
     });
-    it('should create event', done => ledgerNode.events.add({
-      event: 'event'
-    }, (err, result) => {
-      expect(err).not.to.be.ok;
-      console.log('RRRRRRR', JSON.stringify(result, null, 2));
-      done();
-    }));
-    it('should get event', done => async.auto({
-      addEvent: callback => ledgerNode.events.add({
-        event: 'event2'
-      }, callback),
-      getEvent: ['addEvent', (results, callback) => {
-        const eventHash = results.addEvent.meta.eventHash;
-        ledgerNode.events.get(eventHash, (err, result) => {
-          should.not.exist(err);
-          console.log('EEE', err, result);
-          callback();
-        });
-      }]
-    }, done));
+    it('should create event', done => {
+      const testEvent = {testProperty: uuid()};
+      ledgerNode.events.add(testEvent, (err, result) => {
+        should.not.exist(err);
+        should.exist(result);
+        result.event.should.deep.equal(testEvent);
+        result.meta.eventHash.should.be.a('string');
+        done();
+      });
+    });
+    it('should get event', done => {
+      const testEvent = {testProperty: uuid()};
+      async.auto({
+        addEvent: callback => ledgerNode.events.add(testEvent, callback),
+        getEvent: ['addEvent', (results, callback) => {
+          const eventHash = results.addEvent.meta.eventHash;
+          ledgerNode.events.get(eventHash, (err, result) => {
+            should.not.exist(err);
+            should.exist(result);
+            should.exist(result.event);
+            result.event.should.deep.equal(testEvent);
+            should.exist(result.meta);
+            result.meta.eventHash.should.equal(results.addEvent.meta.eventHash);
+            callback();
+          });
+        }]
+      }, done);
+    });
   });
 });

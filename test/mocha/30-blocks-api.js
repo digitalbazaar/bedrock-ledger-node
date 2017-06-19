@@ -8,7 +8,7 @@ const async = require('async');
 const bedrock = require('bedrock');
 const brLedgerStorage = require('bedrock-ledger-storage-mongodb');
 const brIdentity = require('bedrock-identity');
-const ledger = require('bedrock-ledger');
+const brLedger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
@@ -21,7 +21,7 @@ const baseUri = 'http://example.com';
 // use local JSON-LD processor for signatures
 jsigs.use('jsonld', bedrock.jsonld);
 
-describe.skip('Blocks API', () => {
+describe.only('Blocks API', () => {
   before(done => {
     helpers.prepareDatabase(mockData, done);
   });
@@ -31,6 +31,8 @@ describe.skip('Blocks API', () => {
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
     const configBlock = mockData.configBlocks.alpha;
+    let configBlockId;
+    let ledgerNode;
     let actor;
     before(done => async.auto({
       getActor: callback => brIdentity.get(
@@ -38,16 +40,28 @@ describe.skip('Blocks API', () => {
           actor = result;
           callback(err);
         }),
-      addLedger: callback => brLedgerStorage.add(configBlock, {}, {
-        eventHasher: helpers.hasher,
-        blockHasher: helpers.hasher
-      }, callback),
+      addLedger: callback => brLedger.add(
+        null, configBlock, {}, (err, result) => {
+          ledgerNode = result;
+          callback(err, result);
+        }),
       addBlock: ['addLedger', (results, callback) => {
-        callback();
+        results.addLedger.storage.blocks.getLatest({}, (err, result) => {
+          configBlockId = result.configurationBlock.id;
+          callback();
+        });
       }]
     }, done));
     it('should get block', done => {
-      done();
+      ledgerNode.blocks.get(configBlockId, (err, result) => {
+        should.not.exist(err);
+        should.exist(result);
+        result.block.should.be.an('object');
+        const block = result.block;
+        block.id.should.equal(configBlockId);
+        result.meta.should.be.an('object');
+        done();
+      });
     });
   });
 }); // end createLedger

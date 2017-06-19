@@ -40,6 +40,26 @@ blocks.setConfig = (ledgerNode, configBlock, callback) => {
   }, callback);
 };
 
+const events = api.events = {};
+
+events.add = (event, eventStorage, options, callback) => {
+  if(typeof options === 'function') {
+    callback = options;
+    options = {};
+  }
+  async.auto({
+    hashBlock: callback => hasher(event, callback),
+    writeEvent: ['hashBlock', (results, callback) => {
+      // FIXME: hash needs label prefix? (e.g. sha256:)
+      const meta = {
+        eventHash: results.hashBlock
+      };
+      const options = {};
+      eventStorage.add(event, meta, options, callback);
+    }]
+  }, (err, results) => callback(err, results.writeEvent));
+};
+
 // FIXME: normalize data
 function hasher(data, callback) {
   callback(
