@@ -136,7 +136,7 @@ describe.only('Ledger API', () => {
       });
     }); // end regularUser as actor
   }); // end create API
-  describe.skip('get API', () => {
+  describe('get API', () => {
     beforeEach(done => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
@@ -229,7 +229,7 @@ describe.only('Ledger API', () => {
       }, done));
     }); // end regularUser as actor
   }); // end get API
-  describe.skip('delete API', () => {
+  describe('delete API', () => {
     beforeEach(done => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
