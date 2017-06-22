@@ -329,15 +329,6 @@ describe.only('Ledger API', () => {
     }); // end regularUser
   }); // end getNodeIterator
   describe.skip('test stubs', () => {
-    it.skip('should iterate over their ledgers', done => {
-      done();
-    });
-    it.skip('should delete their ledger', done => {
-      done();
-    });
-    it.skip('should not delete non-owned ledger', done => {
-      done();
-    });
     it.skip('should not iterate over non-owned ledgers', done => {
       done();
     });
