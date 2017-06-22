@@ -311,7 +311,7 @@ describe('Ledger API', () => {
                 promise.then(ledgerNode => {
                   iteratorLedgers.push(ledgerNode.id);
                   callback();
-                });
+                }).catch(err => callback(err));
               }, callback);
             });
           }],
