@@ -57,7 +57,8 @@ describe.only('Ledger API', () => {
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
               ledgerNode.storage.plugin.should.equal('mongodb');
-              ledgerNode.sysStatus.should.equal('active');
+              const meta = result.meta;
+              meta.created.should.be.a('number');
               // there should be no owner
               expect(ledgerNode.owner).to.be.null;
               callback();
@@ -108,7 +109,8 @@ describe.only('Ledger API', () => {
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
               ledgerNode.storage.plugin.should.equal('mongodb');
-              ledgerNode.sysStatus.should.equal('active');
+              const meta = result.meta;
+              meta.created.should.be.a('number');
               callback();
             });
           }]
@@ -152,21 +154,22 @@ describe.only('Ledger API', () => {
       });
       it('gets a ledger with no owner', done => async.auto({
         create: callback => brLedger.add(actor, configBlock, callback),
-        get: ['create', (results, callback) =>
-          brLedger.get(actor, configBlock.ledger, (err, result) => {
+        get: ['create', (results, callback) => brLedger.get(
+          actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
             expect(result.blocks).to.exist;
             expect(result.events).to.exist;
             callback();
-          })]
+          })
+        ]
       }, done));
       it('gets a ledger with actor as owner', done => async.auto({
         create: callback => brLedger.add(
           actor, configBlock, {owner: actor.id}, callback),
         get: ['create', (results, callback) => brLedger.get(
-          actor, configBlock.ledger, {owner: actor.id}, (err, result) => {
+          actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
@@ -175,26 +178,13 @@ describe.only('Ledger API', () => {
             callback();
           })]
       }, done));
-      it('returns NotFound if owner is not specified for private ledger',
-        done => async.auto({
-          create: callback => brLedger.add(
-            actor, configBlock, {owner: actor.id}, callback),
-          get: ['create', (results, callback) =>
-            brLedger.get(actor, configBlock.ledger, (err, result) => {
-              expect(err).to.be.ok;
-              expect(result).not.to.be.ok;
-              err.name.should.equal('NotFound');
-              err.details.ledger.should.equal(configBlock.ledger);
-              callback();
-            })]
-        }, done));
       it('returns PermissionDenied if actor does not own the ledger', done => {
         const someOwner = uuid();
         async.auto({
           create: callback => brLedger.add(
             null, configBlock, {owner: someOwner}, callback),
           get: ['create', (results, callback) => brLedger.get(
-            actor, configBlock.ledger, {owner: someOwner}, (err, result) => {
+            actor, results.create.id, {owner: someOwner}, (err, result) => {
               expect(err).to.be.ok;
               expect(result).not.to.be.ok;
               err.name.should.equal('PermissionDenied');
