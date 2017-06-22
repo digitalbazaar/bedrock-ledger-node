@@ -304,17 +304,20 @@ describe('Ledger API', () => {
               testLedgers.push(result.id);
               callback();
             }), callback),
-          iterate: ['create', (results, callback) => {
+          getIterator: ['create', (results, callback) =>
             brLedger.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
-              async.eachSeries(iterator, (promise, callback) => {
-                promise.then(ledgerNode => {
-                  iteratorLedgers.push(ledgerNode.id);
-                  callback();
-                }).catch(err => callback(err));
-              }, callback);
-            });
-          }],
+              callback(null, iterator);
+            })
+          ],
+          iterate: ['getIterator', (results, callback) =>
+            async.eachSeries(results.getIterator, (promise, callback) => {
+              promise.then(ledgerNode => {
+                iteratorLedgers.push(ledgerNode.id);
+                callback();
+              }).catch(err => callback(err));
+            }, callback)
+          ],
           test: ['iterate', (results, callback) => {
             iteratorLedgers.should.have.same.members(testLedgers);
             callback();
