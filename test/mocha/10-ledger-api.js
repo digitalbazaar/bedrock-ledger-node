@@ -206,7 +206,7 @@ describe.only('Ledger API', () => {
         create: callback => brLedger.add(
           actor, configBlock, {owner: actor.id}, callback),
         delete: ['create', (results, callback) => brLedger.remove(
-          actor, configBlock.ledger, 'mongodb', {owner: actor.id}, callback)
+          actor, results.create.id, callback)
         ],
         get: ['delete', (results, callback) => brLedger.get(
           actor, configBlock.ledger, {owner: actor.id}, (err, result) => {
@@ -237,24 +237,23 @@ describe.only('Ledger API', () => {
         create: callback => brLedger.add(
           actor, configBlock, {owner: actor.id}, callback),
         delete: ['create', (results, callback) => brLedger.remove(
-          actor, configBlock.ledger, 'mongodb', {owner: actor.id}, err => {
+          actor, results.create.id, err => {
             expect(err).not.to.be.ok;
             callback();
           })],
         test: ['delete', (results, callback) =>
           database.collections.ledgerNode.findOne({
-            ledger: database.hash(configBlock.ledger),
-            'ledgerNode.storage.plugin': 'mongodb'
+            id: database.hash(results.create.id)
           }, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
-            result.ledgerNode.sysStatus.should.equal('deleted');
+            result.meta.deleted.should.be.a('number');
             callback();
           })]
       }, done));
       it('returns NotFound on a non-exsistent ledger', done => {
-        const unknownLedger = 'did:v1:' + uuid();
-        brLedger.remove(actor, unknownLedger, 'mongodb', (err, result) => {
+        const unknownLedger = 'urn:uuid:' + uuid();
+        brLedger.remove(actor, unknownLedger, (err, result) => {
           expect(err).to.be.ok;
           expect(result).not.to.be.ok;
           err.name.should.equal('NotFound');
@@ -268,7 +267,7 @@ describe.only('Ledger API', () => {
           create: callback => brLedger.add(
             null, configBlock, {owner: someOwner}, callback),
           delete: ['create', (results, callback) => brLedger.remove(
-            actor, configBlock.ledger, 'mongodb', {owner: someOwner}, err => {
+            actor, results.create.id, err => {
               expect(err).to.be.ok;
               err.name.should.equal('PermissionDenied');
               callback();
@@ -278,7 +277,7 @@ describe.only('Ledger API', () => {
       it('returns PermissionDenied if there is no owner', done => async.auto({
         create: callback => brLedger.add(null, configBlock, callback),
         delete: ['create', (results, callback) => brLedger.remove(
-          actor, configBlock.ledger, 'mongodb', err => {
+          actor, results.create.id, err => {
             expect(err).to.be.ok;
             err.name.should.equal('PermissionDenied');
             callback();
