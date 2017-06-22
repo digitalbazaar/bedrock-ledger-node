@@ -5,20 +5,15 @@
 'use strict';
 
 const async = require('async');
-const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
 const brLedger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
-const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
-// use local JSON-LD processor for signatures
-jsigs.use('jsonld', bedrock.jsonld);
-
-describe.only('Ledger API', () => {
+describe('Ledger API', () => {
   before(done => {
     helpers.prepareDatabase(mockData, done);
   });

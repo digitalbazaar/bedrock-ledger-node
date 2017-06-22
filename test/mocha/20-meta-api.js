@@ -11,14 +11,10 @@ const ledger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
-const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
 const baseUri = 'http://example.com';
-
-// use local JSON-LD processor for signatures
-jsigs.use('jsonld', bedrock.jsonld);
 
 describe.skip('Metadata API', () => {
   before(done => {
