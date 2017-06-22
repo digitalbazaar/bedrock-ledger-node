@@ -285,6 +285,49 @@ describe.only('Ledger API', () => {
       }, done));
     });
   }); // end delete API
+
+  describe('getNodeIterator API', () => {
+    beforeEach(done => {
+      helpers.removeCollections(['ledger', 'ledgerNode'], done);
+    });
+    describe('regularUser as actor', () => {
+      const mockIdentity = mockData.identities.regularUser;
+      const configBlock = mockData.configBlocks.alpha;
+      let actor;
+      before(done => {
+        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+          actor = result;
+          done(err);
+        });
+      });
+      it('iterates over ledgers', done => {
+        const testLedgers = [];
+        const iteratorLedgers = [];
+        async.auto({
+          create: callback => async.times(10, (i, callback) =>
+            brLedger.add(actor, configBlock, (err, result) => {
+              testLedgers.push(result.id);
+              callback();
+            }), callback),
+          iterate: ['create', (results, callback) => {
+            brLedger.getNodeIterator(actor, (err, iterator) => {
+              should.not.exist(err);
+              async.eachSeries(iterator, (promise, callback) => {
+                promise.then(ledgerNode => {
+                  iteratorLedgers.push(ledgerNode.id);
+                  callback();
+                });
+              }, callback);
+            });
+          }],
+          test: ['iterate', (results, callback) => {
+            iteratorLedgers.should.have.same.members(testLedgers);
+            callback();
+          }]
+        }, done);
+      });
+    }); // end regularUser
+  }); // end getNodeIterator
   describe.skip('test stubs', () => {
     it.skip('should iterate over their ledgers', done => {
       done();
