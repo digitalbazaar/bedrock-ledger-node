@@ -32,7 +32,7 @@
     "bedrock-ledger-guard-event-type": "digitalbazaar/bedrock-ledger-guard-event-type#implementation",
     "bedrock-ledger-guard-signature": "digitalbazaar/bedrock-ledger-guard-signature#implementation",
     "bedrock-identity": "^4.6.0",
-    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#master",
+    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#ledger-worker",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
     "bedrock-test": "^1.2.0",

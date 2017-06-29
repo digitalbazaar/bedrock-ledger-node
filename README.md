@@ -342,26 +342,41 @@ ledgerNode.events.get(eventId, options, (err, event) => {
 
 ## Ledger Plugin Registration API
 
-Enables plugins to register with the ledger such that they may be
-used to extend the capabilities of the ledger subsystem by adding
-new storage, consensus, and authorization mechanisms.
+Registers or retrieves a ledger plugin.
 
-* options - a set of options used when retrieving the ledger metadata.
-  * capabilityName (required) - the name of the capability
-  * capabilityValue (required) - the value of the capability
-* callback(err) - the callback to call when finished.
-  * err - An Error if an error occurred, null otherwise.
+A plugin can be registered to extend the capabilities of the ledger
+subsystem by adding new storage, consensus, and authorization mechanisms.
+
+* capabilityName (required) - the name of the capability
+* [capabilityValue | callback] - either the value of the capability:
+  * type - type type of plugin (e.g. 'storage', 'authorization', 'consensus')
+  * api - the javascript API for the plugin
+  or a callback function to receive the value when used as an asynchronous
+  getter.
+
+Returns the capabilityValue when used as a synchronous getter (no callback
+function is passed as the second parameter).
 
 ```javascript
 // this code would be executed in a plugin
 const bedrockLedger = require('bedrock-ledger');
 
-const options = {
-  capabilityName: 'storage',
-  capabilityValue: 'mongodb'
-};
+// register a plugin
+bedrockLedger.use('mongodb', {
+  type: 'storage',
+  api: mongodbStorageApi
+});
 
-bedrockLedger.use(options, mongodbStorageApi);
+// get a plugin (capability value) synchronously
+const plugin = bedrockLedger.use('mongodb');
+// plugin.type
+// plugin.api
+
+// get a plugin asynchronously
+bedrockLedger.use('mongodb', (err, plugin) => {
+  // plugin.type
+  // plugin.api
+});
 ```
 
 [bedrock]: https://github.com/digitalbazaar/bedrock
