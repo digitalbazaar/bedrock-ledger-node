@@ -6,7 +6,7 @@ require('bedrock-ledger');
 
 // load ledger plugins
 require('bedrock-ledger-storage-mongodb');
-require('./consensus');
+require('bedrock-ledger-consensus-uni');
 
 require('bedrock-test');
 bedrock.start();
