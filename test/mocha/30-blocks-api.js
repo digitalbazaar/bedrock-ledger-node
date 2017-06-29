@@ -43,7 +43,7 @@ describe('Blocks API', () => {
         }),
       addBlock: ['addLedger', (results, callback) => {
         results.addLedger.storage.blocks.getLatest({}, (err, result) => {
-          configBlockId = result.configurationBlock.id;
+          configBlockId = result.configurationBlock.block.id;
           callback();
         });
       }]
