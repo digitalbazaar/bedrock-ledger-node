@@ -348,11 +348,11 @@ A plugin can be registered to extend the capabilities of the ledger
 subsystem by adding new storage, consensus, and authorization mechanisms.
 
 * capabilityName (required) - the name of the capability
-* [capabilityValue | callback] - either the value of the capability:
+* [capabilityValue | callback] - either the value of the capability or
+  a callback function to receive the value when used as an asynchronous
+  getter. A capabilityValue must be an object with these properties:
   * type - type type of plugin (e.g. 'storage', 'authorization', 'consensus')
   * api - the javascript API for the plugin
-  or a callback function to receive the value when used as an asynchronous
-  getter.
 
 Returns the capabilityValue when used as a synchronous getter (no callback
 function is passed as the second parameter).
