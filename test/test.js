@@ -3,6 +3,7 @@
  */
 var bedrock = require('bedrock');
 require('bedrock-ledger');
+require('bedrock-ledger-context');
 
 // load ledger plugins
 require('bedrock-ledger-storage-mongodb');
