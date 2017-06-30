@@ -44,7 +44,10 @@ describe('Events API', () => {
       }, done);
     });
     it('should create event', done => {
-      const testEvent = {testProperty: uuid()};
+      const testEvent = {
+        '@context': 'https://w3id.org/webledger/v1',
+        'schema:value': uuid()
+      };
       ledgerNode.events.add(testEvent, (err, result) => {
         should.not.exist(err);
         should.exist(result);
@@ -54,7 +57,10 @@ describe('Events API', () => {
       });
     });
     it('should get event', done => {
-      const testEvent = {testProperty: uuid()};
+      const testEvent = {
+        '@context': 'https://w3id.org/webledger/v1',
+        'schema:value': uuid()
+      };
       async.auto({
         addEvent: callback => ledgerNode.events.add(testEvent, callback),
         getEvent: ['addEvent', (results, callback) => {
