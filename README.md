@@ -276,7 +276,7 @@ const event = {
       priceCurrency: 'USD',
       url: 'https://www.ticketfly.com/purchase/309433'
     }
-  ],
+  }],
   signature: {
     type: 'RsaSignature2017',
     created: '2017-05-10T19:47:15Z',
