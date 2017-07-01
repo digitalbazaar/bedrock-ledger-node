@@ -35,8 +35,8 @@ describe('Events API', () => {
             callback(err);
           }),
         addLedger: ['getActor', (results, callback) => {
-          const configBlock = mockData.configBlocks.alpha;
-          brLedger.add(actor, configBlock, (err, result) => {
+          const configEvent = mockData.events.config;
+          brLedger.add(actor, configEvent, (err, result) => {
             ledgerNode = result;
             callback(err);
           });
