@@ -25,29 +25,44 @@ identities[userName].identity.sysResourceRole.push({
 // identities[userName] = {};
 // identities[userName].identity = helpers.createIdentity(userName);
 
-const configBlocks = mock.configBlocks = {};
+const events = mock.events = {};
+events.alpha = {
+  id: 'https://example.com/events/123456',
+  description: 'Example event',
+  signature: {
+    type: 'RsaSignature2017',
+    created: '2017-05-10T19:47:13Z',
+    creator: 'http://example.com/keys/123',
+    signatureValue: 'gXI7wqa...FMMJoS2Bw=='
+  }
+};
 
-configBlocks.alpha = {
-  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
-  type: 'WebLedgerConfigurationBlock',
-  ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-  consensusMethod: {
-    type: 'UnilateralConsensus2017'
-  },
-  configurationBlockAuthorizationMethod: {
-    type: 'ProofOfSignature2016',
-    approvedSigner: [
-      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-    ],
-    minimumSignaturesRequired: 1
-  },
-  eventBlockAuthorizationMethod: {
-    type: 'ProofOfSignature2016',
-    approvedSigner: [
-      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-    ],
-    minimumSignaturesRequired: 1
-  },
+events.config = {
+  '@context': 'https://w3id.org/webledger/v1',
+  type: 'WebLedgerConfigurationEvent',
+  operation: 'Config',
+  input: [{
+    type: 'WebLedgerConfiguration',
+    ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+    consensusMethod: {
+      type: 'UnilateralConsensus2017'
+    },
+    eventGuard: [{
+      type: 'ProofOfSignature2017',
+      supportedEventType: 'WebLedgerEvent',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    }, {
+      type: 'ProofOfSignature2017',
+      supportedEventType: 'WebLedgerConfigurationEvent',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    }]
+  }],
   signature: {
     type: 'RsaSignature2017',
     created: '2017-10-24T05:33:31Z',
@@ -57,82 +72,16 @@ configBlocks.alpha = {
   }
 };
 
-const ledgers = mock.ledgers = {};
+const blocks = mock.blocks = {};
+blocks.config = {
+  '@context': 'https://w3id.org/webledger/v1',
+  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  type: 'WebLedgerEventBlock',
+  event: [events.config]
+};
 
 // constants
-const GENESIS_HASH =
-  'urn:sha256:0000000000000000000000000000000000000000000000000000000000000000';
 mock.authorizedSignerUrl = 'https://example.com' + '/keys/authorized-key-1';
-
-ledgers.alpha = {
-  config: {
-    '@context': 'https://w3id.org/webledger/v1',
-    id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/1',
-    type: 'LedgerConfigurationEvent',
-    ledgerConfig: {
-      id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3',
-      type: 'LedgerConfiguration',
-      name: 'testLedger',
-      description: 'A test Verifiable Claims ledger',
-      storageMechanism: 'SequentialList',
-      consensusAlgorithm: {
-        type: 'ProofOfSignature2016',
-        approvedSigner: [mock.authorizedSignerUrl],
-        minimumSignaturesRequired: 1
-      }
-    },
-    previousEvent: {
-      hash: GENESIS_HASH
-    }
-  },
-  events: [{
-    '@context': [
-      'https://w3id.org/webledger/v1',
-      'https://w3id.org/test/v1'
-    ],
-    id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/2',
-    type: 'LedgerStorageEvent',
-    replacesObject: [{
-      id: 'https://example.us.gov/credentials/234234542',
-      type: ['Credential', 'EmergencyResponseCredential'],
-      claim: {
-        id: 'did:370d4e2c-8839-4588-9ff7-2fda89da341f',
-        emsLicense: {
-          id: 'ems:FF-37-48573',
-          status: 'valid'
-        }
-      }
-    }],
-    previousEvent: {
-      id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/1',
-      // FIXME: should the hash be included here?
-      hash: 'urn:sha256:'
-    }
-  }, {
-    '@context': [
-      'https://w3id.org/webledger/v1',
-      'https://w3id.org/test/v1'
-    ],
-    id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/3',
-    type: 'LedgerStorageEvent',
-    replacesObject: [{
-      id: 'https://example.us.gov/credentials/234234542',
-      type: ['Credential', 'EmergencyResponseCredential'],
-      claim: {
-        id: 'did:370d4e2c-8839-4588-9ff7-2fda89da341f',
-        emsLicense: {
-          id: 'ems:FF-37-48573',
-          status: 'revoked'
-        }
-      }
-    }],
-    previousEvent: {
-      id: 'did:c02915fc-672d-4568-8e6e-b12a0b35cbb3/events/2',
-      // FIXME: should the hash be included here?
-      hash: 'urn:sha256:'
-    }
-  }]
-};
 
 // all mock keys for all groups
 mock.groups = {

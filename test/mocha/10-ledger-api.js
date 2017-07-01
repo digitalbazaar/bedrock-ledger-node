@@ -31,10 +31,10 @@ describe('Ledger API', () => {
         });
       });
       it('should create a ledger with no owner', done => {
-        const configBlock = mockData.configBlocks.alpha;
+        const configEvent = mockData.events.config;
         async.auto({
           create: callback => brLedger.add(
-            actor, configBlock, (err, ledgerNode) => {
+            actor, configEvent, (err, ledgerNode) => {
               should.not.exist(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
@@ -45,10 +45,11 @@ describe('Ledger API', () => {
             }, (err, result) => {
               expect(err).not.to.be.ok;
               result.id.should.equal(database.hash(results.create.id));
-              result.ledger.should.equal(database.hash(configBlock.ledger));
+              result.ledger.should.equal(
+                database.hash(configEvent.input[0].ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configBlock.ledger);
+              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
               ledgerNode.storage.plugin.should.equal('mongodb');
@@ -62,16 +63,16 @@ describe('Ledger API', () => {
         }, done);
       });
       it('returns existing ledger on attempt to create a duplicate', done => {
-        const configBlock = mockData.configBlocks.alpha;
+        const configEvent = mockData.events.config;
         async.auto({
           create: callback => brLedger.add(
-            actor, configBlock, (err, result) => {
+            actor, configEvent, (err, result) => {
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
               callback(null, result);
             }),
           createDuplicate: ['create', (results, callback) => brLedger.add(
-            actor, configBlock, (err, result) => {
+            actor, configEvent, (err, result) => {
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
               expect(result.meta).to.exist;
@@ -82,10 +83,10 @@ describe('Ledger API', () => {
         }, done);
       });
       it('should create a ledger with an owner', done => {
-        const configBlock = mockData.configBlocks.alpha;
+        const configEvent = mockData.events.config;
         async.auto({
           create: callback => brLedger.add(
-            actor, configBlock, {owner: actor.id}, (err, ledgerNode) => {
+            actor, configEvent, {owner: actor.id}, (err, ledgerNode) => {
               expect(err).not.to.be.ok;
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
@@ -96,10 +97,10 @@ describe('Ledger API', () => {
             }, (err, result) => {
               expect(err).not.to.be.ok;
               result.id.should.equal(database.hash(results.create.id));
-              result.ledger.should.equal(database.hash(configBlock.ledger));
+              result.ledger.should.equal(database.hash(configEvent.input[0].ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configBlock.ledger);
+              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
               ledgerNode.owner.should.equal(actor.id);
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
@@ -112,9 +113,9 @@ describe('Ledger API', () => {
         }, done);
       });
       it('returns PermissionDenied if actor is not owner', done => {
-        const configBlock = mockData.configBlocks.alpha;
+        const configEvent = mockData.events.config;
         brLedger.add(
-          actor, configBlock, {owner: uuid()}, (err, ledgerNode) => {
+          actor, configEvent, {owner: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
             err.name.should.equal('PermissionDenied');
@@ -122,9 +123,9 @@ describe('Ledger API', () => {
           });
       });
       it('returns error if invalid storage plugin is specified', done => {
-        const configBlock = mockData.configBlocks.alpha;
+        const configEvent = mockData.events.config;
         brLedger.add(
-          actor, configBlock, {storage: uuid()}, (err, ledgerNode) => {
+          actor, configEvent, {storage: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
             err.name.should.equal('InvalidStorage');
@@ -139,7 +140,7 @@ describe('Ledger API', () => {
     });
     describe('regularUser as actor', () => {
       const mockIdentity = mockData.identities.regularUser;
-      const configBlock = mockData.configBlocks.alpha;
+      const configEvent = mockData.events.config;
       let actor;
       before(done => {
         brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
@@ -148,7 +149,7 @@ describe('Ledger API', () => {
         });
       });
       it('gets a ledger with no owner', done => async.auto({
-        create: callback => brLedger.add(actor, configBlock, callback),
+        create: callback => brLedger.add(actor, configEvent, callback),
         get: ['create', (results, callback) => brLedger.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
@@ -162,7 +163,7 @@ describe('Ledger API', () => {
       }, done));
       it('gets a ledger with actor as owner', done => async.auto({
         create: callback => brLedger.add(
-          actor, configBlock, {owner: actor.id}, callback),
+          actor, configEvent, {owner: actor.id}, callback),
         get: ['create', (results, callback) => brLedger.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
@@ -177,7 +178,7 @@ describe('Ledger API', () => {
         const someOwner = uuid();
         async.auto({
           create: callback => brLedger.add(
-            null, configBlock, {owner: someOwner}, callback),
+            null, configEvent, {owner: someOwner}, callback),
           get: ['create', (results, callback) => brLedger.get(
             actor, results.create.id, {owner: someOwner}, (err, result) => {
               expect(err).to.be.ok;
@@ -199,16 +200,16 @@ describe('Ledger API', () => {
       });
       it('returns NotFound on a deleted ledger', done => async.auto({
         create: callback => brLedger.add(
-          actor, configBlock, {owner: actor.id}, callback),
+          actor, configEvent, {owner: actor.id}, callback),
         delete: ['create', (results, callback) => brLedger.remove(
           actor, results.create.id, callback)
         ],
         get: ['delete', (results, callback) => brLedger.get(
-          actor, configBlock.ledger, {owner: actor.id}, (err, result) => {
+          actor, configEvent.input[0].ledger, {owner: actor.id}, (err, result) => {
             expect(err).to.be.ok;
             expect(result).not.to.be.ok;
             err.name.should.equal('NotFound');
-            err.details.ledger.should.equal(configBlock.ledger);
+            err.details.ledger.should.equal(configEvent.input[0].ledger);
             callback();
           })]
       }, done));
@@ -220,7 +221,7 @@ describe('Ledger API', () => {
     });
     describe('regularUser as actor', () => {
       const mockIdentity = mockData.identities.regularUser;
-      const configBlock = mockData.configBlocks.alpha;
+        const configEvent = mockData.events.config;
       let actor;
       before(done => {
         brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
@@ -230,7 +231,7 @@ describe('Ledger API', () => {
       });
       it('should delete a ledger if actor is owner', done => async.auto({
         create: callback => brLedger.add(
-          actor, configBlock, {owner: actor.id}, callback),
+          actor, configEvent, {owner: actor.id}, callback),
         delete: ['create', (results, callback) => brLedger.remove(
           actor, results.create.id, err => {
             expect(err).not.to.be.ok;
@@ -260,7 +261,7 @@ describe('Ledger API', () => {
         const someOwner = uuid();
         async.auto({
           create: callback => brLedger.add(
-            null, configBlock, {owner: someOwner}, callback),
+            null, configEvent, {owner: someOwner}, callback),
           delete: ['create', (results, callback) => brLedger.remove(
             actor, results.create.id, err => {
               expect(err).to.be.ok;
@@ -270,7 +271,7 @@ describe('Ledger API', () => {
         }, done);
       });
       it('returns PermissionDenied if there is no owner', done => async.auto({
-        create: callback => brLedger.add(null, configBlock, callback),
+        create: callback => brLedger.add(null, configEvent, callback),
         delete: ['create', (results, callback) => brLedger.remove(
           actor, results.create.id, err => {
             expect(err).to.be.ok;
@@ -287,7 +288,7 @@ describe('Ledger API', () => {
     });
     describe('regularUser as actor', () => {
       const mockIdentity = mockData.identities.regularUser;
-      const configBlock = mockData.configBlocks.alpha;
+      const configEvent = mockData.events.config;
       let actor;
       before(done => {
         brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
@@ -300,7 +301,7 @@ describe('Ledger API', () => {
         const iteratorLedgers = [];
         async.auto({
           create: callback => async.times(10, (i, callback) =>
-            brLedger.add(actor, configBlock, (err, result) => {
+            brLedger.add(actor, configEvent, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),

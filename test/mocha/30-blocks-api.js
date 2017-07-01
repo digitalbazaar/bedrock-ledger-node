@@ -26,7 +26,7 @@ describe('Blocks API', () => {
   });
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
-    const configBlock = mockData.configBlocks.alpha;
+    const configBlock = mockData.blocks.config;
     let configBlockId;
     let ledgerNode;
     let actor;
