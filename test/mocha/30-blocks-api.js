@@ -26,7 +26,7 @@ describe('Blocks API', () => {
   });
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
-    const configBlock = mockData.blocks.config;
+    const configEvent = mockData.events.config;
     let configBlockId;
     let ledgerNode;
     let actor;
@@ -37,13 +37,13 @@ describe('Blocks API', () => {
           callback(err);
         }),
       addLedger: callback => brLedger.add(
-        null, configBlock, {}, (err, result) => {
+        null, configEvent, {}, (err, result) => {
           ledgerNode = result;
           callback(err, result);
         }),
       addBlock: ['addLedger', (results, callback) => {
         results.addLedger.storage.blocks.getLatest({}, (err, result) => {
-          configBlockId = result.configurationBlock.block.id;
+          configBlockId = result.eventBlock.block.id;
           callback();
         });
       }]
