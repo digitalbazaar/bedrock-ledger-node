@@ -14,7 +14,7 @@ blocks, and events.
 ## The Ledger API
 
 * Ledger Node API
-  * api.add(actor, configBlock, options, (err, ledgerNode))
+  * api.add(actor, configEvent, options, (err, ledgerNode))
   * api.get(actor, ledgerId, options, (err, ledgerNode))
   * api.remove(actor, ledgerId, options, callback(err))
   * api.getNodeIterator(actor, options, callback(err, iterator))
@@ -37,7 +37,7 @@ npm install bedrock-ledger bedrock-ledger-storage-mongodb bedrock-ledger-authz-s
 ```js
 const ledger = require('bedrock-ledger');
 require('bedrock-ledger-storage-mongodb');
-require('bedrock-ledger-authz-signature');
+require('bedrock-ledger-guard-signature');
 
 const actor = 'admin';
 const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
@@ -57,40 +57,48 @@ For documentation on configuration, see [config.js](./lib/config.js).
 
 ### Create a Ledger
 
-Create a new ledger given a configuration block and a set
+Create a new ledger given a configuration event and a set
 of options.
 
 * actor - the actor performing the action.
-* configBlock - the configuration block for the ledger.
+* configEvent - the configuration Event for the ledger.
 * options - a set of options used when creating the ledger.
+  * genesis - if true, this is a new ledger that is being created
+      (default: false).
   * storage - the storage subsystem for the ledger (default: 'mongodb').
-  * owner - the owner of the ledger node (default: none, anyone can access the node).
+  * owner - the owner of the ledger node (default: none, anyone can access
+      the node).
 * callback(err, ledger) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise
   * ledgerNode - the ledger node associated with the ledger.
 
 ```javascript
-const configBlock = {
-  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/1',
-  type: 'WebLedgerConfigurationBlock',
-  ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-  consensusMethod: {
-    type: 'Continuity2017'
-  },
-  configurationBlockAuthorizationMethod: {
-    type: 'ProofOfSignature2016',
-    approvedSigner: [
-      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-    ],
-    minimumSignaturesRequired: 1
-  },
-  eventBlockAuthorizationMethod: {
-    type: 'ProofOfSignature2016',
-    approvedSigner: [
-      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-    ],
-    minimumSignaturesRequired: 1
-  },
+const configEvent = {
+  '@context': 'https://w3id.org/webledger/v1',
+  type: 'WebLedgerConfigurationEvent',
+  operation: 'Config',
+  input: [{
+    type: 'WebLedgerConfiguration',
+    ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+    consensusMethod: {
+      type: 'UnilateralConsensus2017'
+    },
+    eventGuard: [{
+      type: 'ProofOfSignature2017',
+      supportedEventType: 'WebLedgerEvent',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    }, {
+      type: 'ProofOfSignature2017',
+      supportedEventType: 'WebLedgerConfigurationEvent',
+      approvedSigner: [
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      ],
+      minimumSignaturesRequired: 1
+    }]
+  }],
   signature: {
     type: 'RsaSignature2017',
     created: '2017-10-24T05:33:31Z',
@@ -98,17 +106,18 @@ const configBlock = {
     domain: 'example.com',
     signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
   }
-}
+};
 const options = {
+  genesis: true,
   owner: 'https://example.com/i/123'
 };
 
-ledger.add(actor, configBlock, options, (err, ledgerNode) => {
+brLedger.add(actor, configEvent, options, (err, ledgerNode) => {
   if(err) {
     throw new Error('Failed to create ledger:', err);
   }
 
-  console.log('Ledger created:', ledgerNode.ledgerId);
+  console.log('Ledger created:', ledgerNode.ledger);
 });
 ```
 
@@ -241,8 +250,7 @@ ledgerNode.blocks.get(blockId, options, (err, block) => {
 
 ### Create a Ledger Event
 
-Creates an event to associate with a ledger given an
-event and a set of options.
+Creates an event to associate with a ledger given an event and a set of options.
 
 * event - the event to associate with a ledger.
 * options - a set of options used when creating the event.
@@ -252,17 +260,23 @@ event and a set of options.
 
 ```javascript
 const event = {
-  '@context': 'https://schema.org/',
-  type: 'Event',
-  name: 'Big Band Concert in New York City',
-  startDate: '2017-07-14T21:30',
-  location: 'https://example.org/the-venue',
-  offers: {
-    type: 'Offer',
-    price: '13.00',
-    priceCurrency: 'USD',
-    url: 'https://www.ticketfly.com/purchase/309433'
-  },
+  '@context': 'https://w3id.org/webledger/v1',
+  type: 'WebLedgerEvent',
+  operation: 'Create',
+  input: [{
+    '@context': 'https://schema.org/',
+    id: 'https://example.com/events/123456'
+    type: 'Concert',
+    name: 'Big Band Concert in New York City',
+    startDate: '2017-07-14T21:30',
+    location: 'https://example.org/the-venue',
+    offers: {
+      type: 'Offer',
+      price: '13.00',
+      priceCurrency: 'USD',
+      url: 'https://www.ticketfly.com/purchase/309433'
+    }
+  ],
   signature: {
     type: 'RsaSignature2017',
     created: '2017-05-10T19:47:15Z',
@@ -293,7 +307,7 @@ and a set of options.
   * event - the event that was retrieved from the database.
 
 ```javascript
-const eventId = 'urn:uuid:76b17d64-abb1-4d19-924f-427a743489f0';
+const eventId = 'ni:///sha-256;cGBSKHn2cBJ563oSt3SAf4OxZXXfwtSxj1xFO5LtkGkW';
 
 ledgerNode.events.get(eventId, options, (err, event) => {
   if(err) {
