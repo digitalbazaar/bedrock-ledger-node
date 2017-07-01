@@ -265,7 +265,7 @@ const event = {
   operation: 'Create',
   input: [{
     '@context': 'https://schema.org/',
-    id: 'https://example.com/events/123456'
+    id: 'https://example.com/events/123456',
     type: 'Concert',
     name: 'Big Band Concert in New York City',
     startDate: '2017-07-14T21:30',
