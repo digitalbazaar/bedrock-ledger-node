@@ -246,6 +246,28 @@ ledgerNode.blocks.get(blockId, options, (err, block) => {
 });
 ```
 
+### Gets the latest blocks
+
+Gets the latst blocks from a ledger given a set of options.
+
+* options - a set of options used when retrieving the block.
+* callback(err) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise.
+  * result - the latest blocks from the ledger.
+
+```javascript
+const options = {};
+
+ledgerNode.blocks.getLatest(options, (err, result) => {
+  if(err) {
+    throw new Error('Block retrieval failed:', err);
+  }
+
+  console.log('Retrieved latest block:',
+    result.latest.block, result.latest.meta);
+});
+```
+
 ## Events API
 
 ### Create a Ledger Event
