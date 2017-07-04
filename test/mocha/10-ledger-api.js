@@ -10,12 +10,28 @@ const brLedger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
+const jsigs = require('jsonld-signatures');
+const jsonld = require('bedrock').jsonld;
 const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
+jsigs.use('jsonld', jsonld);
+
+let signedConfigEvent;
+
 describe('Ledger API', () => {
   before(done => {
-    helpers.prepareDatabase(mockData, done);
+    async.series([
+      callback => helpers.prepareDatabase(mockData, callback),
+      callback => jsigs.sign(mockData.events.config, {
+        algorithm: 'LinkedDataSignature2015',
+        privateKeyPem: mockData.groups.authorized.privateKey,
+        creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      }, (err, result) => {
+        signedConfigEvent = result;
+        callback(err);
+      })
+    ], done);
   });
   describe('create API', () => {
     beforeEach(done => {
@@ -31,7 +47,7 @@ describe('Ledger API', () => {
         });
       });
       it('should create a ledger with no owner', done => {
-        const configEvent = mockData.events.config;
+        const configEvent = signedConfigEvent;
         async.auto({
           create: callback => brLedger.add(
             actor, configEvent, (err, ledgerNode) => {
@@ -63,7 +79,7 @@ describe('Ledger API', () => {
         }, done);
       });
       it('returns existing ledger on attempt to create a duplicate', done => {
-        const configEvent = mockData.events.config;
+        const configEvent = signedConfigEvent;
         async.auto({
           create: callback => brLedger.add(
             actor, configEvent, (err, result) => {
@@ -83,7 +99,7 @@ describe('Ledger API', () => {
         }, done);
       });
       it('should create a ledger with an owner', done => {
-        const configEvent = mockData.events.config;
+        const configEvent = signedConfigEvent;
         async.auto({
           create: callback => brLedger.add(
             actor, configEvent, {owner: actor.id}, (err, ledgerNode) => {
@@ -113,7 +129,7 @@ describe('Ledger API', () => {
         }, done);
       });
       it('returns PermissionDenied if actor is not owner', done => {
-        const configEvent = mockData.events.config;
+        const configEvent = signedConfigEvent;
         brLedger.add(
           actor, configEvent, {owner: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
@@ -123,7 +139,7 @@ describe('Ledger API', () => {
           });
       });
       it('returns error if invalid storage plugin is specified', done => {
-        const configEvent = mockData.events.config;
+        const configEvent = signedConfigEvent;
         brLedger.add(
           actor, configEvent, {storage: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
@@ -139,10 +155,11 @@ describe('Ledger API', () => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
-      const mockIdentity = mockData.identities.regularUser;
-      const configEvent = mockData.events.config;
       let actor;
+      let configEvent;
       before(done => {
+        configEvent = signedConfigEvent;
+        const mockIdentity = mockData.identities.regularUser;
         brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
           actor = result;
           done(err);
@@ -220,10 +237,11 @@ describe('Ledger API', () => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
-      const mockIdentity = mockData.identities.regularUser;
-        const configEvent = mockData.events.config;
       let actor;
+      let configEvent;
       before(done => {
+        configEvent = signedConfigEvent;
+        const mockIdentity = mockData.identities.regularUser;
         brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
           actor = result;
           done(err);
@@ -287,10 +305,11 @@ describe('Ledger API', () => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
-      const mockIdentity = mockData.identities.regularUser;
-      const configEvent = mockData.events.config;
       let actor;
+      let configEvent;
       before(done => {
+        const mockIdentity = mockData.identities.regularUser;
+        configEvent = signedConfigEvent;
         brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
           actor = result;
           done(err);

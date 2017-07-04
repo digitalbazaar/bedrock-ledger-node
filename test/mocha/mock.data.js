@@ -48,28 +48,23 @@ events.config = {
       type: 'UnilateralConsensus2017'
     },
     eventGuard: [{
-      type: 'ProofOfSignature2017',
+      type: 'SignatureGuard2017',
       supportedEventType: 'WebLedgerEvent',
       approvedSigner: [
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        // 'https://example.com/i/alpha'
       ],
       minimumSignaturesRequired: 1
     }, {
-      type: 'ProofOfSignature2017',
+      type: 'SignatureGuard2017',
       supportedEventType: 'WebLedgerConfigurationEvent',
       approvedSigner: [
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        // 'https://example.com/i/alpha'
       ],
       minimumSignaturesRequired: 1
     }]
-  }],
-  signature: {
-    type: 'RsaSignature2017',
-    created: '2017-10-24T05:33:31Z',
-    creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-    domain: 'example.com',
-    signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
-  }
+  }]
 };
 
 const blocks = mock.blocks = {};
@@ -81,7 +76,7 @@ blocks.config = {
 };
 
 // constants
-mock.authorizedSignerUrl = 'https://example.com' + '/keys/authorized-key-1';
+mock.authorizedSignerUrl = 'https://example.com/keys/authorized-key-1';
 
 // all mock keys for all groups
 mock.groups = {
@@ -163,17 +158,17 @@ mock.groups = {
   }
 };
 
-mock.ldDocuments = {
-  "https://example.com/i/alpha": {
-    "@context": "https://w3id.org/identity/v1",
-    "id": "https://example.com/i/alpha",
-    "publicKey": [{
-      "id": mock.authorizedSignerUrl,
-      "type": "CryptographicKey",
-      "owner": "https://example.com/i/alpha",
-      "publicKeyPem": mock.groups.authorized.publicKey
-    }]
-  }
+mock.ldDocuments = {};
+
+mock.ldDocuments['https://example.com/i/alpha'] = {
+  "@context": "https://w3id.org/identity/v1",
+  "id": "https://example.com/i/alpha",
+  "publicKey": [{
+    "id": mock.authorizedSignerUrl,
+    "type": "CryptographicKey",
+    "owner": "https://example.com/i/alpha",
+    "publicKeyPem": mock.groups.authorized.publicKey
+  }]
 };
 mock.ldDocuments[mock.authorizedSignerUrl] = {
   "@context": "https://w3id.org/identity/v1",
@@ -183,27 +178,21 @@ mock.ldDocuments[mock.authorizedSignerUrl] = {
   "id": mock.authorizedSignerUrl,
   "publicKeyPem": mock.groups.authorized.publicKey
 };
-
-const bedrock = require('bedrock');
-const jsonld = bedrock.jsonld;
-const oldLoader = jsonld.documentLoader;
-jsonld.documentLoader = function(url, callback) {
-  if(Object.keys(mock.ldDocuments).includes(url)) {
-    return callback(null, {
-      contextUrl: null,
-      document: mock.ldDocuments[url],
-      documentUrl: url
-    });
-  }
-  // const regex = new RegExp(
-  //   'http://authorization.dev/dids' + '/(.*?)$');
-  // const didMatch = url.match(regex);
-  // if(didMatch && didMatch.length === 2 && didMatch[1] in mock.didDocuments) {
-  //   return callback(null, {
-  //     contextUrl: null,
-  //     document: mock.didDocuments[didMatch[1]],
-  //     documentUrl: url
-  //   });
-  // }
-  oldLoader(url, callback);
+mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838'] = {
+  "@context": "https://w3id.org/identity/v1",
+  "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
+  "publicKey": [{
+    "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144",
+    "type": "CryptographicKey",
+    "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
+    "publicKeyPem": mock.groups.authorized.publicKey
+  }]
+};
+mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'] = {
+  "@context": "https://w3id.org/identity/v1",
+  "type": "CryptographicKey",
+  "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
+  "label": "Signing Key 2",
+  "id": 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+  "publicKeyPem": mock.groups.authorized.publicKey
 };

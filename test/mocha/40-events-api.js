@@ -11,14 +11,30 @@ const brLedger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
+const jsonld = bedrock.jsonld;
+const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
+jsigs.use('jsonld', jsonld);
+
 const baseUri = 'http://example.com';
+
+let signedConfigEvent;
 
 describe('Events API', () => {
   before(done => {
-    helpers.prepareDatabase(mockData, done);
+    async.series([
+      callback => helpers.prepareDatabase(mockData, callback),
+      callback => jsigs.sign(mockData.events.config, {
+        algorithm: 'LinkedDataSignature2015',
+        privateKeyPem: mockData.groups.authorized.privateKey,
+        creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      }, (err, result) => {
+        signedConfigEvent = result;
+        callback(err);
+      })
+    ], done);
   });
   beforeEach(done => {
     helpers.removeCollections('ledger_testLedger', done);
@@ -35,8 +51,7 @@ describe('Events API', () => {
             callback(err);
           }),
         addLedger: ['getActor', (results, callback) => {
-          const configEvent = mockData.events.config;
-          brLedger.add(actor, configEvent, (err, result) => {
+          brLedger.add(actor, signedConfigEvent, (err, result) => {
             ledgerNode = result;
             callback(err);
           });
@@ -46,30 +61,55 @@ describe('Events API', () => {
     it('should create event', done => {
       const testEvent = {
         '@context': 'https://w3id.org/webledger/v1',
-        'schema:value': uuid()
+        type: 'WebLedgerEvent',
+        operation: 'Create',
+        input: [{
+          '@context': 'https://schema.org/',
+          value: uuid()
+        }]
       };
-      ledgerNode.events.add(testEvent, (err, result) => {
-        should.not.exist(err);
-        should.exist(result);
-        result.event.should.deep.equal(testEvent);
-        result.meta.eventHash.should.be.a('string');
-        done();
-      });
+      async.auto({
+        signEvent: callback => jsigs.sign(testEvent, {
+          algorithm: 'LinkedDataSignature2015',
+          privateKeyPem: mockData.groups.authorized.privateKey,
+          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        }, callback),
+        add: ['signEvent', (results, callback) => {
+          ledgerNode.events.add(results.signEvent, (err, result) => {
+            should.not.exist(err);
+            should.exist(result);
+            result.event.should.deep.equal(results.signEvent);
+            result.meta.eventHash.should.be.a('string');
+            callback();
+          });
+        }]
+      }, done);
     });
     it('should get event', done => {
       const testEvent = {
         '@context': 'https://w3id.org/webledger/v1',
-        'schema:value': uuid()
+        type: 'WebLedgerEvent',
+        operation: 'Create',
+        input: [{
+          '@context': 'https://schema.org/',
+          value: uuid()
+        }]
       };
       async.auto({
-        addEvent: callback => ledgerNode.events.add(testEvent, callback),
+        signEvent: callback => jsigs.sign(testEvent, {
+          algorithm: 'LinkedDataSignature2015',
+          privateKeyPem: mockData.groups.authorized.privateKey,
+          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        }, callback),
+        addEvent: ['signEvent', (results, callback) =>
+          ledgerNode.events.add(results.signEvent, callback)],
         getEvent: ['addEvent', (results, callback) => {
           const eventHash = results.addEvent.meta.eventHash;
           ledgerNode.events.get(eventHash, (err, result) => {
             should.not.exist(err);
             should.exist(result);
             should.exist(result.event);
-            result.event.should.deep.equal(testEvent);
+            result.event.should.deep.equal(results.signEvent);
             should.exist(result.meta);
             result.meta.eventHash.should.equal(results.addEvent.meta.eventHash);
             callback();

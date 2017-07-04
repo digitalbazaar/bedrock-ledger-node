@@ -26,8 +26,10 @@
   "dependencies": {
     "async": "^2.4.0",
     "bedrock": "digitalbazaar/bedrock#updateTestDeps",
+    "bedrock-did-client": "^1.1.0",
     "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#implementation",
     "bedrock-ledger-context": "digitalbazaar/bedrock-ledger-context#master",
+    "bedrock-ledger-guard-signature": "digitalbazaar/bedrock-ledger-guard-signature#implementation",
     "bedrock-identity": "^4.6.0",
     "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#master",
     "bedrock-mongodb": "^3.0.0",

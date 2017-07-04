@@ -12,21 +12,36 @@ const brLedger = require('bedrock-ledger');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
+const jsonld = bedrock.jsonld;
+const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
+jsigs.use('jsonld', jsonld);
+
 const baseUri = 'http://example.com';
+
+let signedConfigEvent;
 
 describe('Blocks API', () => {
   before(done => {
-    helpers.prepareDatabase(mockData, done);
+    async.series([
+      callback => helpers.prepareDatabase(mockData, callback),
+      callback => jsigs.sign(mockData.events.config, {
+        algorithm: 'LinkedDataSignature2015',
+        privateKeyPem: mockData.groups.authorized.privateKey,
+        creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      }, (err, result) => {
+        signedConfigEvent = result;
+        callback(err);
+      })
+    ], done);
   });
   beforeEach(done => {
     helpers.removeCollections('ledger_testLedger', done);
   });
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
-    const configEvent = mockData.events.config;
     let configBlockId;
     let ledgerNode;
     let actor;
@@ -37,7 +52,7 @@ describe('Blocks API', () => {
           callback(err);
         }),
       addLedger: callback => brLedger.add(
-        null, configEvent, {}, (err, result) => {
+        null, signedConfigEvent, {}, (err, result) => {
           ledgerNode = result;
           callback(err, result);
         }),
