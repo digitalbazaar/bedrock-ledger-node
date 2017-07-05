@@ -47,9 +47,12 @@ events.config = {
     consensusMethod: {
       type: 'UnilateralConsensus2017'
     },
-    eventGuard: [{
+    validationEventGuard: [{
       type: 'SignatureGuard2017',
-      supportedEventType: 'WebLedgerEvent',
+      eventFilter: [{
+        type: 'EventTypeFilter',
+        eventType: ['WebLedgerEvent']
+      }],
       approvedSigner: [
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         // 'https://example.com/i/alpha'
@@ -57,7 +60,10 @@ events.config = {
       minimumSignaturesRequired: 1
     }, {
       type: 'SignatureGuard2017',
-      supportedEventType: 'WebLedgerConfigurationEvent',
+      eventFilter: [{
+        type: 'EventTypeFilter',
+        eventType: ['WebLedgerConfigurationEvent']
+      }],
       approvedSigner: [
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         // 'https://example.com/i/alpha'
