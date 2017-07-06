@@ -59,6 +59,7 @@ describe('Ledger API', () => {
             database.collections.ledgerNode.findOne({
               id: database.hash(results.create.id)
             }, (err, result) => {
+
               expect(err).not.to.be.ok;
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(

@@ -48,6 +48,9 @@ events.config = {
       type: 'UnilateralConsensus2017'
     },
     validationEventGuard: [{
+      type: 'EventTypeGuard2017',
+      eventTypes: ['WebLedgerEvent', 'WebLedgerConfigurationEvent']
+    }, {
       type: 'SignatureGuard2017',
       eventFilter: [{
         type: 'EventTypeFilter',
