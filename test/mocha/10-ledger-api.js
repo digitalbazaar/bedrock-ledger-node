@@ -636,7 +636,8 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
-      it('iterates over public and private ledgers owned by actor', done => {
+      it('iterates public/private ledgers owned by actor', function(done) {
+        this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor and 3 owned by another identity
@@ -676,7 +677,7 @@ describe('Ledger API', () => {
         }, done);
       });
       // FIXME: need to finalize permission model in `getNodeIterator`
-      it.skip('iterator only returns ledgers owned by actor', done => {
+      it.skip('iterator only returns ledgers owned by actor', function(done) {
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor and 3 owned by another identity
@@ -724,7 +725,8 @@ describe('Ledger API', () => {
           done(err);
         });
       });
-      it('iterates over public ledgers', done => {
+      it('iterates over public ledgers', function(done) {
+        this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
         async.auto({
@@ -753,7 +755,8 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
-      it('iterates over public and private ledgers owned by actor', done => {
+      it('iterates public and private ledgers owned by actor', function(done) {
+        this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor and 3 owned by another identity
@@ -792,7 +795,8 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
-      it('iterates over all ledgers', done => {
+      it('iterates over all ledgers', function(done) {
+        this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor, 3 owned by another identity
