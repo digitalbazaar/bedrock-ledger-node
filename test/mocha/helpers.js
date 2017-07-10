@@ -13,9 +13,10 @@ const uuid = require('uuid/v4');
 const api = {};
 module.exports = api;
 
-api.createIdentity = function(userName) {
+api.createIdentity = function(userName, userId) {
+  userId = userId || 'did:v1:' + uuid();
   const newIdentity = {
-    id: 'did:' + uuid(),
+    id: userId,
     type: 'Identity',
     sysSlug: userName,
     label: userName,

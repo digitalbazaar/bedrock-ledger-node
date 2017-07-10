@@ -11,13 +11,23 @@ module.exports = mock;
 const identities = mock.identities = {};
 let userName;
 
-// identity with permission to access its own agreements
+// has permission to access its own resources
 userName = 'regularUser';
 identities[userName] = {};
-identities[userName].identity = helpers.createIdentity(userName);
+identities[userName].identity = helpers.createIdentity(
+  userName, 'did:v1:28b26664-8f0f-4727-b771-864e1a241f48');
 identities[userName].identity.sysResourceRole.push({
   sysRole: 'bedrock-ledger.test',
   generateResource: 'id'
+});
+
+// has admin permissions
+userName = 'adminUser';
+identities[userName] = {};
+identities[userName].identity = helpers.createIdentity(
+  userName, 'did:v1:cbcee289-2484-48bd-a54e-55f50cfc9dfc');
+identities[userName].identity.sysResourceRole.push({
+  sysRole: 'bedrock-ledger.test'
 });
 
 // // identity with no permissions
