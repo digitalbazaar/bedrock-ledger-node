@@ -606,7 +606,8 @@ describe('Ledger API', () => {
           done(err);
         });
       });
-      it('iterates over public ledgers', done => {
+      it('iterates over public ledgers', function(done) {
+        this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
         async.auto({
