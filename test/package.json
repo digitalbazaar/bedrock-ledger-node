@@ -36,6 +36,7 @@
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
     "bedrock-test": "^1.2.0",
+    "bedrock-validation": "^2.2.1",
     "grunt": "^1.0.1"
   }
 }
