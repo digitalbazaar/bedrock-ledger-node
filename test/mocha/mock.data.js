@@ -54,14 +54,15 @@ events.config = {
   input: [{
     type: 'WebLedgerConfiguration',
     ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-    consensusMethod: {
-      type: 'UnilateralConsensus2017'
-    },
-    validationEventGuard: [{
-      type: 'EventTypeGuard2017',
-      eventTypes: ['WebLedgerEvent', 'WebLedgerConfigurationEvent']
-    }, {
-      type: 'SignatureGuard2017',
+    consensusMethod: 'UnilateralConsensus2017',
+    eventValidator: [
+      // FIXME: restore
+    //   {
+    //   type: 'EventTypeGuard2017',
+    //   eventTypes: ['WebLedgerEvent', 'WebLedgerConfigurationEvent']
+    // },
+      {
+      type: 'SignatureValidator2017',
       eventFilter: [{
         type: 'EventTypeFilter',
         eventType: ['WebLedgerEvent']
@@ -72,7 +73,7 @@ events.config = {
       ],
       minimumSignaturesRequired: 1
     }, {
-      type: 'SignatureGuard2017',
+      type: 'SignatureValidator2017',
       eventFilter: [{
         type: 'EventTypeFilter',
         eventType: ['WebLedgerConfigurationEvent']
@@ -82,7 +83,8 @@ events.config = {
         // 'https://example.com/i/alpha'
       ],
       minimumSignaturesRequired: 1
-    }]
+    }],
+    requireEventValidation: true
   }]
 };
 
