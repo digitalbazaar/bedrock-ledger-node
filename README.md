@@ -246,9 +246,31 @@ ledgerNode.blocks.get(blockId, options, (err, block) => {
 });
 ```
 
+### Gets the genesis block
+
+Gets the genesis block from a ledger given a set of options.
+
+* options - a set of options used when retrieving the block.
+* callback(err) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise.
+  * result - the genesis block from the ledger.
+
+```javascript
+const options = {};
+
+ledgerNode.blocks.getGenesis(options, (err, result) => {
+  if(err) {
+    throw new Error('Block retrieval failed:', err);
+  }
+
+  console.log('Retrieved genesis block:',
+    result.genesisBlock.block, result.genesisBlock.meta);
+});
+```
+
 ### Gets the latest blocks
 
-Gets the latst blocks from a ledger given a set of options.
+Gets the latest blocks from a ledger given a set of options.
 
 * options - a set of options used when retrieving the block.
 * callback(err) - the callback to call when finished.
