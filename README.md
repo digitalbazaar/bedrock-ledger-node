@@ -14,7 +14,7 @@ blocks, and events.
 ## The Ledger API
 
 * Ledger Node API
-  * api.add(actor, configEvent, options, (err, ledgerNode))
+  * api.add(actor, options, (err, ledgerNode))
   * api.get(actor, ledgerId, options, (err, ledgerNode))
   * api.remove(actor, ledgerId, options, callback(err))
   * api.getNodeIterator(actor, options, callback(err, iterator))
@@ -55,19 +55,29 @@ For documentation on configuration, see [config.js](./lib/config.js).
 
 ## Ledger Node API
 
-### Create a Ledger
+### Create a Ledger Node
 
-Create a new ledger given a configuration event and a set
-of options.
+Creates a new ledger node. The given options will determine if the ledger
+node will become the first node for a new ledger or if it will mirror
+and existing ledger.
+
+If **options.configEvent** is given, then a new ledger will be created and
+the ledger node will be its first member.
+
+If a **options.genesisBlock** is given, then an existing ledger will be
+mirrored by the new ledger node.
+
 
 * actor - the actor performing the action.
-* configEvent - the configuration Event for the ledger.
 * options - a set of options used when creating the ledger.
-  * genesis - if true, this is a new ledger that is being created
-      (default: false).
+  *   configEvent - the configuration event for a brand new ledger.
+  *   genesisBlock - the genesis block for an existing ledger.
+  *   peerLedgerAgents - a list of Web Ledger Agent peer URLs to associate
+  *     with the ledger node; these may be optionally used by a consensus
+  *     method.
   * storage - the storage subsystem for the ledger (default: 'mongodb').
-  * owner - the owner of the ledger node (default: none, anyone can access
-      the node).
+  * owner - the owner of the ledger node (default: **undefined**, anyone
+      can access the node).
 * callback(err, ledger) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise
   * ledgerNode - the ledger node associated with the ledger.
@@ -108,16 +118,16 @@ const configEvent = {
   }
 };
 const options = {
-  genesis: true,
+  configEvent: configEvent,
   owner: 'https://example.com/i/123'
 };
 
-brLedger.add(actor, configEvent, options, (err, ledgerNode) => {
+brLedger.add(actor, options, (err, ledgerNode) => {
   if(err) {
-    throw new Error('Failed to create ledger:', err);
+    throw new Error('Failed to create ledger node:', err);
   }
 
-  console.log('Ledger created:', ledgerNode.ledger);
+  console.log('Ledger node and new ledger created:', ledgerNode.ledger);
 });
 ```
 
