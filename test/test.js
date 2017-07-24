@@ -10,9 +10,9 @@ require('bedrock-ledger-context');
 // load ledger plugins
 require('bedrock-ledger-storage-mongodb');
 require('bedrock-ledger-consensus-uni');
-require('bedrock-ledger-guard-signature');
+require('bedrock-ledger-validator-signature');
 // FIXME: restore
-// require('bedrock-ledger-guard-event-type');
+// require('bedrock-ledger-validator-event-type');
 
 bedrock.events.on('bedrock.init', () => {
   const jsonld = bedrock.jsonld;
