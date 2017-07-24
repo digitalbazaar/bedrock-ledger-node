@@ -32,7 +32,7 @@
     "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#implementation",
     "bedrock-ledger-context": "digitalbazaar/bedrock-ledger-context#master",
     "bedrock-ledger-guard-event-type": "digitalbazaar/bedrock-ledger-guard-event-type#use-api",
-    "bedrock-ledger-guard-signature": "digitalbazaar/bedrock-ledger-guard-signature#use-api",
+    "bedrock-ledger-guard-signature": "digitalbazaar/bedrock-ledger-guard-signature#implementation",
     "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#ledger-worker",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
