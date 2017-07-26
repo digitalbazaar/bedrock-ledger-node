@@ -1,5 +1,5 @@
 {
-  "name": "bedrock-ledger-test",
+  "name": "bedrock-ledger-node-test",
   "version": "0.0.1-0",
   "description": "Bedrock ledger test",
   "main": "./test",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/digitalbazaar/bedrock-ledger"
+    "url": "https://github.com/digitalbazaar/bedrock-ledger-node"
   },
   "keywords": [
     "bedrock"
@@ -20,9 +20,9 @@
     "url": "http://digitalbazaar.com"
   },
   "bugs": {
-    "url": "https://github.com/digitalbazaar/bedrock-ledger/issues"
+    "url": "https://github.com/digitalbazaar/bedrock-ledger-node/issues"
   },
-  "homepage": "https://github.com/digitalbazaar/bedrock-ledger",
+  "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
     "async": "^2.4.0",
     "bedrock": "digitalbazaar/bedrock#updateTestDeps",
@@ -31,7 +31,7 @@
     "bedrock-jobs": "^2.0.3",
     "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#implementation",
     "bedrock-ledger-context": "digitalbazaar/bedrock-ledger-context#master",
-    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#master",
+    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#cm4",
     "bedrock-ledger-validator-event-type": "digitalbazaar/bedrock-ledger-validator-event-type#implementation",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#implementation",
     "bedrock-mongodb": "^3.0.0",

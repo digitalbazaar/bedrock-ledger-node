@@ -1,11 +1,11 @@
 {
-  "name": "bedrock-ledger",
+  "name": "bedrock-ledger-node",
   "version": "0.3.6-0",
-  "description": "Bedrock ledger",
+  "description": "Bedrock ledger node",
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "https://github.com/digitalbazaar/bedrock-ledger.git"
+    "url": "https://github.com/digitalbazaar/bedrock-ledger-node.git"
   },
   "author": {
     "name": "Digital Bazaar, Inc.",
@@ -13,9 +13,9 @@
     "url": "http://digitalbazaar.com"
   },
   "bugs": {
-    "url": "https://github.com/digitalbazaar/bedrock-ledger/issues"
+    "url": "https://github.com/digitalbazaar/bedrock-ledger-node/issues"
   },
-  "homepage": "https://github.com/digitalbazaar/bedrock-ledger",
+  "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
     "async": "^2.4.0",
     "ni-uri": "^1.1.3",

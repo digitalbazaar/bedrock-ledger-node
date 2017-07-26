@@ -4,7 +4,7 @@
 const bedrock = require('bedrock');
 const brDidClient = require('bedrock-did-client');
 
-require('bedrock-ledger');
+require('bedrock-ledger-node');
 require('bedrock-ledger-context');
 
 // load ledger plugins
