@@ -8,7 +8,7 @@ const async = require('async');
 const bedrock = require('bedrock');
 const brLedgerStorage = require('bedrock-ledger-storage-mongodb');
 const brIdentity = require('bedrock-identity');
-const brLedger = require('bedrock-ledger');
+const brLedgerNode = require('bedrock-ledger-node');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
@@ -51,7 +51,7 @@ describe('Blocks API', () => {
           actor = result;
           callback(err);
         }),
-      addLedger: callback => brLedger.add(
+      addLedger: callback => brLedgerNode.add(
         null, signedConfigEvent, {}, (err, result) => {
           ledgerNode = result;
           callback(err, result);

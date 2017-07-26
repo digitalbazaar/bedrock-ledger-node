@@ -6,7 +6,7 @@
 
 const async = require('async');
 const brIdentity = require('bedrock-identity');
-const brLedger = require('bedrock-ledger');
+const brLedgerNode = require('bedrock-ledger-node');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
@@ -49,7 +49,7 @@ describe('Ledger API', () => {
       it('should create a ledger with no owner', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, (err, ledgerNode) => {
               should.not.exist(err);
               expect(ledgerNode).to.be.ok;
@@ -83,13 +83,13 @@ describe('Ledger API', () => {
       it.skip('returns existing ledger on attempt to create a duplicate', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, (err, result) => {
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
               callback(null, result);
             }),
-          createDuplicate: ['create', (results, callback) => brLedger.add(
+          createDuplicate: ['create', (results, callback) => brLedgerNode.add(
             actor, configEvent, (err, result) => {
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
@@ -103,7 +103,7 @@ describe('Ledger API', () => {
       it('should create a ledger with an owner', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, {owner: actor.id}, (err, ledgerNode) => {
               expect(err).not.to.be.ok;
               expect(ledgerNode).to.be.ok;
@@ -133,7 +133,7 @@ describe('Ledger API', () => {
       });
       it('returns PermissionDenied if actor is not owner', done => {
         const configEvent = signedConfigEvent;
-        brLedger.add(
+        brLedgerNode.add(
           actor, configEvent, {owner: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
@@ -143,7 +143,7 @@ describe('Ledger API', () => {
       });
       it('returns error if invalid storage plugin is specified', done => {
         const configEvent = signedConfigEvent;
-        brLedger.add(
+        brLedgerNode.add(
           actor, configEvent, {storage: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
@@ -164,7 +164,7 @@ describe('Ledger API', () => {
       it('should create a ledger with no owner', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, (err, ledgerNode) => {
               should.not.exist(err);
               expect(ledgerNode).to.be.ok;
@@ -198,13 +198,13 @@ describe('Ledger API', () => {
       it.skip('returns existing ledger on attempt to create a duplicate', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, (err, result) => {
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
               callback(null, result);
             }),
-          createDuplicate: ['create', (results, callback) => brLedger.add(
+          createDuplicate: ['create', (results, callback) => brLedgerNode.add(
             actor, configEvent, (err, result) => {
               expect(err).not.to.be.ok;
               expect(result).to.be.ok;
@@ -218,7 +218,7 @@ describe('Ledger API', () => {
       it('should create a ledger with an owner', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, {owner: actor.id}, (err, ledgerNode) => {
               expect(err).not.to.be.ok;
               expect(ledgerNode).to.be.ok;
@@ -249,7 +249,7 @@ describe('Ledger API', () => {
       it('should create a ledger with a different owner', done => {
         const configEvent = signedConfigEvent;
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             actor, configEvent, {
               owner: mockData.identities.regularUser.identity.id
             }, (err, ledgerNode) => {
@@ -282,7 +282,7 @@ describe('Ledger API', () => {
       });
       it('returns error if invalid storage plugin is specified', done => {
         const configEvent = signedConfigEvent;
-        brLedger.add(
+        brLedgerNode.add(
           actor, configEvent, {storage: uuid()}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
@@ -308,8 +308,8 @@ describe('Ledger API', () => {
         });
       });
       it('gets a ledger with no owner', done => async.auto({
-        create: callback => brLedger.add(actor, configEvent, callback),
-        get: ['create', (results, callback) => brLedger.get(
+        create: callback => brLedgerNode.add(actor, configEvent, callback),
+        get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
@@ -321,9 +321,9 @@ describe('Ledger API', () => {
         ]
       }, done));
       it('gets a ledger with actor as owner', done => async.auto({
-        create: callback => brLedger.add(
+        create: callback => brLedgerNode.add(
           actor, configEvent, {owner: actor.id}, callback),
-        get: ['create', (results, callback) => brLedger.get(
+        get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
@@ -336,9 +336,9 @@ describe('Ledger API', () => {
       it('returns PermissionDenied if actor does not own the ledger', done => {
         const someOwner = uuid();
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             null, configEvent, {owner: someOwner}, callback),
-          get: ['create', (results, callback) => brLedger.get(
+          get: ['create', (results, callback) => brLedgerNode.get(
             actor, results.create.id, {owner: someOwner}, (err, result) => {
               expect(err).to.be.ok;
               expect(result).not.to.be.ok;
@@ -349,7 +349,7 @@ describe('Ledger API', () => {
       });
       it('returns NotFound on a non-exsistent ledger', done => {
         const unknownLedger = 'did:v1:' + uuid();
-        brLedger.get(actor, unknownLedger, (err, result) => {
+        brLedgerNode.get(actor, unknownLedger, (err, result) => {
           expect(err).to.be.ok;
           expect(result).not.to.be.ok;
           err.name.should.equal('NotFound');
@@ -358,12 +358,12 @@ describe('Ledger API', () => {
         });
       });
       it('returns NotFound on a deleted ledger', done => async.auto({
-        create: callback => brLedger.add(
+        create: callback => brLedgerNode.add(
           actor, configEvent, {owner: actor.id}, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, callback)
         ],
-        get: ['delete', (results, callback) => brLedger.get(
+        get: ['delete', (results, callback) => brLedgerNode.get(
           actor, configEvent.input[0].ledger, {
             owner: actor.id
           }, (err, result) => {
@@ -387,8 +387,8 @@ describe('Ledger API', () => {
         });
       });
       it('gets a ledger with no owner', done => async.auto({
-        create: callback => brLedger.add(actor, configEvent, callback),
-        get: ['create', (results, callback) => brLedger.get(
+        create: callback => brLedgerNode.add(actor, configEvent, callback),
+        get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
@@ -400,9 +400,9 @@ describe('Ledger API', () => {
         ]
       }, done));
       it('gets a ledger with actor as owner', done => async.auto({
-        create: callback => brLedger.add(
+        create: callback => brLedgerNode.add(
           actor, configEvent, {owner: actor.id}, callback),
-        get: ['create', (results, callback) => brLedger.get(
+        get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
@@ -413,10 +413,10 @@ describe('Ledger API', () => {
           })]
       }, done));
       it('gets a ledger with a different owner', done => async.auto({
-        create: callback => brLedger.add(actor, configEvent, {
+        create: callback => brLedgerNode.add(actor, configEvent, {
           owner: mockData.identities.regularUser.identity.id
         }, callback),
-        get: ['create', (results, callback) => brLedger.get(
+        get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
             expect(err).not.to.be.ok;
             expect(result).to.be.ok;
@@ -428,7 +428,7 @@ describe('Ledger API', () => {
       }, done));
       it('returns NotFound on a non-exsistent ledger', done => {
         const unknownLedger = 'did:v1:' + uuid();
-        brLedger.get(actor, unknownLedger, (err, result) => {
+        brLedgerNode.get(actor, unknownLedger, (err, result) => {
           expect(err).to.be.ok;
           expect(result).not.to.be.ok;
           err.name.should.equal('NotFound');
@@ -437,12 +437,12 @@ describe('Ledger API', () => {
         });
       });
       it('returns NotFound on a deleted ledger', done => async.auto({
-        create: callback => brLedger.add(
+        create: callback => brLedgerNode.add(
           actor, configEvent, {owner: actor.id}, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, callback)
         ],
-        get: ['delete', (results, callback) => brLedger.get(
+        get: ['delete', (results, callback) => brLedgerNode.get(
           actor, configEvent.input[0].ledger, {
             owner: actor.id
           }, (err, result) => {
@@ -471,9 +471,9 @@ describe('Ledger API', () => {
         });
       });
       it('should delete a ledger if actor is owner', done => async.auto({
-        create: callback => brLedger.add(
+        create: callback => brLedgerNode.add(
           actor, configEvent, {owner: actor.id}, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
             expect(err).not.to.be.ok;
             callback();
@@ -490,7 +490,7 @@ describe('Ledger API', () => {
       }, done));
       it('returns NotFound on a non-exsistent ledger', done => {
         const unknownLedger = 'urn:uuid:' + uuid();
-        brLedger.remove(actor, unknownLedger, (err, result) => {
+        brLedgerNode.remove(actor, unknownLedger, (err, result) => {
           expect(err).to.be.ok;
           expect(result).not.to.be.ok;
           err.name.should.equal('NotFound');
@@ -501,9 +501,9 @@ describe('Ledger API', () => {
       it('returns PermissionDenied if actor is not owner', done => {
         const someOwner = uuid();
         async.auto({
-          create: callback => brLedger.add(
+          create: callback => brLedgerNode.add(
             null, configEvent, {owner: someOwner}, callback),
-          delete: ['create', (results, callback) => brLedger.remove(
+          delete: ['create', (results, callback) => brLedgerNode.remove(
             actor, results.create.id, err => {
               expect(err).to.be.ok;
               err.name.should.equal('PermissionDenied');
@@ -512,8 +512,8 @@ describe('Ledger API', () => {
         }, done);
       });
       it('returns PermissionDenied if there is no owner', done => async.auto({
-        create: callback => brLedger.add(null, configEvent, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        create: callback => brLedgerNode.add(null, configEvent, callback),
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
             expect(err).to.be.ok;
             err.name.should.equal('PermissionDenied');
@@ -533,9 +533,9 @@ describe('Ledger API', () => {
         });
       });
       it('should delete a ledger if actor is owner', done => async.auto({
-        create: callback => brLedger.add(
+        create: callback => brLedgerNode.add(
           actor, configEvent, {owner: actor.id}, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
             expect(err).not.to.be.ok;
             callback();
@@ -551,10 +551,10 @@ describe('Ledger API', () => {
           })]
       }, done));
       it('should delete a ledger with a different owner', done => async.auto({
-        create: callback => brLedger.add(actor, configEvent, {
+        create: callback => brLedgerNode.add(actor, configEvent, {
           owner: mockData.identities.regularUser.identity.id
         }, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
             expect(err).not.to.be.ok;
             callback();
@@ -571,7 +571,7 @@ describe('Ledger API', () => {
       }, done));
       it('returns NotFound on a non-exsistent ledger', done => {
         const unknownLedger = 'urn:uuid:' + uuid();
-        brLedger.remove(actor, unknownLedger, (err, result) => {
+        brLedgerNode.remove(actor, unknownLedger, (err, result) => {
           expect(err).to.be.ok;
           expect(result).not.to.be.ok;
           err.name.should.equal('NotFound');
@@ -580,8 +580,8 @@ describe('Ledger API', () => {
         });
       });
       it('returns PermissionDenied if there is no owner', done => async.auto({
-        create: callback => brLedger.add(null, configEvent, callback),
-        delete: ['create', (results, callback) => brLedger.remove(
+        create: callback => brLedgerNode.add(null, configEvent, callback),
+        delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
             expect(err).to.be.ok;
             err.name.should.equal('PermissionDenied');
@@ -612,12 +612,12 @@ describe('Ledger API', () => {
         const iteratorLedgers = [];
         async.auto({
           create: callback => async.times(10, (i, callback) =>
-            brLedger.add(actor, configEvent, (err, result) => {
+            brLedgerNode.add(actor, configEvent, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           getIterator: ['create', (results, callback) =>
-            brLedger.getNodeIterator(actor, (err, iterator) => {
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
               callback(null, iterator);
             })
@@ -644,7 +644,7 @@ describe('Ledger API', () => {
         async.auto({
           // private ledgers owned by actor
           createAlpha: callback => async.times(5, (i, callback) =>
-            brLedger.add(actor, configEvent, {
+            brLedgerNode.add(actor, configEvent, {
               owner: actor.id
             }, (err, result) => {
               testLedgers.push(result.id);
@@ -652,12 +652,12 @@ describe('Ledger API', () => {
             }), callback),
           // public ledgers
           createBeta: callback => async.times(3, (i, callback) =>
-            brLedger.add(null, configEvent, (err, result) => {
+            brLedgerNode.add(null, configEvent, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           getIterator: ['createAlpha', 'createBeta', (results, callback) =>
-            brLedger.getNodeIterator(actor, (err, iterator) => {
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
               callback(null, iterator);
             })
@@ -683,18 +683,18 @@ describe('Ledger API', () => {
         // create 5 ledgers owned by actor and 3 owned by another identity
         async.auto({
           createAlpha: callback => async.times(5, (i, callback) =>
-            brLedger.add(actor, configEvent, {
+            brLedgerNode.add(actor, configEvent, {
               owner: actor.id
             },(err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           createBeta: callback => async.times(3, (i, callback) =>
-            brLedger.add(null, configEvent, {
+            brLedgerNode.add(null, configEvent, {
               owner: 'did:v1:a22b5d78-f88b-4172-b19b-8389fa8dd1e3'
             }, callback), callback),
           getIterator: ['createAlpha', 'createBeta', (results, callback) =>
-            brLedger.getNodeIterator(actor, (err, iterator) => {
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
               callback(null, iterator);
             })
@@ -731,12 +731,12 @@ describe('Ledger API', () => {
         const iteratorLedgers = [];
         async.auto({
           create: callback => async.times(10, (i, callback) =>
-            brLedger.add(actor, configEvent, (err, result) => {
+            brLedgerNode.add(actor, configEvent, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           getIterator: ['create', (results, callback) =>
-            brLedger.getNodeIterator(actor, (err, iterator) => {
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
               callback(null, iterator);
             })
@@ -763,7 +763,7 @@ describe('Ledger API', () => {
         async.auto({
           // private ledgers owned by actor
           createAlpha: callback => async.times(5, (i, callback) =>
-            brLedger.add(actor, configEvent, {
+            brLedgerNode.add(actor, configEvent, {
               owner: actor.id
             }, (err, result) => {
               testLedgers.push(result.id);
@@ -771,12 +771,12 @@ describe('Ledger API', () => {
             }), callback),
           // public ledgers
           createBeta: callback => async.times(3, (i, callback) =>
-            brLedger.add(null, configEvent, (err, result) => {
+            brLedgerNode.add(null, configEvent, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           getIterator: ['createAlpha', 'createBeta', (results, callback) =>
-            brLedger.getNodeIterator(actor, (err, iterator) => {
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
               callback(null, iterator);
             })
@@ -803,27 +803,27 @@ describe('Ledger API', () => {
         // 2 public ledgers
         async.auto({
           createAlpha: callback => async.times(5, (i, callback) =>
-            brLedger.add(actor, configEvent, {
+            brLedgerNode.add(actor, configEvent, {
               owner: actor.id
             }, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           createBeta: callback => async.times(3, (i, callback) =>
-            brLedger.add(null, configEvent, {
+            brLedgerNode.add(null, configEvent, {
               owner: 'did:v1:a22b5d78-f88b-4172-b19b-8389fa8dd1e3'
             }, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           createGamma: callback => async.times(3, (i, callback) =>
-            brLedger.add(null, configEvent, (err, result) => {
+            brLedgerNode.add(null, configEvent, (err, result) => {
               testLedgers.push(result.id);
               callback();
             }), callback),
           getIterator: [
             'createAlpha', 'createBeta', 'createGamma', (results, callback) =>
-            brLedger.getNodeIterator(actor, (err, iterator) => {
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
               should.not.exist(err);
               callback(null, iterator);
             })
