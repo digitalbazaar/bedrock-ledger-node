@@ -1,4 +1,4 @@
-[![Build Status](https://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger)](https://ci.digitalbazaar.com/job/bedrock-ledger)
+[![Build Status](https://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger-node-node)](https://ci.digitalbazaar.com/job/bedrock-ledger-node)
 
 # Bedrock Ledger
 
@@ -11,7 +11,7 @@ blocks, and events.
 
 ![An image of the Web Ledger ecosystem](https://w3c.github.io/web-ledger/diagrams/ecosystem.svg)
 
-## The Ledger API
+## The Ledger Node API
 
 * Ledger Node API
   * api.add(actor, options, (err, ledgerNode))
@@ -31,18 +31,18 @@ blocks, and events.
 ## Quick Examples
 
 ```
-npm install bedrock-ledger bedrock-ledger-storage-mongodb bedrock-ledger-authz-signature
+npm install bedrock-ledger-node bedrock-ledger-storage-mongodb bedrock-ledger-validator-signature
 ```
 
 ```js
-const ledger = require('bedrock-ledger');
+const brLedgerNode = require('bedrock-ledger-node');
 require('bedrock-ledger-storage-mongodb');
-require('bedrock-ledger-guard-signature');
+require('bedrock-ledger-validator-signature');
 
 const actor = 'admin';
 const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
 
-ledger.get(actor, ledgerId, options, (err, ledgerNode) => {
+brLedgerNode.get(actor, ledgerId, options, (err, ledgerNode) => {
   ledgerNode.events.add( /* new ledger event details go here */);
     /* ... do other operations on the ledger */
   });
@@ -90,27 +90,33 @@ const configEvent = {
   input: [{
     type: 'WebLedgerConfiguration',
     ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-    consensusMethod: {
-      type: 'UnilateralConsensus2017'
-    },
-    eventGuard: [{
-      type: 'ProofOfSignature2017',
-      supportedEventType: 'WebLedgerEvent',
+    consensusMethod: 'UnilateralConsensus2017',
+    eventValidator: [{
+      type: 'SignatureValidator2017',
+      eventFilter: [{
+        type: 'EventTypeFilter',
+        eventType: ['WebLedgerEvent']
+      }],
       approvedSigner: [
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       ],
       minimumSignaturesRequired: 1
     }, {
-      type: 'ProofOfSignature2017',
-      supportedEventType: 'WebLedgerConfigurationEvent',
+      type: 'SignatureValidator2017',
+      eventFilter: [{
+        type: 'EventTypeFilter',
+        eventType: ['WebLedgerConfigurationEvent']
+      }],
       approvedSigner: [
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       ],
       minimumSignaturesRequired: 1
-    }]
+    }],
+    // events that are not validated by at least 1 validator will be rejected
+    requireEventValidation: true    
   }],
   signature: {
-    type: 'RsaSignature2017',
+    type: 'LinkedDataSignature2015',
     created: '2017-10-24T05:33:31Z',
     creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
     domain: 'example.com',
@@ -391,21 +397,16 @@ function is passed as the second parameter).
 
 ```javascript
 // this code would be executed in a plugin
-const bedrockLedger = require('bedrock-ledger');
+const brLedgerNode = require('bedrock-ledger-node');
 
 // register a plugin
-bedrockLedger.use('mongodb', {
+brLedgerNode.use('mongodb', {
   type: 'storage',
   api: mongodbStorageApi
 });
 
-// get a plugin (capability value) synchronously
-const plugin = bedrockLedger.use('mongodb');
-// plugin.type
-// plugin.api
-
 // get a plugin asynchronously
-bedrockLedger.use('mongodb', (err, plugin) => {
+brLedgerNode.use('mongodb', (err, plugin) => {
   // plugin.type
   // plugin.api
 });
