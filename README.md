@@ -1,4 +1,4 @@
-# Bedrock Ledger
+# Bedrock Ledger Node
 
 [![Build Status](https://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger-node)](https://ci.digitalbazaar.com/job/bedrock-ledger-node)
 
