@@ -6,20 +6,14 @@
 
 const async = require('async');
 const bedrock = require('bedrock');
-const brLedgerStorage = require('bedrock-ledger-storage-mongodb');
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
-const database = require('bedrock-mongodb');
-const expect = global.chai.expect;
 const helpers = require('./helpers');
 const jsonld = bedrock.jsonld;
 const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
-const uuid = require('uuid/v4');
 
 jsigs.use('jsonld', jsonld);
-
-const baseUri = 'http://example.com';
 
 let signedConfigEvent;
 
@@ -52,7 +46,7 @@ describe('Blocks API', () => {
           callback(err);
         }),
       addLedger: callback => brLedgerNode.add(
-        null, signedConfigEvent, {}, (err, result) => {
+        null, {configEvent: signedConfigEvent}, (err, result) => {
           ledgerNode = result;
           callback(err, result);
         }),
