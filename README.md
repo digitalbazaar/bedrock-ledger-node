@@ -128,7 +128,7 @@ const options = {
   owner: 'https://example.com/i/123'
 };
 
-brLedger.add(actor, options, (err, ledgerNode) => {
+brLedgerNode.add(actor, options, (err, ledgerNode) => {
   if(err) {
     throw new Error('Failed to create ledger node:', err);
   }
