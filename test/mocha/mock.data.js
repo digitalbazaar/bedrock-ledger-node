@@ -46,6 +46,25 @@ events.alpha = {
     signatureValue: 'gXI7wqa...FMMJoS2Bw=='
   }
 };
+events.beta = {
+  '@context': 'https://w3id.org/webledger/v1',
+  type: 'WebLedgerEvent',
+  operation: 'Create',
+  input: [{
+    '@context': 'https://schema.org/',
+    id: 'https://example.com/events/1234567',
+    type: 'Concert',
+    name: 'Big Band Concert in New York City',
+    startDate: '2017-07-14T21:30',
+    location: 'https://example.org/the-venue',
+    offers: {
+      type: 'Offer',
+      price: '13.00',
+      priceCurrency: 'USD',
+      url: 'https://www.ticketfly.com/purchase/309433'
+    }
+  }]
+};
 
 events.config = {
   '@context': 'https://w3id.org/webledger/v1',
@@ -85,9 +104,19 @@ events.config = {
 const blocks = mock.blocks = {};
 blocks.config = {
   '@context': 'https://w3id.org/webledger/v1',
-  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/',
   type: 'WebLedgerEventBlock',
   event: [events.config]
+};
+
+blocks.event = {
+  '@context': 'https://w3id.org/webledger/v1',
+  type: 'WebLedgerEvent',
+  operation: 'Create',
+  input: [{
+    id: 'https://example.com/events/123456',
+    description: 'Example event'
+  }]
 };
 
 // constants

@@ -5,13 +5,58 @@
 'use strict';
 
 const async = require('async');
+const bedrock = require('bedrock');
+const config = bedrock.config;
 const brIdentity = require('bedrock-identity');
 const crypto = require('crypto');
 const database = require('bedrock-mongodb');
+let jsonld = bedrock.jsonld;
+const jsigs = require('jsonld-signatures')();
+let request = require('request');
 const uuid = require('uuid/v4');
 
 const api = {};
 module.exports = api;
+
+// ensure that requests always send JSON
+request = request.defaults({json: true});
+
+// FIXME: Do not use an insecure document loader in production
+const nodeDocumentLoader = jsonld.documentLoaders.node({
+  secure: false,
+  strictSSL: false
+});
+jsonld.documentLoader = (url, callback) => {
+  if(url in config.constants.CONTEXTS) {
+    return callback(
+      null, {
+        contextUrl: null,
+        document: config.constants.CONTEXTS[url],
+        documentUrl: url
+      });
+  }
+  nodeDocumentLoader(url, callback);
+};
+
+// use local JSON-LD processor for checking signatures
+jsigs.use('jsonld', jsonld);
+// test hashing function
+api.testHasher = function (data, callback) {
+  // ensure a basic context exists
+  if(!data['@context']) {
+    data['@context'] = 'https://w3id.org/webledger/v1';
+  }
+
+  jsonld.normalize(data, {
+    algorithm: 'URDNA2015',
+    format: 'application/nquads'
+  }, function(err, normalized) {
+    const hash = crypto.createHash('sha256').update(normalized).digest()
+      .toString('base64')
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    callback(err, 'ni://sha-256;' + hash);
+  });
+}
 
 api.createIdentity = function(userName, userId) {
   userId = userId || 'did:v1:' + uuid();
