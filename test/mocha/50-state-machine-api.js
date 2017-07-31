@@ -53,14 +53,15 @@ describe('State Machine API', () => {
             callback(err);
           }),
         addLedger: ['getActor', (results, callback) => {
-          brLedgerNode.add(actor, signedConfigEvent, (err, result) => {
+          brLedgerNode.add(actor, {configEvent: signedConfigEvent},
+            (err, result) => {
             ledgerNode = result;
             callback(err);
           });
         }]
       }, done);
     });
-    it.only('should get existing event input from state machine', done => {
+    it('should get existing event input from state machine', done => {
       const event = _.cloneDeep(mockData.events.beta);
       async.auto({
         sign: callback => {
@@ -77,7 +78,6 @@ describe('State Machine API', () => {
         get: ['add', (results, callback) => {
           const objId = 'https://example.com/events/1234567';
           ledgerNode.stateMachine.get(objId, {}, (err, result) => {
-            console.log("ERR", err);
             should.not.exist(err);
             should.exist(result);
             result.object.should.deep.equal(results.sign.input[0]);
