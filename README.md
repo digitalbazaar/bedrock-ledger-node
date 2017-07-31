@@ -25,6 +25,8 @@ blocks, and events.
 * Ledger Node Events API
   * ledgerNode.events.add(event, options, (err, event))
   * ledgerNode.events.get(eventId, options, (err, event))
+* Ledger State Machine API
+  * ledgerNode.stateMachine.get(objectId, options, (err, object))
 * Ledger Node Plugin API
   * api.use(options, mongodbStorageApi)
 
@@ -113,7 +115,7 @@ const configEvent = {
       minimumSignaturesRequired: 1
     }],
     // events that are not validated by at least 1 validator will be rejected
-    requireEventValidation: true    
+    requireEventValidation: true
   }],
   signature: {
     type: 'LinkedDataSignature2015',
@@ -375,6 +377,31 @@ ledgerNode.events.get(eventId, options, (err, event) => {
   }
 
   console.log('Event retrieval successful:', events);
+});
+```
+
+## State Machine API
+
+### Get an Object
+
+Gets an object associated with the state machine of
+ledger given an objectId and a set of options.
+
+* objectId - the object to fetch from the state machine.
+* options - a set of options used when retrieving the object.
+* callback(err) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise.
+  * object - the object that was retrieved from the database.
+
+```javascript
+const objectId = 'https://example.com/objects/1234';
+
+ledgerNode.stateMachne.get(objectId, options, (err, object) => {
+  if(err) {
+    throw new Error('Object retrieval failed:', err);
+  }
+
+  console.log('Object retrieval successful:', object);
 });
 ```
 
