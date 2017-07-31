@@ -32,7 +32,6 @@
     "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#implementation",
     "bedrock-ledger-context": "digitalbazaar/bedrock-ledger-context#master",
     "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#cm4",
-    "bedrock-ledger-validator-event-type": "digitalbazaar/bedrock-ledger-validator-event-type#implementation",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#implementation",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
