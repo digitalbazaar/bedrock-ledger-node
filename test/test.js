@@ -11,8 +11,6 @@ require('bedrock-ledger-context');
 require('bedrock-ledger-storage-mongodb');
 require('bedrock-ledger-consensus-uni');
 require('bedrock-ledger-validator-signature');
-// FIXME: restore
-// require('bedrock-ledger-validator-event-type');
 
 bedrock.events.on('bedrock.init', () => {
   const jsonld = bedrock.jsonld;

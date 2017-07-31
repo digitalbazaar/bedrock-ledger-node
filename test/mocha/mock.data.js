@@ -55,13 +55,7 @@ events.config = {
     type: 'WebLedgerConfiguration',
     ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
     consensusMethod: 'UnilateralConsensus2017',
-    eventValidator: [
-      // FIXME: restore
-    //   {
-    //   type: 'EventTypeGuard2017',
-    //   eventTypes: ['WebLedgerEvent', 'WebLedgerConfigurationEvent']
-    // },
-      {
+    eventValidator: [{
       type: 'SignatureValidator2017',
       eventFilter: [{
         type: 'EventTypeFilter',
