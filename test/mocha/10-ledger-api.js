@@ -147,7 +147,7 @@ describe('Ledger API', () => {
           actor, {storage: uuid(), configEvent}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
-            err.name.should.equal('InvalidStorage');
+            err.name.should.equal('DataError');
             done();
           });
       });
@@ -287,7 +287,7 @@ describe('Ledger API', () => {
           actor, {storage: uuid(), configEvent}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
-            err.name.should.equal('InvalidStorage');
+            err.name.should.equal('DataError');
             done();
           });
       });
