@@ -643,7 +643,7 @@ describe('Ledger API', () => {
         this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
-        // create 5 ledgers owned by actor and 3 owned by another identity
+        // create 5 ledgers owned by actor and 3 public ledgers
         async.auto({
           // private ledgers owned by actor
           createAlpha: callback => async.times(5, (i, callback) =>
@@ -680,8 +680,8 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
-      // FIXME: need to finalize permission model in `getNodeIterator`
-      it.skip('iterator only returns ledgers owned by actor', function(done) {
+      it('iterator only returns ledgers owned by actor', function(done) {
+        this.timeout(30000);
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor and 3 owned by another identity
@@ -719,6 +719,53 @@ describe('Ledger API', () => {
           }]
         }, done);
       });
+      it('iterator returns ledgers owned by actor and public', function(done) {
+        this.timeout(30000);
+        const testLedgers = [];
+        const iteratorLedgers = [];
+        // create 5 ledgers owned by actor and 3 owned by another identity
+        // and 2 public ledgers
+        async.auto({
+          createAlpha: callback => async.times(5, (i, callback) =>
+            brLedgerNode.add(actor, {
+              configEvent,
+              owner: actor.id
+            },(err, result) => {
+              testLedgers.push(result.id);
+              callback();
+            }), callback),
+          createBeta: callback => async.times(3, (i, callback) =>
+            brLedgerNode.add(null, {
+              configEvent,
+              owner: 'did:v1:a22b5d78-f88b-4172-b19b-8389fa8dd1e3'
+            }, callback), callback),
+          // public ledgers
+          createGamma: callback => async.times(2, (i, callback) =>
+            brLedgerNode.add(null, {configEvent}, (err, result) => {
+              testLedgers.push(result.id);
+              callback();
+            }), callback),
+          getIterator: [
+            'createAlpha', 'createBeta', 'createGamma', (results, callback) =>
+            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
+              should.not.exist(err);
+              callback(null, iterator);
+            })
+          ],
+          iterate: ['getIterator', (results, callback) =>
+            async.eachSeries(results.getIterator, (promise, callback) => {
+              promise.then(ledgerNode => {
+                iteratorLedgers.push(ledgerNode.id);
+                callback();
+              }).catch(err => callback(err));
+            }, callback)
+          ],
+          test: ['iterate', (results, callback) => {
+            iteratorLedgers.should.have.same.members(testLedgers);
+            callback();
+          }]
+        }, done);
+      });
     }); // end regularUser as actor
     describe('adminUser as actor', () => {
       let actor;
@@ -732,7 +779,7 @@ describe('Ledger API', () => {
         });
       });
       it('iterates over public ledgers', function(done) {
-        this.timeout(30000);
+        this.timeout(60000);
         const testLedgers = [];
         const iteratorLedgers = [];
         async.auto({
@@ -762,7 +809,7 @@ describe('Ledger API', () => {
         }, done);
       });
       it('iterates public and private ledgers owned by actor', function(done) {
-        this.timeout(30000);
+        this.timeout(60000);
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor and 3 owned by another identity
@@ -803,7 +850,7 @@ describe('Ledger API', () => {
         }, done);
       });
       it('iterates over all ledgers', function(done) {
-        this.timeout(30000);
+        this.timeout(60000);
         const testLedgers = [];
         const iteratorLedgers = [];
         // create 5 ledgers owned by actor, 3 owned by another identity
