@@ -46,7 +46,7 @@ describe('Blocks API', () => {
           callback(err);
         }),
       addLedger: callback => brLedgerNode.add(
-        null, {configEvent: signedConfigEvent}, (err, result) => {
+        actor, {configEvent: signedConfigEvent}, (err, result) => {
           ledgerNode = result;
           callback(err, result);
         }),
@@ -69,4 +69,4 @@ describe('Blocks API', () => {
       });
     });
   });
-}); // end createLedger
+});

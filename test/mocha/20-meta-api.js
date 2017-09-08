@@ -1,20 +1,11 @@
 /*
  * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals should */
 'use strict';
 
-const async = require('async');
-const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
-const brLedgerNode = require('bedrock-ledger-node');
-const database = require('bedrock-mongodb');
-const expect = global.chai.expect;
 const helpers = require('./helpers');
 const mockData = require('./mock.data');
-const uuid = require('uuid/v4');
-
-const baseUri = 'http://example.com';
 
 describe.skip('Metadata API', () => {
   before(done => {
@@ -33,6 +24,7 @@ describe.skip('Metadata API', () => {
       });
     });
     it.skip('should get ledger metadata', done => {
+      // TODO: use `actor`
       done();
     });
   });
@@ -46,6 +38,7 @@ describe.skip('Metadata API', () => {
       });
     });
     it.skip('should get ledger metadata for any ledger', done => {
+      // TODO: use `actor`
       done();
     });
   });

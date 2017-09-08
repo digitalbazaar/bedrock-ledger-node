@@ -69,8 +69,7 @@ events.beta = {
 events.config = {
   '@context': 'https://w3id.org/webledger/v1',
   type: 'WebLedgerConfigurationEvent',
-  operation: 'Config',
-  input: [{
+  ledgerConfiguration: {
     type: 'WebLedgerConfiguration',
     ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
     consensusMethod: 'UnilateralConsensus2017',
@@ -98,7 +97,7 @@ events.config = {
       minimumSignaturesRequired: 1
     }],
     requireEventValidation: true
-  }]
+  }
 };
 
 const blocks = mock.blocks = {};
