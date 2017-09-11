@@ -9,8 +9,6 @@ const async = require('async');
 const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
-const database = require('bedrock-mongodb');
-const expect = global.chai.expect;
 const helpers = require('./helpers');
 const jsonld = bedrock.jsonld;
 const jsigs = require('jsonld-signatures');
@@ -18,8 +16,6 @@ const mockData = require('./mock.data');
 const uuid = require('uuid/v4');
 
 jsigs.use('jsonld', jsonld);
-
-const baseUri = 'http://example.com';
 
 let signedConfigEvent;
 
@@ -42,7 +38,6 @@ describe('State Machine API', () => {
   });
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
-    const testEventInputId = 'urn:uuid:' + uuid();
     let actor;
     let ledgerNode;
     before(done => {

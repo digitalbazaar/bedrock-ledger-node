@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals should */
+/* globals should, assertNoError */
 'use strict';
 
 const async = require('async');
@@ -59,14 +59,14 @@ describe('Ledger API', () => {
             database.collections.ledgerNode.findOne({
               id: database.hash(results.create.id)
             }, (err, result) => {
-
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(
-                database.hash(configEvent.input[0].ledger));
+                database.hash(configEvent.ledgerConfiguration.ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
+              ledgerNode.ledger.should.equal(
+                configEvent.ledgerConfiguration.ledger);
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
               ledgerNode.storage.plugin.should.equal('mongodb');
@@ -85,13 +85,13 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedgerNode.add(
             actor, {configEvent}, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(result).to.be.ok;
               callback(null, result);
             }),
           createDuplicate: ['create', (results, callback) => brLedgerNode.add(
             actor, {configEvent}, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(result).to.be.ok;
               expect(result.meta).to.exist;
               expect(result.blocks).to.exist;
@@ -105,7 +105,7 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedgerNode.add(
             actor, {owner: actor.id, configEvent}, (err, ledgerNode) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
@@ -113,13 +113,14 @@ describe('Ledger API', () => {
             database.collections.ledgerNode.findOne({
               id: database.hash(results.create.id)
             }, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(
-                database.hash(configEvent.input[0].ledger));
+                database.hash(configEvent.ledgerConfiguration.ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
+              ledgerNode.ledger.should.equal(
+                configEvent.ledgerConfiguration.ledger);
               ledgerNode.owner.should.equal(actor.id);
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
@@ -174,14 +175,14 @@ describe('Ledger API', () => {
             database.collections.ledgerNode.findOne({
               id: database.hash(results.create.id)
             }, (err, result) => {
-
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(
-                database.hash(configEvent.input[0].ledger));
+                database.hash(configEvent.ledgerConfiguration.ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
+              ledgerNode.ledger.should.equal(
+                configEvent.ledgerConfiguration.ledger);
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
               ledgerNode.storage.plugin.should.equal('mongodb');
@@ -200,13 +201,13 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedgerNode.add(
             actor, {configEvent}, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(result).to.be.ok;
               callback(null, result);
             }),
           createDuplicate: ['create', (results, callback) => brLedgerNode.add(
             actor, {configEvent}, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(result).to.be.ok;
               expect(result.meta).to.exist;
               expect(result.blocks).to.exist;
@@ -220,7 +221,7 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedgerNode.add(
             actor, {owner: actor.id, configEvent}, (err, ledgerNode) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
@@ -228,13 +229,14 @@ describe('Ledger API', () => {
             database.collections.ledgerNode.findOne({
               id: database.hash(results.create.id)
             }, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(
-                database.hash(configEvent.input[0].ledger));
+                database.hash(configEvent.ledgerConfiguration.ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
+              ledgerNode.ledger.should.equal(
+                configEvent.ledgerConfiguration.ledger);
               ledgerNode.owner.should.equal(actor.id);
               ledgerNode.storage.should.be.an('object');
               ledgerNode.storage.id.should.be.a('string');
@@ -254,7 +256,7 @@ describe('Ledger API', () => {
               configEvent,
               owner: mockData.identities.regularUser.identity.id
             }, (err, ledgerNode) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
@@ -262,13 +264,14 @@ describe('Ledger API', () => {
             database.collections.ledgerNode.findOne({
               id: database.hash(results.create.id)
             }, (err, result) => {
-              expect(err).not.to.be.ok;
+              assertNoError(err);
               result.id.should.equal(database.hash(results.create.id));
               result.ledger.should.equal(
-                database.hash(configEvent.input[0].ledger));
+                database.hash(configEvent.ledgerConfiguration.ledger));
               const ledgerNode = result.ledgerNode;
               ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(configEvent.input[0].ledger);
+              ledgerNode.ledger.should.equal(
+                configEvent.ledgerConfiguration.ledger);
               ledgerNode.owner.should.equal(
                 mockData.identities.regularUser.identity.id);
               ledgerNode.storage.should.be.an('object');
@@ -312,7 +315,7 @@ describe('Ledger API', () => {
         create: callback => brLedgerNode.add(actor, {configEvent}, callback),
         get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
             expect(result.blocks).to.exist;
@@ -326,7 +329,7 @@ describe('Ledger API', () => {
           actor, {owner: actor.id, configEvent}, callback),
         get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
             expect(result.blocks).to.exist;
@@ -365,13 +368,14 @@ describe('Ledger API', () => {
           actor, results.create.id, callback)
         ],
         get: ['delete', (results, callback) => brLedgerNode.get(
-          actor, configEvent.input[0].ledger, {
+          actor, configEvent.ledgerConfiguration.ledger, {
             owner: actor.id
           }, (err, result) => {
             expect(err).to.be.ok;
             expect(result).not.to.be.ok;
             err.name.should.equal('NotFound');
-            err.details.ledger.should.equal(configEvent.input[0].ledger);
+            err.details.ledger.should.equal(
+              configEvent.ledgerConfiguration.ledger);
             callback();
           })]
       }, done));
@@ -391,7 +395,7 @@ describe('Ledger API', () => {
         create: callback => brLedgerNode.add(actor, {configEvent}, callback),
         get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
             expect(result.blocks).to.exist;
@@ -405,7 +409,7 @@ describe('Ledger API', () => {
           actor, {owner: actor.id, configEvent}, callback),
         get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
             expect(result.blocks).to.exist;
@@ -420,7 +424,7 @@ describe('Ledger API', () => {
         }, callback),
         get: ['create', (results, callback) => brLedgerNode.get(
           actor, results.create.id, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             expect(result.meta).to.exist;
             expect(result.blocks).to.exist;
@@ -445,13 +449,14 @@ describe('Ledger API', () => {
           actor, results.create.id, callback)
         ],
         get: ['delete', (results, callback) => brLedgerNode.get(
-          actor, configEvent.input[0].ledger, {
+          actor, configEvent.ledgerConfiguration.ledger, {
             owner: actor.id
           }, (err, result) => {
             expect(err).to.be.ok;
             expect(result).not.to.be.ok;
             err.name.should.equal('NotFound');
-            err.details.ledger.should.equal(configEvent.input[0].ledger);
+            err.details.ledger.should.equal(
+              configEvent.ledgerConfiguration.ledger);
             callback();
           })]
       }, done));
@@ -477,14 +482,14 @@ describe('Ledger API', () => {
           actor, {owner: actor.id, configEvent}, callback),
         delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             callback();
           })],
         test: ['delete', (results, callback) =>
           database.collections.ledgerNode.findOne({
             id: database.hash(results.create.id)
           }, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             result.meta.deleted.should.be.a('number');
             callback();
@@ -539,14 +544,14 @@ describe('Ledger API', () => {
           actor, {owner: actor.id, configEvent}, callback),
         delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             callback();
           })],
         test: ['delete', (results, callback) =>
           database.collections.ledgerNode.findOne({
             id: database.hash(results.create.id)
           }, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             result.meta.deleted.should.be.a('number');
             callback();
@@ -559,14 +564,14 @@ describe('Ledger API', () => {
         }, callback),
         delete: ['create', (results, callback) => brLedgerNode.remove(
           actor, results.create.id, err => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             callback();
           })],
         test: ['delete', (results, callback) =>
           database.collections.ledgerNode.findOne({
             id: database.hash(results.create.id)
           }, (err, result) => {
-            expect(err).not.to.be.ok;
+            assertNoError(err);
             expect(result).to.be.ok;
             result.meta.deleted.should.be.a('number');
             callback();
@@ -651,12 +656,16 @@ describe('Ledger API', () => {
               configEvent,
               owner: actor.id
             }, (err, result) => {
+              assertNoError(err);
+              expect(result).to.be.ok;
               testLedgers.push(result.id);
               callback();
             }), callback),
           // public ledgers
           createBeta: callback => async.times(3, (i, callback) =>
             brLedgerNode.add(null, {configEvent}, (err, result) => {
+              assertNoError(err);
+              expect(result).to.be.ok;
               testLedgers.push(result.id);
               callback();
             }), callback),
@@ -691,6 +700,7 @@ describe('Ledger API', () => {
               configEvent,
               owner: actor.id
             },(err, result) => {
+              assertNoError(err);
               testLedgers.push(result.id);
               callback();
             }), callback),
@@ -731,6 +741,8 @@ describe('Ledger API', () => {
               configEvent,
               owner: actor.id
             },(err, result) => {
+              assertNoError(err);
+              expect(result).to.be.ok;
               testLedgers.push(result.id);
               callback();
             }), callback),
@@ -742,6 +754,8 @@ describe('Ledger API', () => {
           // public ledgers
           createGamma: callback => async.times(2, (i, callback) =>
             brLedgerNode.add(null, {configEvent}, (err, result) => {
+              assertNoError(err);
+              expect(result).to.be.ok;
               testLedgers.push(result.id);
               callback();
             }), callback),
@@ -785,12 +799,13 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => async.times(10, (i, callback) =>
             brLedgerNode.add(actor, {configEvent}, (err, result) => {
+              assertNoError(err);
               testLedgers.push(result.id);
               callback();
             }), callback),
           getIterator: ['create', (results, callback) =>
             brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
+              assertNoError(err);
               callback(null, iterator);
             })
           ],
@@ -861,6 +876,8 @@ describe('Ledger API', () => {
               configEvent,
               owner: actor.id
             }, (err, result) => {
+              assertNoError(err);
+              expect(result).to.be.ok;
               testLedgers.push(result.id);
               callback();
             }), callback),
@@ -869,6 +886,8 @@ describe('Ledger API', () => {
               configEvent,
               owner: 'did:v1:a22b5d78-f88b-4172-b19b-8389fa8dd1e3'
             }, (err, result) => {
+              assertNoError(err);
+              expect(result).to.be.ok;
               testLedgers.push(result.id);
               callback();
             }), callback),
