@@ -12,7 +12,7 @@ const roles = config.permission.roles;
 config.mocha.tests.push(path.join(__dirname, 'mocha'));
 
 // MongoDB
-config.mongodb.name = 'bedrock_ledger_test';
+config.mongodb.name = 'bedrock_ledger_node_test';
 config.mongodb.dropCollections.onInit = true;
 config.mongodb.dropCollections.collections = [];
 
