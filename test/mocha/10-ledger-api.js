@@ -51,7 +51,7 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedgerNode.add(
             actor, {configEvent}, (err, ledgerNode) => {
-              should.not.exist(err);
+              assertNoError(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
@@ -167,7 +167,7 @@ describe('Ledger API', () => {
         async.auto({
           create: callback => brLedgerNode.add(
             actor, {configEvent}, (err, ledgerNode) => {
-              should.not.exist(err);
+              assertNoError(err);
               expect(ledgerNode).to.be.ok;
               callback(null, ledgerNode);
             }),
@@ -626,7 +626,7 @@ describe('Ledger API', () => {
             }), callback),
           getIterator: ['create', (results, callback) =>
             brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
+              assertNoError(err);
               callback(null, iterator);
             })
           ],
@@ -671,7 +671,7 @@ describe('Ledger API', () => {
             }), callback),
           getIterator: ['createAlpha', 'createBeta', (results, callback) =>
             brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
+              assertNoError(err);
               callback(null, iterator);
             })
           ],
@@ -699,7 +699,7 @@ describe('Ledger API', () => {
             brLedgerNode.add(actor, {
               configEvent,
               owner: actor.id
-            },(err, result) => {
+            }, (err, result) => {
               assertNoError(err);
               testLedgers.push(result.id);
               callback();
@@ -711,7 +711,7 @@ describe('Ledger API', () => {
             }, callback), callback),
           getIterator: ['createAlpha', 'createBeta', (results, callback) =>
             brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
+              assertNoError(err);
               callback(null, iterator);
             })
           ],
@@ -740,7 +740,7 @@ describe('Ledger API', () => {
             brLedgerNode.add(actor, {
               configEvent,
               owner: actor.id
-            },(err, result) => {
+            }, (err, result) => {
               assertNoError(err);
               expect(result).to.be.ok;
               testLedgers.push(result.id);
@@ -761,10 +761,10 @@ describe('Ledger API', () => {
             }), callback),
           getIterator: [
             'createAlpha', 'createBeta', 'createGamma', (results, callback) =>
-            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
-              callback(null, iterator);
-            })
+              brLedgerNode.getNodeIterator(actor, (err, iterator) => {
+                assertNoError(err);
+                callback(null, iterator);
+              })
           ],
           iterate: ['getIterator', (results, callback) =>
             async.eachSeries(results.getIterator, (promise, callback) => {
@@ -846,7 +846,7 @@ describe('Ledger API', () => {
             }), callback),
           getIterator: ['createAlpha', 'createBeta', (results, callback) =>
             brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
+              assertNoError(err);
               callback(null, iterator);
             })
           ],
@@ -898,10 +898,10 @@ describe('Ledger API', () => {
             }), callback),
           getIterator: [
             'createAlpha', 'createBeta', 'createGamma', (results, callback) =>
-            brLedgerNode.getNodeIterator(actor, (err, iterator) => {
-              should.not.exist(err);
-              callback(null, iterator);
-            })
+              brLedgerNode.getNodeIterator(actor, (err, iterator) => {
+                assertNoError(err);
+                callback(null, iterator);
+              })
           ],
           iterate: ['getIterator', (results, callback) =>
             async.eachSeries(results.getIterator, (promise, callback) => {

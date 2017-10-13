@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals should */
 'use strict';
 
 const async = require('async');
@@ -71,7 +70,7 @@ describe('Events API', () => {
         }, callback),
         add: ['signEvent', (results, callback) => {
           ledgerNode.events.add(results.signEvent, (err, result) => {
-            should.not.exist(err);
+            assertNoError(err);
             should.exist(result);
             result.event.should.deep.equal(results.signEvent);
             result.meta.eventHash.should.be.a('string');
@@ -101,7 +100,7 @@ describe('Events API', () => {
         getEvent: ['addEvent', (results, callback) => {
           const eventHash = results.addEvent.meta.eventHash;
           ledgerNode.events.get(eventHash, (err, result) => {
-            should.not.exist(err);
+            assertNoError(err);
             should.exist(result);
             should.exist(result.event);
             result.event.should.deep.equal(results.signEvent);

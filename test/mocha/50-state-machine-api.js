@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals should */
 'use strict';
 
 const _ = require('lodash');
@@ -50,9 +49,9 @@ describe('State Machine API', () => {
         addLedger: ['getActor', (results, callback) => {
           brLedgerNode.add(actor, {configEvent: signedConfigEvent},
             (err, result) => {
-            ledgerNode = result;
-            callback(err);
-          });
+              ledgerNode = result;
+              callback(err);
+            });
         }]
       }, done);
     });
@@ -73,7 +72,7 @@ describe('State Machine API', () => {
         get: ['add', (results, callback) => {
           const objId = 'https://example.com/events/1234567';
           ledgerNode.stateMachine.get(objId, {}, (err, result) => {
-            should.not.exist(err);
+            assertNoError(err);
             should.exist(result);
             result.object.should.deep.equal(results.sign.input[0]);
             callback();

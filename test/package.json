@@ -31,7 +31,7 @@
     "bedrock-jobs": "^2.0.3",
     "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#implementation",
     "bedrock-ledger-context": "digitalbazaar/bedrock-ledger-context#master",
-    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#cm4",
+    "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#getLatestSummary",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#implementation",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",

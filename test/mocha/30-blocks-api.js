@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals should */
 'use strict';
 
 const async = require('async');
@@ -59,7 +58,7 @@ describe('Blocks API', () => {
     }, done));
     it('should get block', done => {
       ledgerNode.blocks.get(configBlockId, (err, result) => {
-        should.not.exist(err);
+        assertNoError(err);
         should.exist(result);
         result.block.should.be.an('object');
         const block = result.block;
