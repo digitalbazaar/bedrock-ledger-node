@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
  */
-/* globals should, assertNoError */
 'use strict';
 
 const async = require('async');
