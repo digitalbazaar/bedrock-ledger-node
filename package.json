@@ -22,7 +22,7 @@
     "uuid": "^3.0.1"
   },
   "peerDependencies": {
-    "bedrock": "digitalbazaar/bedrock#jsonld-1.1",
+    "bedrock": "^1.8.0",
     "bedrock-mongodb": "^3.0.0",
     "bedrock-permission": "^2.3.2",
     "bedrock-jobs": "^2.0.3"
