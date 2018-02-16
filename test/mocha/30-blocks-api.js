@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -14,18 +14,18 @@ const mockData = require('./mock.data');
 
 jsigs.use('jsonld', jsonld);
 
-let signedConfigEvent;
+let signedConfig;
 
 describe('Blocks API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
-      callback => jsigs.sign(mockData.events.config, {
-        algorithm: 'LinkedDataSignature2015',
+      callback => jsigs.sign(mockData.ledgerConfiguration, {
+        algorithm: 'RsaSignature2018',
         privateKeyPem: mockData.groups.authorized.privateKey,
         creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       }, (err, result) => {
-        signedConfigEvent = result;
+        signedConfig = result;
         callback(err);
       })
     ], done);
@@ -45,7 +45,7 @@ describe('Blocks API', () => {
           callback(err);
         }),
       addLedger: callback => brLedgerNode.add(
-        actor, {configEvent: signedConfigEvent}, (err, result) => {
+        actor, {ledgerConfiguration: signedConfig}, (err, result) => {
           ledgerNode = result;
           callback(err, result);
         }),

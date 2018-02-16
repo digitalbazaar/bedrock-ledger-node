@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -24,13 +24,13 @@ describe('Performance tests', () => {
   let storage;
   before(done => async.auto({
     prepare: callback => helpers.prepareDatabase(mockData, callback),
-    sign: callback => jsigs.sign(mockData.events.config, {
-      algorithm: 'LinkedDataSignature2015',
+    sign: callback => jsigs.sign(mockData.ledgerConfiguration, {
+      algorithm: 'RsaSignature2018',
       privateKeyPem: mockData.groups.authorized.privateKey,
       creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
     }, callback),
     addLedger: ['prepare', 'sign', (results, callback) => brLedgerNode.add(
-      null, {configEvent: results.sign}, (err, result) => {
+      null, {ledgerConfiguration: results.sign}, (err, result) => {
         ledgerNode = result;
         storage = ledgerNode.storage;
         callback(err, result);

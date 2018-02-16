@@ -17,7 +17,7 @@ jsigs.use('jsonld', jsonld);
 
 let signedConfig;
 
-describe('Events API', () => {
+describe('Operations API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
@@ -52,7 +52,7 @@ describe('Events API', () => {
           })]
       }, done);
     });
-    it('should create event', done => {
+    it('should add operation', done => {
       const testOperation = {
         '@context': 'https://w3id.org/webledger/v1',
         type: 'CreateWebLedgerRecord',
@@ -72,10 +72,29 @@ describe('Events API', () => {
             assertNoError(err);
             callback();
           });
-        }],
+        }]
+      }, done);
+    });
+    it('should get event containing the operation', done => {
+      const testOperation = {
+        '@context': 'https://w3id.org/webledger/v1',
+        type: 'CreateWebLedgerRecord',
+        record: {
+          '@context': 'https://schema.org/',
+          value: uuid()
+        }
+      };
+      async.auto({
+        sign: callback => jsigs.sign(testOperation, {
+          algorithm: 'RsaSignature2018',
+          privateKeyPem: mockData.groups.authorized.privateKey,
+          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        }, callback),
+        add: ['sign', (results, callback) =>
+          ledgerNode.operations.add(results.sign, callback)],
         // unilateral consensus allows immediate retrieval of an event with
         // a single operation in it from the latest block
-        getEventFromBlock: ['add', (results, callback) => {
+        get: ['add', (results, callback) => {
           ledgerNode.blocks.getLatest((err, result) => {
             assertNoError(err);
             should.exist(result);
@@ -87,26 +106,6 @@ describe('Events API', () => {
             should.exist(event.operation);
             should.exist(event.operation[0]);
             event.operation[0].should.deep.equal(results.sign);
-            callback(null, event);
-          });
-        }],
-        // hash event (only works because of knowledge of how unilateral
-        // consensus works)
-        hashEvent: ['getEventFromBlock', (results, callback) => {
-          const hasher = brLedgerNode.consensus._hasher;
-          hasher(results.getEventFromBlock, callback);
-        }],
-        getEvent: ['hashEvent', (results, callback) => {
-          const eventHash = results.hashEvent;
-          ledgerNode.events.get(eventHash, (err, result) => {
-            assertNoError(err);
-            should.exist(result);
-            should.exist(result.event);
-            should.exist(result.event.operation);
-            should.exist(result.event.operation[0]);
-            result.event.operation[0].should.deep.equal(results.sign);
-            should.exist(result.meta);
-            result.meta.eventHash.should.equal(eventHash);
             callback();
           });
         }]

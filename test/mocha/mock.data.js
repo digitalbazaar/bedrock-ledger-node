@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -36,14 +36,44 @@ identities[userName].identity.sysResourceRole.push({
 // identities[userName] = {};
 // identities[userName].identity = helpers.createIdentity(userName);
 
-const events = mock.events = {};
+const ledgerConfiguration = mock.ledgerConfiguration = {
+  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+  type: 'WebLedgerConfiguration',
+  ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  consensusMethod: 'UnilateralConsensus2017',
+  ledgerConfigurationValidator: [{
+    type: 'SignatureValidator2017',
+    validatorFilter: [{
+      type: 'ValidatorFilterByType',
+      validatorFilterByType: ['WebLedgerConfiguration']
+    }],
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      // 'https://example.com/i/alpha'
+    ],
+    minimumSignaturesRequired: 1
+  }],
+  operationValidator: [{
+    type: 'SignatureValidator2017',
+    validatorFilter: [{
+      type: 'ValidatorFilterByType',
+      validatorFilterByType: ['CreateWebLedgerRecord']
+    }],
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+      // 'https://example.com/i/alpha'
+    ],
+    minimumSignaturesRequired: 1
+  }]
+};
+
+const operations = mock.operations = {};
 
 // using verbose signature for performance tests
-events.alpha = {
+operations.alpha = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  type: 'WebLedgerEvent',
-  operation: 'Create',
-  input: [{
+  type: 'CreateWebLedgerRecord',
+  record: {
     '@context': constants.TEST_CONTEXT_V1_URL,
     id: `https://example.com/events/a05bebf8-c966-427f-92f2-ff9060f4bd23`,
     type: 'Concert',
@@ -56,19 +86,19 @@ events.alpha = {
       priceCurrency: 'USD',
       url: `https://example.org/purchase/a05bebf8-c966-427f-92f2-ff9060f4bd23`,
     }
-  }],
-  signature: {
-    type: 'RsaSignature2017',
+  },
+  // using verbose signature for performance tests
+  proof: {
+    type: 'RsaSignature2018',
     created: '2017-05-10T19:47:13Z',
     creator: "https://bedrock.local:18443/consensus/continuity2017/voters/57565658-0d8a-4668-b734-e801aeaa6472#key",
     signatureValue: "nlx8c9uFI8Ur/h57F5AeHHrKPSKiiGJmN6APRnYesQPK4LXftnm2lzqpWzsvKGDPzH6QfoOIktQu2Ax0pj/Bi6Oa4/Na75HuoRGppaHCqlyrgbr5EUPRCiYSjlsYKBhEN6ITdmR/O8iGz9WZi4PQjSW9XrrP8bQLeu9Kzsu5hdkzmgS4f3PCXpImwpKFttyF7xARvSQxrgRxZrqWPIGtD9sghRY2/Zn3T2npTaOTXMhgW9Lc7uEpjThnCEsrKflshbLGevZglc/njBp5SoEgon8CuzQIkMBFjCTEdJYBtTuk0AF5BcVyoxPDfH9bdUYOIMFaDhZBQKM5tQEU2GqE/g=="
   }
 };
-events.beta = {
+operations.beta = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  type: 'WebLedgerEvent',
-  operation: 'Create',
-  input: [{
+  type: 'CreateWebLedgerRecord',
+  record: {
     '@context': 'https://schema.org/',
     id: 'https://example.com/events/1234567',
     type: 'Concert',
@@ -81,41 +111,27 @@ events.beta = {
       priceCurrency: 'USD',
       url: 'https://www.ticketfly.com/purchase/309433'
     }
-  }]
+  }
+};
+
+const events = mock.events = {};
+
+// FIXME: remove `events.alpha` and `events.beta`
+events.alpha = {
+  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+  type: 'WebLedgerEvent',
+  operation: [operations.alpha]
+};
+events.beta = {
+  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+  type: 'WebLedgerEvent',
+  operation: [operations.beta]
 };
 
 events.config = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
   type: 'WebLedgerConfigurationEvent',
-  ledgerConfiguration: {
-    type: 'WebLedgerConfiguration',
-    ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-    consensusMethod: 'UnilateralConsensus2017',
-    eventValidator: [{
-      type: 'SignatureValidator2017',
-      eventFilter: [{
-        type: 'EventTypeFilter',
-        eventType: ['WebLedgerEvent']
-      }],
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-        // 'https://example.com/i/alpha'
-      ],
-      minimumSignaturesRequired: 1
-    }, {
-      type: 'SignatureValidator2017',
-      eventFilter: [{
-        type: 'EventTypeFilter',
-        eventType: ['WebLedgerConfigurationEvent']
-      }],
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-        // 'https://example.com/i/alpha'
-      ],
-      minimumSignaturesRequired: 1
-    }],
-    requireEventValidation: true
-  }
+  ledgerConfiguration
 };
 
 const eventBlocks = mock.eventBlocks = {};
@@ -140,10 +156,12 @@ blocks.config = {
 blocks.event = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
   type: 'WebLedgerEvent',
-  operation: 'Create',
-  input: [{
-    id: 'https://example.com/events/123456',
-    description: 'Example event'
+  operation: [{
+    type: 'CreateWebLedgerRecord',
+    record: {
+      id: 'https://example.com/events/123456',
+      description: 'Example event'
+    }
   }]
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -16,18 +16,18 @@ const uuid = require('uuid/v4');
 
 jsigs.use('jsonld', jsonld);
 
-let signedConfigEvent;
+let signedConfig;
 
 describe('State Machine API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
-      callback => jsigs.sign(mockData.events.config, {
-        algorithm: 'LinkedDataSignature2015',
+      callback => jsigs.sign(mockData.ledgerConfiguration, {
+        algorithm: 'RsaSignature2018',
         privateKeyPem: mockData.groups.authorized.privateKey,
         creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       }, (err, result) => {
-        signedConfigEvent = result;
+        signedConfig = result;
         callback(err);
       })
     ], done);
@@ -47,7 +47,7 @@ describe('State Machine API', () => {
             callback(err);
           }),
         addLedger: ['getActor', (results, callback) => {
-          brLedgerNode.add(actor, {configEvent: signedConfigEvent},
+          brLedgerNode.add(actor, {ledgerConfiguration: signedConfig},
             (err, result) => {
               ledgerNode = result;
               callback(err);
@@ -56,17 +56,17 @@ describe('State Machine API', () => {
       }, done);
     });
     it('should get existing event input from state machine', done => {
-      const event = _.cloneDeep(mockData.events.beta);
+      const operation = _.cloneDeep(mockData.operations.beta);
       async.auto({
         sign: callback => {
-          event.id = 'https://example.com/events/' + uuid();
-          jsigs.sign(event, {
-            algorithm: 'LinkedDataSignature2015',
+          operation.id = 'https://example.com/events/' + uuid();
+          jsigs.sign(operation, {
+            algorithm: 'RsaSignature2018',
             privateKeyPem: mockData.groups.authorized.privateKey,
             creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
           }, (err, result) => callback(err, result));
         },
-        add: ['sign', (results, callback) => ledgerNode.events.add(
+        add: ['sign', (results, callback) => ledgerNode.operations.add(
           results.sign, (err, result) => callback(err, result))
         ],
         get: ['add', (results, callback) => {
@@ -74,7 +74,7 @@ describe('State Machine API', () => {
           ledgerNode.stateMachine.get(objId, {}, (err, result) => {
             assertNoError(err);
             should.exist(result);
-            result.object.should.deep.equal(results.sign.input[0]);
+            result.object.should.deep.equal(results.sign.record);
             callback();
           });
         }]

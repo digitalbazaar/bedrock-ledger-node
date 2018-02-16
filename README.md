@@ -22,9 +22,12 @@ blocks, and events.
   * ledgerNode.meta.get(options, (err, ledgerMeta))
 * Ledger Node Blocks API
   * ledgerNode.blocks.get(blockId, options, callback(err, block))
+* Ledger Node Config API
+  * ledgerNode.config.change(ledgerConfiguration, options, (err))
 * Ledger Node Events API
-  * ledgerNode.events.add(event, options, (err, event))
   * ledgerNode.events.get(eventId, options, (err, event))
+* Ledger Node Operations API
+  * ledgerNode.operations.add(operation, options, (err))
 * Ledger State Machine API
   * ledgerNode.stateMachine.get(objectId, options, (err, object))
 * Ledger Node Plugin API
@@ -45,7 +48,7 @@ const actor = 'admin';
 const ledgerId = 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59';
 
 brLedgerNode.get(actor, ledgerId, options, (err, ledgerNode) => {
-  ledgerNode.events.add( /* new ledger event details go here */);
+  ledgerNode.operations.add( /* new ledger operation details go here */);
     /* ... do other operations on the ledger */
   });
 });
@@ -63,8 +66,8 @@ Creates a new ledger node. The given options will determine if the ledger
 node will become the first node for a new ledger or if it will mirror
 and existing ledger.
 
-If **options.configEvent** is given, then a new ledger will be created and
-the ledger node will be its first member.
+If **options.ledgerConfiguration** is given, then a new ledger will be created
+and the ledger node will be its first member.
 
 If a **options.genesisBlock** is given, then an existing ledger will be
 mirrored by the new ledger node.
@@ -85,47 +88,43 @@ mirrored by the new ledger node.
   * ledgerNode - the ledger node associated with the ledger.
 
 ```javascript
-const configEvent = {
+const ledgerConfiguration = {
   '@context': 'https://w3id.org/webledger/v1',
-  type: 'WebLedgerConfigurationEvent',
-  ledgerConfiguration: [{
-    type: 'WebLedgerConfiguration',
-    ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
-    consensusMethod: 'UnilateralConsensus2017',
-    eventValidator: [{
-      type: 'SignatureValidator2017',
-      eventFilter: [{
-        type: 'EventTypeFilter',
-        eventType: ['WebLedgerEvent']
-      }],
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      ],
-      minimumSignaturesRequired: 1
-    }, {
-      type: 'SignatureValidator2017',
-      eventFilter: [{
-        type: 'EventTypeFilter',
-        eventType: ['WebLedgerConfigurationEvent']
-      }],
-      approvedSigner: [
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      ],
-      minimumSignaturesRequired: 1
+  type: 'WebLedgerConfiguration',
+  ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  consensusMethod: 'UnilateralConsensus2017',
+  ledgerConfigurationValidator: [{
+    type: 'SignatureValidator2017',
+    validatorFilter: [{
+      type: 'ValidatorFilterByType',
+      validatorFilterByType: ['WebLedgerConfiguration']
     }],
-    // events that are not validated by at least 1 validator will be rejected
-    requireEventValidation: true
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+    ],
+    minimumSignaturesRequired: 1
   }],
-  signature: {
-    type: 'LinkedDataSignature2015',
+  operationValidator: [{
+    type: 'SignatureValidator2017',
+    validatorFilter: [{
+      type: 'ValidatorFilterByType',
+      validatorFilterByType: ['CreateWebLedgerRecord']
+    }],
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+    ],
+    minimumSignaturesRequired: 1
+  }],
+  proof: {
+    type: 'RsaSignature2018',
     created: '2017-10-24T05:33:31Z',
     creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
     domain: 'example.com',
-    signatureValue: 'eyiOiJJ0eXAK...EjXkgFWFO'
+    jws: 'eyiOiJJ0eXAK...EjXkgFWFO'
   }
 };
 const options = {
-  configEvent: configEvent,
+  ledgerConfiguration,
   owner: 'https://example.com/i/123'
 };
 
@@ -307,24 +306,90 @@ ledgerNode.blocks.getLatest(options, (err, result) => {
 });
 ```
 
-## Events API
+## Config API
 
-### Create a Ledger Event
+### Change a Ledger's configuration
 
-Creates an event to associate with a ledger given an event and a set of options.
+Schedules a change to the ledger's configuration. The particular consensus
+mechanism for the ledger will determine what event to place the new
+`ledgerConfiguration` in and when that event achieves consensus. Different
+consensus mechanisms will behave differently. Once the event containing the
+operation achieves consensus, the new configuration will be applied via the
+ledger's state machine if it is considered valid at that time.
 
-* event - the event to associate with a ledger.
-* options - a set of options used when creating the event.
+* ledgerConfiguration - the new ledger configuration to use.
+* options - a set of options used when adding the ledger configuration.
 * callback(err) - the callback to call when finished.
   * err - An Error if an error occurred, null otherwise.
-  * event - the event that was written to the database.
 
 ```javascript
-const event = {
+const ledgerConfiguration = {
   '@context': 'https://w3id.org/webledger/v1',
-  type: 'WebLedgerEvent',
-  operation: 'Create',
-  input: [{
+  type: 'WebLedgerConfiguration',
+  ledger: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
+  consensusMethod: 'UnilateralConsensus2017',
+  ledgerConfigurationValidator: [{
+    type: 'SignatureValidator2017',
+    validatorFilter: [{
+      type: 'ValidatorFilterByType',
+      validatorFilterByType: ['WebLedgerConfiguration']
+    }],
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+    ],
+    minimumSignaturesRequired: 1
+  }],
+  operationValidator: [{
+    type: 'SignatureValidator2017',
+    validatorFilter: [{
+      type: 'ValidatorFilterByType',
+      validatorFilterByType: ['CreateWebLedgerRecord']
+    }],
+    approvedSigner: [
+      'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+    ],
+    minimumSignaturesRequired: 1
+  }],
+  proof: {
+    type: 'RsaSignature2018',
+    created: '2017-10-24T05:33:31Z',
+    creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+    domain: 'example.com',
+    jws: 'eyiOiJJ0eXAK...EjXkgFWFO'
+  }
+};
+const options = {};
+
+ledgerNode.config.change(ledgerConfiguration, options, err => {
+  if(err) {
+    throw new Error('Failed to change the configuration:', err);
+  }
+
+  console.log('Ledger configuration change scheduled.');
+});
+```
+
+## Operations API
+
+### Add a Ledger Operation
+
+Adds an operation to mutate the state of the ledger. The particular consensus
+mechanism for the ledger will determine what event to place the operation in
+and when that event achieves consensus. Different consensus mechanisms will
+behave differently. Once the event containing the operation achieves consensus,
+the operation will be applied via the ledger's state machine if it is
+considered valid at that time.
+
+* operation - the operation to perform.
+* options - a set of options used when adding the operation.
+* callback(err) - the callback to call when finished.
+  * err - An Error if an error occurred, null otherwise.
+
+```javascript
+const operation = {
+  '@context': 'https://w3id.org/webledger/v1',
+  type: 'CreateWebLedgerRecord',
+  record: {
     '@context': 'https://schema.org/',
     id: 'https://example.com/events/123456',
     type: 'Concert',
@@ -337,24 +402,26 @@ const event = {
       priceCurrency: 'USD',
       url: 'https://www.ticketfly.com/purchase/309433'
     }
-  }],
-  signature: {
-    type: 'RsaSignature2017',
+  },
+  proof: {
+    type: 'RsaSignature2018',
     created: '2017-05-10T19:47:15Z',
     creator: 'https://www.ticketfly.com/keys/789',
-    signatureValue: 'JoS27wqa...BFMgXIMw=='
+    jws: 'JoS27wqa...BFMgXIMw=='
   }
-}
+};
 const options = {};
 
-ledgerNode.events.add(event, options, (err, event) => {
+ledgerNode.operations.add(operation, options, err => {
   if(err) {
-    throw new Error('Failed to create the event:', err);
+    throw new Error('Failed to add the operation:', err);
   }
 
-  console.log('Event creation successful:', event.id);
+  console.log('Operation addition successful.');
 });
 ```
+
+## Events API
 
 ### Get a Ledger Event
 

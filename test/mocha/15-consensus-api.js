@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -16,8 +16,8 @@ describe('Consensus API', () => {
       const event1 = bedrock.util.clone(mockData.events.alpha);
       const event2 = bedrock.util.clone(mockData.events.alpha);
       // NOTE: event IDs *must* be URIs
-      event1.input[0].id = `https://example.com/event/${uuid()}`;
-      event2.input[0].id = `https://example.com/event/${uuid()}`;
+      event1.operation[0].record.id = `https://example.com/event/${uuid()}`;
+      event2.operation[0].record.id = `https://example.com/event/${uuid()}`;
       async.auto({
         hash1: callback => hasher(event1, callback),
         hash2: callback => hasher(event2, callback),

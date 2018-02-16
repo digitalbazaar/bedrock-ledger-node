@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2016-2018 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -105,11 +105,11 @@ api.createBlocks = (
     block.previousBlockHash = uuid();
     const time = startTime + i;
     const meta = {
-      "blockHash": uuid(),
-      "created": time,
-      "updated": time,
-      "consensus": true,
-      "consensusDate": time
+      blockHash: uuid(),
+      created: time,
+      updated: time,
+      consensus: true,
+      consensusDate: time
     };
     async.auto({
       events: callback => api.createEvent(
