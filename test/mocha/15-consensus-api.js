@@ -12,7 +12,7 @@ const uuid = require('uuid/v4');
 describe('Consensus API', () => {
   describe('hasher API', () => {
     const hasher = brLedgerNode.consensus._hasher;
-    it('unique WebLedgerEvents create unique hashes', done => {
+    it('unique WebLedgerOperationEvents create unique hashes', done => {
       const event1 = bedrock.util.clone(mockData.events.alpha);
       const event2 = bedrock.util.clone(mockData.events.alpha);
       // NOTE: event IDs *must* be URIs

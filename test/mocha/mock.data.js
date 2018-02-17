@@ -116,15 +116,14 @@ operations.beta = {
 
 const events = mock.events = {};
 
-// FIXME: remove `events.alpha` and `events.beta`
 events.alpha = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  type: 'WebLedgerEvent',
+  type: 'WebLedgerOperationEvent',
   operation: [operations.alpha]
 };
 events.beta = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  type: 'WebLedgerEvent',
+  type: 'WebLedgerOperationEvent',
   operation: [operations.beta]
 };
 
@@ -155,7 +154,7 @@ blocks.config = {
 
 blocks.event = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  type: 'WebLedgerEvent',
+  type: 'WebLedgerOperationEvent',
   operation: [{
     type: 'CreateWebLedgerRecord',
     record: {
