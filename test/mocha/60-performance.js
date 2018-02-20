@@ -52,27 +52,29 @@ describe('Performance tests', () => {
         done();
       });
     });
-    it(`blocks.add ${blockNum} blocks`, function(done) {
-      this.timeout(120000);
-      async.eachLimit(blocksAndEvents.blocks, 100, (b, callback) => {
-        storage.blocks.add(b.block, b.meta, err => {
-          assertNoError(err);
-          callback();
-        });
-      }, done);
-    });
     it(`events.add events`, function(done) {
       this.timeout(120000);
       console.log(`Adding ${blocksAndEvents.events.length} events.`);
-      async.eachLimit(blocksAndEvents.events, 100, (e, callback) => {
-        storage.events.add(e.event, e.meta, err => {
+      async.eachLimit(
+        blocksAndEvents.events, 100, ({event, meta}, callback) => {
+          storage.events.add({event, meta}, err => {
+            assertNoError(err);
+            callback();
+          });
+        }, err => {
           assertNoError(err);
-          callback();
+          done();
         });
-      }, err => {
-        assertNoError(err);
-        done();
-      });
+    });
+    it(`blocks.add ${blockNum} blocks`, function(done) {
+      this.timeout(120000);
+      async.eachLimit(
+        blocksAndEvents.blocks, 100, ({block, meta}, callback) => {
+          storage.blocks.add({block, meta}, err => {
+            assertNoError(err);
+            callback();
+          });
+        }, done);
     });
   });
   describe('get API', () => {
