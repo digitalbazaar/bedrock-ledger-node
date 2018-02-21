@@ -50,14 +50,14 @@ describe('Blocks API', () => {
           callback(err, result);
         }),
       addBlock: ['addLedger', (results, callback) => {
-        results.addLedger.storage.blocks.getLatest({}, (err, result) => {
+        results.addLedger.storage.blocks.getLatest((err, result) => {
           configBlockId = result.eventBlock.block.id;
           callback();
         });
       }]
     }, done));
     it('should get block', done => {
-      ledgerNode.blocks.get(configBlockId, (err, result) => {
+      ledgerNode.blocks.get({blockId: configBlockId}, (err, result) => {
         assertNoError(err);
         should.exist(result);
         result.block.should.be.an('object');
