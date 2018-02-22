@@ -250,38 +250,36 @@ mock.groups = {
 mock.ldDocuments = {};
 
 mock.ldDocuments['https://example.com/i/alpha'] = {
-  "@context": constants.IDENTITY_CONTEXT_V1_URL,
+  "@context": constants.SECURITY_CONTEXT_V2_URL,
   "id": "https://example.com/i/alpha",
   "publicKey": [{
     "id": mock.authorizedSignerUrl,
-    "type": "CryptographicKey",
+    "type": "RsaVerificationKey2018",
     "owner": "https://example.com/i/alpha",
     "publicKeyPem": mock.groups.authorized.publicKey
   }]
 };
 mock.ldDocuments[mock.authorizedSignerUrl] = {
-  "@context": constants.IDENTITY_CONTEXT_V1_URL,
-  "type": "CryptographicKey",
+  "@context": constants.SECURITY_CONTEXT_V2_URL,
+  "type": "RsaVerificationKey2018",
   "owner": "https://example.com/i/alpha",
-  "label": "Signing Key 2",
   "id": mock.authorizedSignerUrl,
   "publicKeyPem": mock.groups.authorized.publicKey
 };
 mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838'] = {
-  "@context": constants.IDENTITY_CONTEXT_V1_URL,
+  "@context": constants.SECURITY_CONTEXT_V2_URL,
   "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
   "publicKey": [{
     "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144",
-    "type": "CryptographicKey",
+    "type": "RsaVerificationKey2018",
     "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
     "publicKeyPem": mock.groups.authorized.publicKey
   }]
 };
 mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'] = {
-  "@context": constants.IDENTITY_CONTEXT_V1_URL,
-  "type": "CryptographicKey",
+  "@context": constants.SECURITY_CONTEXT_V2_URL,
+  "type": "RsaVerificationKey2018",
   "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
-  "label": "Signing Key 2",
   "id": 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
   "publicKeyPem": mock.groups.authorized.publicKey
 };
