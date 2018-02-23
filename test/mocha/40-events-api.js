@@ -68,7 +68,8 @@ describe('Events API', () => {
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
         add: ['sign', (results, callback) => {
-          ledgerNode.operations.add(results.sign, (err, result) => {
+          ledgerNode.operations.add(
+            {operation: results.sign}, (err, result) => {
             assertNoError(err);
             callback();
           });

@@ -68,7 +68,7 @@ describe('Operations API', () => {
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
         add: ['sign', (results, callback) => {
-          ledgerNode.operations.add(results.sign, err => {
+          ledgerNode.operations.add({operation: results.sign}, err => {
             assertNoError(err);
             callback();
           });
@@ -91,7 +91,7 @@ describe('Operations API', () => {
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
         add: ['sign', (results, callback) =>
-          ledgerNode.operations.add(results.sign, callback)],
+          ledgerNode.operations.add({operation: results.sign}, callback)],
         // unilateral consensus allows immediate retrieval of an event with
         // a single operation in it from the latest block
         get: ['add', (results, callback) => {
