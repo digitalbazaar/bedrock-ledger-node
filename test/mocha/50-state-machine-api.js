@@ -67,7 +67,7 @@ describe('State Machine API', () => {
           }, (err, result) => callback(err, result));
         },
         add: ['sign', (results, callback) => ledgerNode.operations.add(
-          results.sign, (err, result) => callback(err, result))
+          {operation: results.sign}, (err, result) => callback(err, result))
         ],
         get: ['add', (results, callback) => {
           const objId = 'https://example.com/events/1234567';
