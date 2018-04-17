@@ -7,6 +7,7 @@ const async = require('async');
 const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
+const {_hasher: hasher} = brLedgerNode.consensus;
 const helpers = require('./helpers');
 const jsonld = bedrock.jsonld;
 const jsigs = require('jsonld-signatures');
@@ -67,17 +68,17 @@ describe('Events API', () => {
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
-        add: ['sign', (results, callback) => {
-          ledgerNode.operations.add(
-            {operation: results.sign}, (err, result) => {
+        operationHash: ['sign', (results, callback) =>
+          hasher(results.sign, callback)],
+        add: ['sign', (results, callback) => ledgerNode.operations.add(
+          {operation: results.sign}, err => {
             assertNoError(err);
             callback();
-          });
-        }],
+          })],
         // unilateral consensus allows immediate retrieval of an event with
         // a single operation in it from the latest block
-        getEventFromBlock: ['add', (results, callback) => {
-          ledgerNode.blocks.getLatest((err, result) => {
+        event: ['add', (results, callback) => ledgerNode.blocks.getLatest(
+          (err, result) => {
             assertNoError(err);
             should.exist(result);
             should.exist(result.eventBlock);
@@ -89,16 +90,17 @@ describe('Events API', () => {
             should.exist(event.operation[0]);
             event.operation[0].should.deep.equal(results.sign);
             callback(null, event);
-          });
-        }],
+          })],
         // hash event (only works because of knowledge of how unilateral
         // consensus works)
-        hashEvent: ['getEventFromBlock', (results, callback) => {
-          const hasher = brLedgerNode.consensus._hasher;
-          hasher(results.getEventFromBlock, callback);
+        eventHash: ['event', 'operationHash', (results, callback) => {
+          const {event, operationHash} = results;
+          event.operationHash = [operationHash];
+          delete event.operation;
+          hasher(event, callback);
         }],
-        getEvent: ['hashEvent', (results, callback) => {
-          const eventHash = results.hashEvent;
+        getEvent: ['eventHash', (results, callback) => {
+          const {eventHash} = results;
           ledgerNode.events.get(eventHash, (err, result) => {
             assertNoError(err);
             should.exist(result);

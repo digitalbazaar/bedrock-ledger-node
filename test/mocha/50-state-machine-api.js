@@ -55,7 +55,7 @@ describe('State Machine API', () => {
         }]
       }, done);
     });
-    it('should get existing event input from state machine', done => {
+    it('should get existing operation input from state machine', done => {
       const operation = _.cloneDeep(mockData.operations.beta);
       async.auto({
         sign: callback => {

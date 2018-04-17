@@ -14,7 +14,9 @@ const mockData = require('./mock.data');
 jsigs.use('jsonld', jsonld);
 
 // NOTE: these tests are designed to be run in sequence, not not use .only
-describe('Performance tests', () => {
+// TODO: remove these tests, these are largely duplicated in
+// bedrock-ledger-storage mongodb
+describe.skip('Performance tests', () => {
   const blockNum = 1000;
   const eventNum = 10;
   const opNum = 2500;
