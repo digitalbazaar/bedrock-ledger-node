@@ -597,7 +597,8 @@ describe('Ledger API', () => {
     }); // end adminUser as actor
   }); // end delete API
 
-  describe('getNodeIterator API', () => {
+  // FIXME: see https://github.com/digitalbazaar/bedrock-ledger-node/issues/17
+  describe.skip('getNodeIterator API', () => {
     beforeEach(done => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
