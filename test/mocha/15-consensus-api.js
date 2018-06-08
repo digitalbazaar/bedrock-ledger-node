@@ -16,8 +16,8 @@ describe('Consensus API', () => {
       const event1 = bedrock.util.clone(mockData.events.alpha);
       const event2 = bedrock.util.clone(mockData.events.alpha);
       // NOTE: event IDs *must* be URIs
-      event1.operation[0].record.id = `https://example.com/event/${uuid()}`;
-      event2.operation[0].record.id = `https://example.com/event/${uuid()}`;
+      event1.operationHash = [uuid()];
+      event2.operationHash = [uuid()];
       async.auto({
         hash1: callback => hasher(event1, callback),
         hash2: callback => hasher(event2, callback),

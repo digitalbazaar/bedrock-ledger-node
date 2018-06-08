@@ -113,18 +113,35 @@ operations.beta = {
     }
   }
 };
+operations.gamma = {
+  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+  type: 'UpdateWebLedgerRecord',
+  recordPatch: {
+    target: `https://example.com/events/a05bebf8-c966-427f-92f2-ff9060f4bd23`,
+    sequence: 0,
+    patch: [{
+      op: 'add', path: '/endDate', value: '2017-07-14T23:30'
+    }]
+  }
+};
+operations.delta = {
+  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+  type: 'UpdateWebLedgerRecord',
+  recordPatch: {
+    target: `https://example.com/events/a05bebf8-c966-427f-92f2-ff9060f4bd23`,
+    sequence: 0,
+    patch: [{
+      op: 'replace', path: '/name',
+      value: 'Less Big Band Concert in New York City'
+    }]
+  }
+};
 
 const events = mock.events = {};
 
 events.alpha = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
   type: 'WebLedgerOperationEvent',
-  operation: [operations.alpha]
-};
-events.beta = {
-  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  type: 'WebLedgerOperationEvent',
-  operation: [operations.beta]
 };
 
 events.config = {
