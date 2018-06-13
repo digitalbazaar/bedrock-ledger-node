@@ -59,6 +59,7 @@ describe('Events API', () => {
         type: 'CreateWebLedgerRecord',
         record: {
           '@context': 'https://schema.org/',
+          id: `urn:uuid:${uuid()}`,
           value: uuid()
         }
       };
