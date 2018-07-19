@@ -25,6 +25,7 @@
   },
   "peerDependencies": {
     "bedrock": "^1.8.0",
+    "bedrock-injector": "^1.0.0",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.3.2",
     "bedrock-jobs": "^2.0.3"

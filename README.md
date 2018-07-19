@@ -498,11 +498,10 @@ brLedgerNode.use('mongodb', {
   api: mongodbStorageApi
 });
 
-// get a plugin asynchronously
-brLedgerNode.use('mongodb', (err, plugin) => {
-  // plugin.type
-  // plugin.api
-});
+// get a plugin synchronously
+const plugin = brLedgerNode.use('mongodb');
+// plugin.type
+// plugin.api
 ```
 
 [bedrock]: https://github.com/digitalbazaar/bedrock

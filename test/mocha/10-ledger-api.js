@@ -146,7 +146,7 @@ describe('Ledger API', () => {
           actor, {storage: uuid(), ledgerConfiguration}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
-            err.name.should.equal('DataError');
+            err.name.should.equal('NotFoundError');
             done();
           });
       });
@@ -286,7 +286,7 @@ describe('Ledger API', () => {
           actor, {storage: uuid(), ledgerConfiguration}, (err, ledgerNode) => {
             expect(err).to.be.ok;
             expect(ledgerNode).not.to.be.ok;
-            err.name.should.equal('DataError');
+            err.name.should.equal('NotFoundError');
             done();
           });
       });
