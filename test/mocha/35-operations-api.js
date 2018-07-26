@@ -58,6 +58,7 @@ describe('Operations API', () => {
         type: 'CreateWebLedgerRecord',
         record: {
           '@context': 'https://schema.org/',
+          id: `urn:uuid:${uuid()}`,
           value: uuid()
         }
       };
@@ -75,12 +76,65 @@ describe('Operations API', () => {
         }]
       }, done);
     });
+    it('should fail add operation with an incorrect context', done => {
+      const testOperation = {
+        '@context': 'https://w3id.org/test/v1',
+        type: 'CreateWebLedgerRecord',
+        record: {
+          '@context': 'https://schema.org/',
+          id: `urn:uuid:${uuid()}`,
+          value: uuid()
+        }
+      };
+      async.auto({
+        sign: callback => jsigs.sign(testOperation, {
+          algorithm: 'RsaSignature2018',
+          privateKeyPem: mockData.groups.authorized.privateKey,
+          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        }, callback),
+        add: ['sign', (results, callback) => {
+          ledgerNode.operations.add({operation: results.sign}, (err) => {
+            err.name.should.equal('SyntaxError');
+            err.message.should.equal(
+              'Operation context must be... https://w3id.org/webledger/v1');
+            callback();
+          });
+        }]
+      }, done);
+    });
+    it('should fail add operation with incorrect order of contexts', done => {
+      const testOperation = {
+        '@context': ['https://w3id.org/test/v1'],
+        type: 'CreateWebLedgerRecord',
+        record: {
+          '@context': 'https://schema.org/',
+          id: `urn:uuid:${uuid()}`,
+          value: uuid()
+        }
+      };
+      async.auto({
+        sign: callback => jsigs.sign(testOperation, {
+          algorithm: 'RsaSignature2018',
+          privateKeyPem: mockData.groups.authorized.privateKey,
+          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        }, callback),
+        add: ['sign', (results, callback) => {
+          ledgerNode.operations.add({operation: results.sign}, (err) => {
+            err.name.should.equal('SyntaxError');
+            err.message.should.equal('Operation context must contain https://' +
+              'w3id.org/webledger/v1 as the first element.');
+            callback();
+          });
+        }]
+      }, done);
+    });
     it('should get event containing the operation', done => {
       const testOperation = {
         '@context': 'https://w3id.org/webledger/v1',
         type: 'CreateWebLedgerRecord',
         record: {
           '@context': 'https://schema.org/',
+          id: `urn:uuid:${uuid()}`,
           value: uuid()
         }
       };
