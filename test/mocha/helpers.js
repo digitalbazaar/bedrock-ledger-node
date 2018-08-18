@@ -73,7 +73,7 @@ api.addEvent = ({
         const {eventHash, operationHash} = results;
         operations = [{
           meta: {
-            eventHash: database.hash(eventHash), eventOrder: 0, operationHash
+            eventHash: eventHash, eventOrder: 0, operationHash
           },
           operation,
           recordId: database.hash(testRecordId),
