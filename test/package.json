@@ -37,7 +37,7 @@
     "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#multihash",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#master",
     "bedrock-mongodb": "^5.0.0",
-    "bedrock-permission": "^2.3.2",
+    "bedrock-permission": "^2.5.1",
     "bedrock-test": "^2.0.0",
     "bedrock-validation": "^2.2.1",
     "grunt": "^1.0.1",
