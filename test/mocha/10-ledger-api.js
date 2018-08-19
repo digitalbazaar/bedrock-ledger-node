@@ -18,7 +18,7 @@ jsigs.use('jsonld', jsonld);
 
 let signedConfig;
 
-describe('Ledger API', () => {
+describe.only('Ledger API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
@@ -45,37 +45,23 @@ describe('Ledger API', () => {
           done(err);
         });
       });
-      it('should create a ledger with no owner', done => {
+      it('should create a ledger with no owner', async () => {
         const ledgerConfiguration = signedConfig;
-        async.auto({
-          create: callback => brLedgerNode.add(
-            actor, {ledgerConfiguration}, (err, ledgerNode) => {
-              assertNoError(err);
-              expect(ledgerNode).to.be.ok;
-              callback(null, ledgerNode);
-            }),
-          test: ['create', (results, callback) => {
-            database.collections.ledgerNode.findOne({
-              id: database.hash(results.create.id)
-            }, (err, result) => {
-              assertNoError(err);
-              result.id.should.equal(database.hash(results.create.id));
-              result.ledger.should.equal(
-                database.hash(ledgerConfiguration.ledger));
-              const ledgerNode = result.ledgerNode;
-              ledgerNode.id.should.equal(results.create.id);
-              ledgerNode.ledger.should.equal(ledgerConfiguration.ledger);
-              ledgerNode.storage.should.be.an('object');
-              ledgerNode.storage.id.should.be.a('string');
-              ledgerNode.storage.plugin.should.equal('mongodb');
-              const meta = result.meta;
-              meta.created.should.be.a('number');
-              // there should be no owner
-              expect(ledgerNode.owner).to.be.null;
-              callback();
-            });
-          }]
-        }, done);
+        const ledgerNode = await brLedgerNode.add(actor, {ledgerConfiguration});
+        expect(ledgerNode).to.be.ok;
+        const record = await database.collections.ledgerNode.findOne(
+          {id: database.hash(ledgerNode.id)});
+        record.id.should.equal(database.hash(ledgerNode.id));
+        record.ledger.should.equal(database.hash(ledgerConfiguration.ledger));
+        record.ledgerNode.id.should.equal(ledgerNode.id);
+        record.ledgerNode.ledger.should.equal(ledgerConfiguration.ledger);
+        record.ledgerNode.storage.should.be.an('object');
+        record.ledgerNode.storage.id.should.be.a('string');
+        record.ledgerNode.storage.plugin.should.equal('mongodb');
+        const {meta} = record;
+        meta.created.should.be.a('number');
+        // there should be no owner
+        expect(record.ledgerNode.owner).to.be.null;
       });
       // FIXME: determine proper behavior, this test creates a new ledger
       it.skip('returns existing ledger on attempt to create a duplicate', done => {
