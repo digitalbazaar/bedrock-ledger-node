@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
-    "async": "^2.4.0",
     "fast-json-patch": "^2.0.6",
     "lodash": "^4.17.10",
     "multibase": "^0.4.0",
