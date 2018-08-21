@@ -18,7 +18,7 @@ jsigs.use('jsonld', jsonld);
 
 let signedConfig;
 
-describe.only('Ledger API', () => {
+describe('Ledger API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
