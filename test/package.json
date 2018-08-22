@@ -31,7 +31,7 @@
     "bedrock-identity": "^4.6.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^2.0.3",
-    "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#master",
+    "bedrock-ledger-consensus-uni": "digitalbazaar/bedrock-ledger-consensus-uni#promises",
     "bedrock-ledger-context": "^1.0.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "digitalbazaar/bedrock-ledger-storage-mongodb#promises",
