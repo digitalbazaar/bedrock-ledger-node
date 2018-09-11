@@ -18,6 +18,10 @@ jsigs.use('jsonld', jsonld);
 
 let signedConfig;
 
+// NOTE: there is an index in the storage layer that ensures that there are
+// never two consensus events with the same blockHeight and blockOrder. That
+// is why `startBlockHeight` is used in the following tests.
+
 describe('Records API', () => {
   before(done => {
     async.series([
@@ -30,7 +34,10 @@ describe('Records API', () => {
         signedConfig = result;
         callback(err);
       })
-    ], done);
+    ], err => {
+      assertNoError(err);
+      done();
+    });
   });
   beforeEach(done => {
     helpers.removeCollections('ledger_testLedger', done);
@@ -56,7 +63,10 @@ describe('Records API', () => {
                 callback(err);
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
       it('get an existing record', done => {
         const opTemplate = mockData.operations.beta;
@@ -85,7 +95,10 @@ describe('Records API', () => {
                 callback();
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
       it('get an updated record', done => {
         const opTemplate = mockData.operations.beta;
@@ -96,11 +109,12 @@ describe('Records API', () => {
           // the helper creates events without consensus by default
           events: callback => helpers.addEvent({
             consensus: true, eventTemplate, ledgerStorage, opTemplate,
-            recordId: testRecordId
+            recordId: testRecordId, startBlockHeight: 2
           }, callback),
           update: ['events', (results, callback) => helpers.addEvent({
             consensus: true, eventTemplate, ledgerStorage,
-            opTemplate: updateOpTemplate, recordId: testRecordId
+            opTemplate: updateOpTemplate, recordId: testRecordId,
+            startBlockHeight: 3
           }, callback)],
           get: ['update', (results, callback) => {
             ledgerNode.records.get(
@@ -121,7 +135,10 @@ describe('Records API', () => {
                 callback();
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
       it('get a record that was updated twice', done => {
         const opTemplate = mockData.operations.beta;
@@ -130,11 +147,12 @@ describe('Records API', () => {
         ];
         const eventTemplate = mockData.events.alpha;
         const testRecordId = `https://example.com/event/${uuid()}`;
+        const startBlockHeight = 4;
         async.auto({
           // the helper creates events without consensus by default
           events: callback => helpers.addEvent({
             consensus: true, eventTemplate, ledgerStorage, opTemplate,
-            recordId: testRecordId
+            recordId: testRecordId, startBlockHeight
           }, callback),
           update: ['events', (results, callback) => async.eachOfSeries(
             opUpdates, (updateOpTemplate, i, callback) => {
@@ -142,7 +160,7 @@ describe('Records API', () => {
               helpers.addEvent({
                 consensus: true, eventTemplate, ledgerStorage,
                 opTemplate: updateOpTemplate, recordId: testRecordId,
-                startBlockHeight: i + 2
+                startBlockHeight: i + startBlockHeight + 1
               }, callback);
             }, callback)],
           get: ['update', (results, callback) => {
@@ -166,7 +184,10 @@ describe('Records API', () => {
                 callback();
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
       // the same record property will be updated twice
       it('record updates are applied in the proper order', done => {
@@ -183,11 +204,12 @@ describe('Records API', () => {
         ];
         const eventTemplate = mockData.events.alpha;
         const testRecordId = `https://example.com/event/${uuid()}`;
+        const startBlockHeight = 7;
         async.auto({
           // the helper creates events without consensus by default
           events: callback => helpers.addEvent({
             consensus: true, eventTemplate, ledgerStorage, opTemplate,
-            recordId: testRecordId
+            recordId: testRecordId, startBlockHeight
           }, callback),
           update: ['events', (results, callback) => async.eachOfSeries(
             opUpdates, (updateOpTemplate, i, callback) => {
@@ -195,7 +217,7 @@ describe('Records API', () => {
               helpers.addEvent({
                 consensus: true, eventTemplate, ledgerStorage,
                 opTemplate: updateOpTemplate, recordId: testRecordId,
-                startBlockHeight: i + 2
+                startBlockHeight: i + startBlockHeight + 1
               }, callback);
             }, callback)],
           get: ['update', (results, callback) => {
@@ -216,7 +238,10 @@ describe('Records API', () => {
                 callback();
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
       it('record does not reflect invalid updates', done => {
         const opTemplate = mockData.operations.beta;
@@ -240,11 +265,12 @@ describe('Records API', () => {
         ];
         const eventTemplate = mockData.events.alpha;
         const testRecordId = `https://example.com/event/${uuid()}`;
+        const startBlockHeight = 10;
         async.auto({
           // the helper creates events without consensus by default
           events: callback => helpers.addEvent({
             consensus: true, eventTemplate, ledgerStorage, opTemplate,
-            recordId: testRecordId
+            recordId: testRecordId, startBlockHeight
           }, callback),
           update: ['events', (results, callback) => async.eachOfSeries(
             opUpdates, (updateOpTemplate, i, callback) => {
@@ -252,7 +278,7 @@ describe('Records API', () => {
               helpers.addEvent({
                 consensus: true, eventTemplate, ledgerStorage,
                 opTemplate: updateOpTemplate, recordId: testRecordId,
-                startBlockHeight: i + 2
+                startBlockHeight: i + startBlockHeight + 1
               }, callback);
             }, callback)],
           get: ['update', (results, callback) => {
@@ -275,7 +301,10 @@ describe('Records API', () => {
                 callback();
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
       it('returns proper record with the maxBlockHeight option', done => {
         const opTemplate = mockData.operations.beta;
@@ -291,12 +320,13 @@ describe('Records API', () => {
         ];
         const eventTemplate = mockData.events.alpha;
         const testRecordId = `https://example.com/event/${uuid()}`;
+        const startBlockHeight = 13;
         async.auto({
           // the helper creates events without consensus by default
           // block 1
           events: callback => helpers.addEvent({
             consensus: true, eventTemplate, ledgerStorage, opTemplate,
-            recordId: testRecordId
+            recordId: testRecordId, startBlockHeight
           }, callback),
           // blocks 2 and 3
           update: ['events', (results, callback) => async.eachOfSeries(
@@ -305,17 +335,36 @@ describe('Records API', () => {
               helpers.addEvent({
                 consensus: true, eventTemplate, ledgerStorage,
                 opTemplate: updateOpTemplate, recordId: testRecordId,
-                startBlockHeight: i + 2
+                startBlockHeight: i + startBlockHeight + 1
               }, callback);
             }, callback)],
-          get: ['update', (results, callback) => {
+          get1: ['update', (results, callback) => {
             ledgerNode.records.get(
-              {maxBlockHeight: 2, recordId: testRecordId}, (err, result) => {
+              {maxBlockHeight: 13, recordId: testRecordId}, (err, result) => {
                 assertNoError(err);
                 should.exist(result);
                 const eventHash = Object.keys(results.events)[0];
                 const testRecord = bedrock.util.clone(results.events[eventHash]
                   .operations[0].operation.record);
+                const {meta, record} = result;
+                should.exist(record);
+                // at blockHeight 13 the original record should be returned
+                record.should.eql(testRecord);
+                should.exist(meta);
+                should.exist(meta.sequence);
+                meta.sequence.should.equal(0);
+                callback();
+              });
+          }],
+          get2: ['get1', (results, callback) => {
+            ledgerNode.records.get(
+              {maxBlockHeight: 14, recordId: testRecordId}, (err, result) => {
+                assertNoError(err);
+                should.exist(result);
+                const eventHash = Object.keys(results.events)[0];
+                const testRecord = bedrock.util.clone(results.events[eventHash]
+                  .operations[0].operation.record);
+                // at blockHeight 14, the updated record is returned
                 // corresponds to mockData.operations.gamma;
                 testRecord.endDate = '2017-07-14T23:30';
                 const {meta, record} = result;
@@ -327,7 +376,10 @@ describe('Records API', () => {
                 callback();
               });
           }]
-        }, done);
+        }, err => {
+          assertNoError(err);
+          done();
+        });
       });
     });
   });
