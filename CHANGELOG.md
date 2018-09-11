@@ -1,5 +1,9 @@
 # bedrock-ledger ChangeLog
 
+## 1.0.0 - 2018-09-11
+
+- See git history for changes previous to this release.
+
 ## 0.3.5 - 2017-05-08
 
 ### Fixed
