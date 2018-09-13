@@ -1,27 +1,48 @@
 /*!
  * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
  */
+'use strict';
+
 const {constants} = require('bedrock').config;
 const {schemas} = require('bedrock-validation');
 
 const proof = {
   title: '@context',
-  required: true,
+
+  // TODO: update this schema for properties of PoW, possibly tighten this
+  // up to allow only certain proof types: 'Ed25519Signature2018'
+  // 'RsaSignature2018', make use of `schemas.linkedDataSignature2018()`
+
+  // jws is not required
+  required: [
+    'creator', 'created', 'type'
+  ],
   type: 'object',
   properties: {
-    type: schemas.url(),
     creator: schemas.url(),
-    created: schemas.w3cDateTime()
-  }
+    created: schemas.w3cDateTime(),
+    jws: {
+      type: 'string'
+    },
+    type: {
+      type: 'string'
+    },
+  },
+  additionalProperties: false
 };
 
 const createOperation = {
   title: 'CreateWebLedgerRecord',
-  required: true,
+  // proof is not required
+  required: [
+    '@context',
+    'record',
+    'type'
+  ],
   type: 'object',
   properties: {
     '@context': {
-      type: [
+      oneOf: [
         schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL), {
           type: 'array',
           items: schemas.url()
@@ -31,33 +52,38 @@ const createOperation = {
     type: {
       type: 'string',
       enum: ['CreateWebLedgerRecord'],
-      required: true
     },
     record: {
+      required: ['@context', 'id'],
+      // additional properties are allowed here
       type: 'object',
-      required: true,
       properties: {
+        '@context': schemas.jsonldContext(),
         id: schemas.url()
       }
     },
     proof: {
-      type: [
+      oneOf: [
         proof, {
           type: 'array',
           items: proof
         }
       ]
     }
-  }
+  },
+  additionalProperties: false
 };
 
 const updateOperation = {
   title: 'UpdateWebLedgerRecord',
-  required: true,
+  // proof is not required
+  required: [
+    '@context', 'recordPatch', 'type'
+  ],
   type: 'object',
   properties: {
     '@context': {
-      type: [
+      oneOf: [
         schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL), {
           type: 'array',
           items: schemas.url()
@@ -67,28 +93,27 @@ const updateOperation = {
     type: {
       type: 'string',
       enum: ['UpdateWebLedgerRecord'],
-      required: true
     },
     recordPatch: {
       type: 'object',
-      required: true,
+      required: ['target'],
       properties: {
         target: schemas.url()
       }
     },
     proof: {
-      type: [
+      oneOf: [
         proof, {
           type: 'array',
           items: proof
         }
       ]
     }
-  }
+  },
+  additionalProperties: false
 };
 
 module.exports.operation = () => ({
   title: 'WebLedgerOperation',
-  required: true,
-  type: [createOperation, updateOperation]
+  oneOf: [createOperation, updateOperation]
 });

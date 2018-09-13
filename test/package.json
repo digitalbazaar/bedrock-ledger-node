@@ -35,11 +35,11 @@
     "bedrock-ledger-context": "^1.0.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "^1.0.0",
-    "bedrock-ledger-validator-signature": "^1.0.0",
+    "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#validation",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.1",
     "bedrock-test": "^2.0.0",
-    "bedrock-validation": "^2.2.1",
+    "bedrock-validation": "digitalbazaar/bedrock-validation#v3updates",
     "grunt": "^1.0.1",
     "jsonld-signatures": "^2.1.4"
   }
