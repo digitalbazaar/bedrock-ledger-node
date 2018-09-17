@@ -28,7 +28,7 @@
     "async": "^2.4.0",
     "bedrock": "^1.8.0",
     "bedrock-did-client": "digitalbazaar/bedrock-did-client#jsonld-1.1",
-    "bedrock-identity": "^4.6.0",
+    "bedrock-identity": "^6.0.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^2.0.3",
     "bedrock-ledger-consensus-uni": "^1.0.0",

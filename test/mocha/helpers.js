@@ -113,12 +113,9 @@ api.createIdentity = function(userName, userId) {
     sysSlug: userName,
     label: userName,
     email: userName + '@bedrock.dev',
-    sysPassword: 'password',
     sysPublic: ['label', 'url', 'description'],
-    sysResourceRole: [],
     url: 'https://example.com',
     description: userName,
-    sysStatus: 'active'
   };
   return newIdentity;
 };
@@ -231,8 +228,8 @@ api.hasher = (data, callback) => callback(
 
 // Insert identities and public keys used for testing into database
 function insertTestData(mockData, callback) {
-  async.forEachOf(mockData.identities, (identity, key, callback) => {
-    brIdentity.insert(null, identity.identity, callback);
+  async.forEachOf(mockData.identities, ({identity, meta}, key, callback) => {
+    brIdentity.insert({actor: null, identity, meta}, callback);
   }, err => {
     if(err) {
       if(!database.isDuplicateError(err)) {

@@ -36,16 +36,18 @@ describe('Events API', () => {
     helpers.removeCollections('ledger_testLedger', done);
   });
   describe('regularUser as actor', () => {
-    const mockIdentity = mockData.identities.regularUser;
     let actor;
     let ledgerNode;
     before(done => {
       async.auto({
-        getActor: callback =>
-          brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        getActor: callback => {
+          const {id} = mockData.identities.regularUser.identity;
+          brIdentity.getCapabilities({id}, (err, result) => {
             actor = result;
-            callback(err);
-          }),
+            assertNoError(err);
+            callback();
+          });
+        },
         addLedger: ['getActor', (results, callback) => brLedgerNode.add(
           actor, {ledgerConfiguration: signedConfig}, (err, result) => {
             ledgerNode = result;

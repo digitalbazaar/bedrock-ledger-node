@@ -37,12 +37,13 @@ describe('Ledger API', () => {
       helpers.removeCollections(['ledger', 'ledgerNode'], done);
     });
     describe('regularUser as actor', () => {
-      const mockIdentity = mockData.identities.regularUser;
       let actor;
       before(done => {
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.regularUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('should create a ledger with no owner', async () => {
@@ -138,12 +139,13 @@ describe('Ledger API', () => {
       });
     }); // end regularUser as actor
     describe('admin as actor', () => {
-      const mockIdentity = mockData.identities.adminUser;
       let actor;
       before(done => {
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.adminUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('should create a ledger with no owner', done => {
@@ -287,10 +289,11 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(done => {
         ledgerConfiguration = signedConfig;
-        const mockIdentity = mockData.identities.regularUser;
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.regularUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('gets a ledger with no owner', done => async.auto({
@@ -367,10 +370,11 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(done => {
         ledgerConfiguration = signedConfig;
-        const mockIdentity = mockData.identities.adminUser;
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.adminUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('gets a ledger with no owner', done => async.auto({
@@ -453,10 +457,11 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(done => {
         ledgerConfiguration = signedConfig;
-        const mockIdentity = mockData.identities.regularUser;
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.regularUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('should delete a ledger if actor is owner', done => async.auto({
@@ -516,10 +521,11 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(done => {
         ledgerConfiguration = signedConfig;
-        const mockIdentity = mockData.identities.adminUser;
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.adminUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('should delete a ledger if actor is owner', done => async.auto({
@@ -592,11 +598,12 @@ describe('Ledger API', () => {
       let actor;
       let ledgerConfiguration;
       before(done => {
-        const mockIdentity = mockData.identities.regularUser;
         ledgerConfiguration = signedConfig;
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.regularUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('iterates over public ledgers', function(done) {
@@ -774,11 +781,12 @@ describe('Ledger API', () => {
       let actor;
       let ledgerConfiguration;
       before(done => {
-        const mockIdentity = mockData.identities.adminUser;
         ledgerConfiguration = signedConfig;
-        brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
+        const {id} = mockData.identities.adminUser.identity;
+        brIdentity.getCapabilities({id}, (err, result) => {
           actor = result;
-          done(err);
+          assertNoError(err);
+          done();
         });
       });
       it('iterates over public ledgers', function(done) {
