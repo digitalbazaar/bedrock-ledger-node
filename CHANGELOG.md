@@ -1,5 +1,12 @@
 # bedrock-ledger ChangeLog
 
+## 2.0.0 - 2018-09-17
+
+### Changed
+- Use bedrock-validation 3.x.
+- Improve `WebLedgerOperation` validation schema.
+- Use bedrock-identity 6.x in test framework.
+
 ## 1.0.0 - 2018-09-11
 
 - See git history for changes previous to this release.
