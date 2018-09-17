@@ -35,7 +35,7 @@
     "bedrock-ledger-context": "^1.0.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "^1.0.0",
-    "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#validation",
+    "bedrock-ledger-validator-signature": "^2.0.0",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.3",
     "bedrock-test": "^2.0.0",
