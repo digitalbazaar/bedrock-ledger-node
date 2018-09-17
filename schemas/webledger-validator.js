@@ -7,12 +7,7 @@ const {constants} = require('bedrock').config;
 const {schemas} = require('bedrock-validation');
 
 const proof = {
-  title: '@context',
-
-  // TODO: update this schema for properties of PoW, possibly tighten this
-  // up to allow only certain proof types: 'Ed25519Signature2018'
-  // 'RsaSignature2018', make use of `schemas.linkedDataSignature2018()`
-
+  title: 'Operation Proof',
   // jws is not required
   required: [
     'creator', 'created', 'type'
@@ -25,7 +20,11 @@ const proof = {
       type: 'string'
     },
     type: {
-      type: 'string'
+      anyOf: [
+        schemas.jsonldType('Ed25519Signature2018'),
+        schemas.jsonldType('RsaSignature2018'),
+        schemas.jsonldType('EquihashProof2018'),
+      ]
     },
   },
   additionalProperties: false
@@ -42,7 +41,7 @@ const createOperation = {
   type: 'object',
   properties: {
     '@context': {
-      oneOf: [
+      anyOf: [
         schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL), {
           type: 'array',
           items: schemas.url()
@@ -63,7 +62,7 @@ const createOperation = {
       }
     },
     proof: {
-      oneOf: [
+      anyOf: [
         proof, {
           type: 'array',
           items: proof
@@ -83,7 +82,7 @@ const updateOperation = {
   type: 'object',
   properties: {
     '@context': {
-      oneOf: [
+      anyOf: [
         schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL), {
           type: 'array',
           items: schemas.url()
@@ -102,7 +101,7 @@ const updateOperation = {
       }
     },
     proof: {
-      oneOf: [
+      anyOf: [
         proof, {
           type: 'array',
           items: proof
@@ -115,5 +114,5 @@ const updateOperation = {
 
 module.exports.operation = () => ({
   title: 'WebLedgerOperation',
-  oneOf: [createOperation, updateOperation]
+  anyOf: [createOperation, updateOperation]
 });
