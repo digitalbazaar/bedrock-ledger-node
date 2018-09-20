@@ -26,3 +26,6 @@ roles['bedrock-ledger.test'] = {
     permissions.LEDGER_REMOVE.id
   ]
 };
+
+config['did-client'].methods['veres-one'].hostname =
+  'genesis.testnet.veres.one';

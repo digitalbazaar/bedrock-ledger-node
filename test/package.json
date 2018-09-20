@@ -27,7 +27,7 @@
   "dependencies": {
     "async": "^2.4.0",
     "bedrock": "^1.8.0",
-    "bedrock-did-client": "digitalbazaar/bedrock-did-client#jsonld-1.1",
+    "bedrock-did-client": "^2.0.0",
     "bedrock-identity": "^6.0.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^2.0.3",
