@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 2.0.2 - 2018-09-20
+
+### Changed
+- Use bedrock-ledger-context 2.x in test suite.
+
 ## 2.0.1 - 2018-09-20
 
 ### Changed
