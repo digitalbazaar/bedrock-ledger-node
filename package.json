@@ -24,9 +24,9 @@
     "uuid": "^3.0.1"
   },
   "peerDependencies": {
-    "bedrock": "^1.8.0",
+    "bedrock": "^1.12.0",
     "bedrock-injector": "^1.0.0",
-    "bedrock-ledger-context": "^1.1.1",
+    "bedrock-ledger-context": "^2.0.0",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.1",
     "bedrock-jobs": "^2.0.3",
