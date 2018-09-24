@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 2.0.3 - 2018-09-24
+
+### Fixed
+- Fixed the `proof` validation schema.
+
 ## 2.0.2 - 2018-09-20
 
 ### Changed
