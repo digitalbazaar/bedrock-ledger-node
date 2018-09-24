@@ -6,19 +6,31 @@
 const {constants} = require('bedrock').config;
 const {schemas} = require('bedrock-validation');
 
+// TODO: create schemas for each proof type
 const proof = {
   title: 'Operation Proof',
-  // jws is not required
+  // jws is not required, EquihashProof2018 does not include creator
   required: [
-    'creator', 'created', 'type'
+    'created', 'type'
   ],
   type: 'object',
   properties: {
+    capability: {type: 'string'},
+    capabilityAction: {
+      required: ['id'],
+      type: 'object',
+      properties: {
+        id: {type: 'string'},
+      }
+    },
     creator: schemas.url(),
     created: schemas.w3cDateTime(),
-    jws: {
-      type: 'string'
-    },
+    equihashParameterK: {type: 'integer'},
+    equihashParameterN: {type: 'integer'},
+    jws: {type: 'string'},
+    nonce: {type: 'string'},
+    proofPurpose: {type: 'string'},
+    proofValue: {type: 'string'},
     type: {
       anyOf: [
         schemas.jsonldType('Ed25519Signature2018'),
