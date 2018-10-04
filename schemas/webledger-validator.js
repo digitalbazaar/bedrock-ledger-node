@@ -16,13 +16,7 @@ const proof = {
   type: 'object',
   properties: {
     capability: {type: 'string'},
-    capabilityAction: {
-      required: ['id'],
-      type: 'object',
-      properties: {
-        id: {type: 'string'},
-      }
-    },
+    capabilityAction: {type: 'string'},
     creator: schemas.url(),
     created: schemas.w3cDateTime(),
     equihashParameterK: {type: 'integer'},
