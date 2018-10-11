@@ -1,5 +1,11 @@
 # bedrock-ledger ChangeLog
 
+## 3.0.0 - 2018-10-11
+
+### Changed
+- **BREAKING** Change `capabilityAction` in the `Operation Proof` validation
+  schema to a string.
+
 ## 2.0.3 - 2018-09-24
 
 ### Fixed
