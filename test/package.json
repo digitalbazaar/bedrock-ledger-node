@@ -27,7 +27,7 @@
   "dependencies": {
     "async": "^2.4.0",
     "bedrock": "^1.8.0",
-    "bedrock-did-client": "^2.0.0",
+    "bedrock-did-client": "digitalbazaar/bedrock-did-client#update-deps",
     "bedrock-identity": "^6.0.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^2.0.3",
@@ -35,7 +35,7 @@
     "bedrock-ledger-context": "^2.0.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "^1.0.0",
-    "bedrock-ledger-validator-signature": "^2.0.0",
+    "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#refactorValidation",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.3",
     "bedrock-test": "^2.0.0",
