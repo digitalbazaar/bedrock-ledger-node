@@ -46,11 +46,13 @@ const createOperation = {
   ],
   type: 'object',
   properties: {
+    // @context is thorougly validated in validator.js
     '@context': {
       anyOf: [
-        schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL), {
+        schemas.url(), {
           type: 'array',
-          items: schemas.url()
+          minItems: 1,
+          items: schemas.url(),
         }
       ]
     },
@@ -63,7 +65,15 @@ const createOperation = {
       // additional properties are allowed here
       type: 'object',
       properties: {
-        '@context': schemas.jsonldContext(),
+        '@context': {
+          anyOf: [
+            schemas.url(), {
+              type: 'array',
+              minItems: 1,
+              items: schemas.url(),
+            }
+          ]
+        },
         id: schemas.url()
       }
     },
@@ -71,6 +81,7 @@ const createOperation = {
       anyOf: [
         proof, {
           type: 'array',
+          minItems: 1,
           items: proof
         }
       ]
