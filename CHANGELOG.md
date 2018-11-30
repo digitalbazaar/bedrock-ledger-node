@@ -1,5 +1,15 @@
 # bedrock-ledger ChangeLog
 
+## 4.0.0 - 2018-11-30
+
+### Added
+- Implement blocks.getLatestSummary API.
+
+### Changed
+- **BREAKING** Changed names for ledger node permissions.
+- **BREAKING** Refactor validator APIs. Validators must use named parameter.
+  Validators must also have a return value of {valid: <bool>, error: <Error>}.
+
 ## 3.0.0 - 2018-10-11
 
 ### Changed
