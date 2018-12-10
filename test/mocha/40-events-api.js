@@ -55,9 +55,10 @@ describe('Events API', () => {
           })]
       }, done);
     });
-    it('should create event', done => {
+    it('should create an event', done => {
       const testOperation = {
         '@context': 'https://w3id.org/webledger/v1',
+        creator: 'https://example.com/someCreatorId',
         type: 'CreateWebLedgerRecord',
         record: {
           '@context': 'https://schema.org/',

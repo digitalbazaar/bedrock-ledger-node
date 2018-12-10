@@ -41,6 +41,7 @@ const createOperation = {
   // proof is not required
   required: [
     '@context',
+    'creator',
     'record',
     'type'
   ],
@@ -55,6 +56,9 @@ const createOperation = {
           items: schemas.url(),
         }
       ]
+    },
+    creator: {
+      type: 'string'
     },
     type: {
       type: 'string',
@@ -94,9 +98,12 @@ const updateOperation = {
   title: 'UpdateWebLedgerRecord',
   // proof is not required
   required: [
-    '@context', 'recordPatch', 'type'
+    '@context', 'creator', 'recordPatch', 'type'
   ],
   type: 'object',
+  creator: {
+    type: 'string'
+  },
   properties: {
     '@context': {
       anyOf: [
@@ -264,7 +271,29 @@ const ledgerConfiguration = {
   },
 };
 
+// NOTE: the ledgerNode API only uses this validator for validating a
+// configuration event included in a genesis block
+const genesisLedgerConfigurationEvent = {
+  title: 'Genesis WebLedgerConfigurationEvent',
+  type: 'object',
+  additionalProperties: false,
+  required: ['@context', 'creator', 'ledgerConfiguration', 'type'],
+  properties: {
+    '@context': schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL),
+    creator: {
+      type: 'string'
+    },
+    ledgerConfiguration,
+    type: {
+      type: 'string',
+      enum: ['WebLedgerConfigurationEvent']
+    }
+  }
+};
+
 module.exports.ledgerConfiguration = () => ledgerConfiguration;
+module.exports.genesisLedgerConfigurationEvent = () =>
+  genesisLedgerConfigurationEvent;
 module.exports.operation = () => ({
   title: 'WebLedgerOperation',
   anyOf: [createOperation, updateOperation]
