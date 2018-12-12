@@ -1,5 +1,11 @@
 # bedrock-ledger ChangeLog
 
+## 5.0.0 - TBD
+
+### Changed
+- **BREAKING** Operations and the genesis `WebLedgerConfigurationEvent` must
+  include a `creator` property.
+
 ## 4.1.0 - 2018-12-05
 
 ### Added
