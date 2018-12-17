@@ -38,10 +38,9 @@ const proof = {
 
 const createOperation = {
   title: 'CreateWebLedgerRecord',
-  // proof is not required
+  // `proof` and `creator` are not required
   required: [
     '@context',
-    'creator',
     'record',
     'type'
   ],
