@@ -32,7 +32,7 @@
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^2.0.3",
     "bedrock-ledger-consensus-uni": "^1.0.0",
-    "bedrock-ledger-context": "^5.0.0",
+    "bedrock-ledger-context": "^6.0.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "^1.0.0",
     "bedrock-ledger-validator-signature": "^3.0.0",
