@@ -54,7 +54,7 @@ describe('Operations API', () => {
           })]
       }, done);
     });
-    it('should add operation', done => {
+    it('should add operation with optional creator', done => {
       const testOperation = {
         '@context': 'https://w3id.org/webledger/v1',
         type: 'CreateWebLedgerRecord',
@@ -73,6 +73,31 @@ describe('Operations API', () => {
         }, callback),
         add: ['sign', (results, callback) => {
           ledgerNode.operations.add({operation: results.sign}, err => {
+            assertNoError(err);
+            callback();
+          });
+        }]
+      }, done);
+    });
+    it('should add operation without optional creator', done => {
+      const testOperation = {
+        '@context': 'https://w3id.org/webledger/v1',
+        type: 'CreateWebLedgerRecord',
+        // the optional creator is missing
+        record: {
+          '@context': 'https://schema.org/',
+          id: 'urn:uuid:' + uuid(),
+          value: uuid()
+        }
+      };
+      async.auto({
+        sign: callback => jsigs.sign(testOperation, {
+          algorithm: 'RsaSignature2018',
+          privateKeyPem: mockData.groups.authorized.privateKey,
+          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+        }, callback),
+        add: ['sign', (results, callback) => {
+          ledgerNode.operations.add({operation: results.sign}, (err) => {
             assertNoError(err);
             callback();
           });
@@ -101,34 +126,6 @@ describe('Operations API', () => {
             err.name.should.equal('SyntaxError');
             err.message.should.equal(
               'Operation context must be "https://w3id.org/webledger/v1"');
-            callback();
-          });
-        }]
-      }, done);
-    });
-    it('should fail add operation without creator', done => {
-      const testOperation = {
-        '@context': 'https://w3id.org/webledger/v1',
-        type: 'CreateWebLedgerRecord',
-        // creator is missing
-        record: {
-          '@context': 'https://schema.org/',
-          id: 'urn:uuid:' + uuid(),
-          value: uuid()
-        }
-      };
-      async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
-          privateKeyPem: mockData.groups.authorized.privateKey,
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-        }, callback),
-        add: ['sign', (results, callback) => {
-          ledgerNode.operations.add({operation: results.sign}, (err) => {
-            err.name.should.equal('ValidationError');
-            const [validationError] = err.details.errors;
-            validationError.message.should.equal(
-              `should have required property 'creator'`);
             callback();
           });
         }]
