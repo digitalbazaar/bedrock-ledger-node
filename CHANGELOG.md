@@ -1,10 +1,13 @@
 # bedrock-ledger ChangeLog
 
-## 5.0.0 - TBD
+## 4.2.0 - TBD
 
-### Changed
-- **BREAKING** Operations and the genesis `WebLedgerConfigurationEvent` must
-  include a `creator` property.
+### Added
+- Operations and the genesis `WebLedgerConfigurationEvent` may include
+  an optional `creator` property.
+- Implement `rdfCanonizeAndHash` API that returns the Buffer that was used
+  during the hashing operation. This Buffer can be used to measure the byte
+  size of the operation.
 
 ## 4.1.0 - 2018-12-05
 
