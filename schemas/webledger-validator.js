@@ -93,16 +93,35 @@ const createOperation = {
   additionalProperties: false
 };
 
+// TODO: implement json-patch schema
+const recordPatch = {
+  type: 'object',
+  required: ['patch', 'sequence', 'target'],
+  additionalProperties: false,
+  properties: {
+    patch: {
+      type: 'array',
+      items: {
+        type: 'object'
+      },
+      minItems: 1,
+    },
+    sequence: {
+      type: 'integer',
+      minimum: 0,
+    },
+    target: schemas.url(),
+  }
+};
+
 const updateOperation = {
   title: 'UpdateWebLedgerRecord',
-  // proof is not required
+  // proof and creator are not required
   required: [
-    '@context', 'creator', 'recordPatch', 'type'
+    '@context', 'recordPatch', 'type'
   ],
+  additionalProperties: false,
   type: 'object',
-  creator: {
-    type: 'string'
-  },
   properties: {
     '@context': {
       anyOf: [
@@ -112,17 +131,14 @@ const updateOperation = {
         }
       ]
     },
+    creator: {
+      type: 'string'
+    },
     type: {
       type: 'string',
       enum: ['UpdateWebLedgerRecord'],
     },
-    recordPatch: {
-      type: 'object',
-      required: ['target'],
-      properties: {
-        target: schemas.url()
-      }
-    },
+    recordPatch,
     proof: {
       anyOf: [
         proof, {
@@ -132,7 +148,6 @@ const updateOperation = {
       ]
     }
   },
-  additionalProperties: false
 };
 
 const ledgerConfiguration = {
