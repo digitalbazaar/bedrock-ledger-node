@@ -168,6 +168,9 @@ const ledgerConfiguration = {
     consensusMethod: {
       type: 'string',
     },
+    creator: {
+      type: 'string'
+    },
     electorSelectionMethod: {
       type: 'object',
     },
@@ -278,6 +281,10 @@ const ledgerConfiguration = {
         type: 'array',
       }]
     },
+    sequence: {
+      type: 'integer',
+      minimum: 0,
+    },
     type: {
       type: 'string',
       enum: ['WebLedgerConfiguration']
@@ -291,12 +298,9 @@ const genesisLedgerConfigurationEvent = {
   title: 'Genesis WebLedgerConfigurationEvent',
   type: 'object',
   additionalProperties: false,
-  required: ['@context', 'creator', 'ledgerConfiguration', 'type'],
+  required: ['@context', 'ledgerConfiguration', 'type'],
   properties: {
     '@context': schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL),
-    creator: {
-      type: 'string'
-    },
     ledgerConfiguration,
     type: {
       type: 'string',
