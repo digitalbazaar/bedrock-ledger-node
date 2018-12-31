@@ -1,6 +1,9 @@
 # bedrock-ledger ChangeLog
 
-## 4.2.0 - TBD
+## 5.0.0 - 2018-12-31
+
+### Changed
+- **BREAKING** Require `sequence` in ledger configurations.
 
 ### Added
 - Operations and the genesis `WebLedgerConfigurationEvent` may include
