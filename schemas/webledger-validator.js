@@ -160,6 +160,7 @@ const ledgerConfiguration = {
     'ledger',
     // 'ledgerConfigurationValidator',
     // 'operationValidator',
+    'sequence',
     'type',
   ],
   type: 'object',

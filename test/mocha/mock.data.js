@@ -66,7 +66,8 @@ const ledgerConfiguration = mock.ledgerConfiguration = {
       // 'https://example.com/i/alpha'
     ],
     minimumSignaturesRequired: 1
-  }]
+  }],
+  sequence: 0,
 };
 
 const operations = mock.operations = {};
