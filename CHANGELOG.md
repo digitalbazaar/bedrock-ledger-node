@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 5.1.0 - 2019-01-07
+
+### Added
+- Pass `basisBlockHeight` into validator APIs.
+
 ## 5.0.0 - 2018-12-31
 
 ### Changed
