@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const {constants} = require('bedrock').config;
+const {config: {constants}} = require('bedrock');
 const {schemas} = require('bedrock-validation');
 
 // TODO: create schemas for each proof type
@@ -93,12 +93,22 @@ const createOperation = {
   additionalProperties: false
 };
 
-// TODO: implement json-patch schema
 const recordPatch = {
   type: 'object',
-  required: ['patch', 'sequence', 'target'],
+  required: ['@context', 'patch', 'sequence', 'target'],
   additionalProperties: false,
   properties: {
+    '@context': {
+      type: 'array',
+      minItems: 2,
+      // must have jsonl-ld-patch context in first position and then
+      // ledger specific contexts to be validated by ledger validators
+      items: [{
+        type: 'string',
+        enum: [constants.JSON_LD_PATCH_CONTEXT_V1_URL],
+      }]
+    },
+    // TODO: implement json-patch schema
     patch: {
       type: 'array',
       items: {
