@@ -1,5 +1,11 @@
 # bedrock-ledger ChangeLog
 
+## 6.0.0 - TBD
+
+### Changed
+- **BREAKING** Require `recordPatch` documents included in
+  `UpdateWebLedgerRecord` operations to include `@context`.
+
 ## 5.1.0 - 2019-01-07
 
 ### Added
