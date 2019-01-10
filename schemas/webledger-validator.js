@@ -101,8 +101,9 @@ const recordPatch = {
     '@context': {
       type: 'array',
       minItems: 2,
-      // must have jsonl-ld-patch context in first position and then
+      // must have json-ld-patch context in first position and then
       // ledger specific contexts to be validated by ledger validators
+      // this schema syntax does *not* validate any items after the first one
       items: [{
         type: 'string',
         enum: [constants.JSON_LD_PATCH_CONTEXT_V1_URL],
