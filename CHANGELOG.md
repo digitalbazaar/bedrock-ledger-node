@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 6.0.0 - TBD
+## 6.0.0 - 2019-01-17
 
 ### Changed
 - **BREAKING**: Require `recordPatch` documents included in
