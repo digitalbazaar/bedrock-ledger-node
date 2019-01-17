@@ -3,7 +3,7 @@
 ## 6.0.0 - TBD
 
 ### Changed
-- **BREAKING** Require `recordPatch` documents included in
+- **BREAKING**: Require `recordPatch` documents included in
   `UpdateWebLedgerRecord` operations to include `@context`.
 
 ## 5.1.0 - 2019-01-07
@@ -14,7 +14,7 @@
 ## 5.0.0 - 2018-12-31
 
 ### Changed
-- **BREAKING** Require `sequence` in ledger configurations.
+- **BREAKING**: Require `sequence` in ledger configurations.
 
 ### Added
 - Operations and the genesis `WebLedgerConfigurationEvent` may include
@@ -38,14 +38,14 @@
 - Implement blocks.getLatestSummary API.
 
 ### Changed
-- **BREAKING** Changed names for ledger node permissions.
-- **BREAKING** Refactor validator APIs. Validators must use named parameter.
+- **BREAKING**: Changed names for ledger node permissions.
+- **BREAKING**: Refactor validator APIs. Validators must use named parameter.
   Validators must also have a return value of {valid: <bool>, error: <Error>}.
 
 ## 3.0.0 - 2018-10-11
 
 ### Changed
-- **BREAKING** Change `capabilityAction` in the `Operation Proof` validation
+- **BREAKING**: Change `capabilityAction` in the `Operation Proof` validation
   schema to a string.
 
 ## 2.0.3 - 2018-09-24
