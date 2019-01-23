@@ -39,7 +39,7 @@
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.3",
     "bedrock-test": "^2.0.0",
-    "bedrock-validation": "^4.0.0",
+    "bedrock-validation": "^4.1.0",
     "grunt": "^1.0.1",
     "jsonld-signatures": "^2.1.4"
   }
