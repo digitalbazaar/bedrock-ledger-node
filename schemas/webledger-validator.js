@@ -6,36 +6,6 @@
 const {config: {constants}} = require('bedrock');
 const {schemas} = require('bedrock-validation');
 
-// TODO: create schemas for each proof type
-const proof = {
-  title: 'Operation Proof',
-  // jws is not required, EquihashProof2018 does not include creator
-  required: [
-    'created', 'type'
-  ],
-  type: 'object',
-  properties: {
-    capability: {type: 'string'},
-    capabilityAction: {type: 'string'},
-    creator: schemas.url(),
-    created: schemas.w3cDateTime(),
-    equihashParameterK: {type: 'integer'},
-    equihashParameterN: {type: 'integer'},
-    jws: {type: 'string'},
-    nonce: {type: 'string'},
-    proofPurpose: {type: 'string'},
-    proofValue: {type: 'string'},
-    type: {
-      anyOf: [
-        schemas.jsonldType('Ed25519Signature2018'),
-        schemas.jsonldType('RsaSignature2018'),
-        schemas.jsonldType('EquihashProof2018'),
-      ]
-    },
-  },
-  additionalProperties: false
-};
-
 const createOperation = {
   title: 'CreateWebLedgerRecord',
   // `proof` and `creator` are not required
@@ -80,15 +50,7 @@ const createOperation = {
         id: schemas.url()
       }
     },
-    proof: {
-      anyOf: [
-        proof, {
-          type: 'array',
-          minItems: 1,
-          items: proof
-        }
-      ]
-    }
+    proof: schemas.linkedDataSignature2018()
   },
   additionalProperties: false
 };
@@ -150,14 +112,7 @@ const updateOperation = {
       enum: ['UpdateWebLedgerRecord'],
     },
     recordPatch,
-    proof: {
-      anyOf: [
-        proof, {
-          type: 'array',
-          items: proof
-        }
-      ]
-    }
+    proof: schemas.linkedDataSignature2018(),
   },
 };
 
@@ -286,13 +241,7 @@ const ledgerConfiguration = {
         }
       }
     },
-    proof: {
-      anyOf: [{
-        type: 'object',
-      }, {
-        type: 'array',
-      }]
-    },
+    proof: schemas.linkedDataSignature2018(),
     sequence: {
       type: 'integer',
       minimum: 0,

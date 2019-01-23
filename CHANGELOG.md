@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 7.0.0 - TBD
+
+### Changed
+- **BREAKING**: EquihashProof2018 is no longer supported on operations.
+
 ## 6.0.0 - 2019-01-17
 
 ### Changed
