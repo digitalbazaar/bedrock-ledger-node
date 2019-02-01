@@ -1,5 +1,11 @@
 # bedrock-ledger ChangeLog
 
+## 7.1.0 - TBD
+
+### Added
+- Use JSON Schema to validate ledger configurations submitted via the
+  `config.change` API.
+
 ## 7.0.0 - 2019-01-23
 
 ### Changed
