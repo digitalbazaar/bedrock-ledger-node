@@ -1,6 +1,6 @@
 {
   "name": "bedrock-ledger-node",
-  "version": "7.1.1-0",
+  "version": "7.2.0",
   "description": "Bedrock ledger node",
   "main": "./lib",
   "scripts": {
