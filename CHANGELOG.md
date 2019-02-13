@@ -1,5 +1,13 @@
 # bedrock-ledger ChangeLog
 
+## 7.2.0 - 2019-02-13
+
+### Added
+- Implement eslint-config-digitalbazaar and `npm run lint` script.
+
+### Changed
+- Use multibase@0.6.0.
+
 ## 7.1.0 - 2019-02-01
 
 ### Added
