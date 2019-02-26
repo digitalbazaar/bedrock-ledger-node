@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 8.0.0 - TBD
+
+### Changed
+- Use bedrock-jobs@3 which is not backwardly compatible.
+
 ## 7.2.0 - 2019-02-13
 
 ### Added
