@@ -1,6 +1,6 @@
 {
   "name": "bedrock-ledger-node",
-  "version": "7.2.1-0",
+  "version": "8.0.0",
   "description": "Bedrock ledger node",
   "main": "./lib",
   "scripts": {
@@ -30,11 +30,10 @@
   "peerDependencies": {
     "bedrock": "^1.12.0",
     "bedrock-injector": "^1.0.0",
-    "bedrock-jobs": "^3.0.0",
+    "bedrock-jobs": "^2.0.3",
     "bedrock-ledger-context": "^11.0.0",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.1",
-    "bedrock-jobs": "^2.0.3",
     "bedrock-validation": "^4.1.0"
   },
   "engines": {
