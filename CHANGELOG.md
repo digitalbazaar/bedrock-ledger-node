@@ -1,9 +1,12 @@
 # bedrock-ledger ChangeLog
 
-## 8.0.0 - TBD
+## 8.0.0 - 2019-03-20
+
+### Added
+- Make the `validator` API public.
 
 ### Changed
-- Use bedrock-jobs@3 which is not backwardly compatible.
+- **BREAKING**: Use bedrock-jobs@3 which is not backwardly compatible.
 
 ## 7.2.0 - 2019-02-13
 
