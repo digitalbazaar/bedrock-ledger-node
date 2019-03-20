@@ -30,7 +30,7 @@
     "bedrock-did-client": "digitalbazaar/bedrock-did-client#testnet_v2",
     "bedrock-identity": "^6.0.0",
     "bedrock-injector": "^1.0.0",
-    "bedrock-jobs": "digitalbazaar/bedrock-jobs#3.x",
+    "bedrock-jobs": "^3.0.0",
     "bedrock-ledger-consensus-uni": "^2.0.0",
     "bedrock-ledger-context": "^11.0.0",
     "bedrock-ledger-node": "file:..",
