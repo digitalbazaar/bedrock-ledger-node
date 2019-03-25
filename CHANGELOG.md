@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 8.0.1 - 2019-03-25
+
+### Fixed
+- Use bedrock-jobs@3 in peer dependencies.
+
 ## 8.0.0 - 2019-03-20
 
 ### Added
