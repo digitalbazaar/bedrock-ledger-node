@@ -30,7 +30,7 @@
   "peerDependencies": {
     "bedrock": "^1.12.0",
     "bedrock-injector": "^1.0.0",
-    "bedrock-jobs": "^2.0.3",
+    "bedrock-jobs": "^3.0.0",
     "bedrock-ledger-context": "^11.0.0",
     "bedrock-mongodb": "^5.0.0",
     "bedrock-permission": "^2.5.1",
