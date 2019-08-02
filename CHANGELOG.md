@@ -1,5 +1,12 @@
 # bedrock-ledger ChangeLog
 
+## 8.0.2 - TBD
+
+### Fixed
+- Move scheduling of consensus work from `bedrock.init` event to
+  `bedrock.ready`. Since bedrock-jobs@3 does not depend on `bedrock-mongodb`
+  consensus work was being scheduled before Mongo collections were initialized.
+
 ## 8.0.1 - 2019-03-25
 
 ### Fixed
