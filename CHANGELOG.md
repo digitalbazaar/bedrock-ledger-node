@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 8.0.2 - TBD
+## 8.0.2 - 2019-08-03
 
 ### Fixed
 - Move scheduling of consensus work from `bedrock.init` event to
