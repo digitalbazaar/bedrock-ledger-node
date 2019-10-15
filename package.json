@@ -32,7 +32,7 @@
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^3.0.0",
     "bedrock-ledger-context": "^12.0.0",
-    "bedrock-mongodb": "^5.0.0",
+    "bedrock-mongodb": "5.5.0 - 6",
     "bedrock-permission": "^2.5.1",
     "bedrock-validation": "^4.1.0"
   },
