@@ -1,5 +1,11 @@
 # bedrock-ledger ChangeLog
 
+## 8.0.3 - 2019-10-15
+
+### Changed
+- Update peer dependencies.
+- Update dependencies in test suite.
+
 ## 8.0.2 - 2019-08-03
 
 ### Fixed
