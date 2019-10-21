@@ -9,12 +9,8 @@ const brLedgerNode = require('bedrock-ledger-node');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
 const helpers = require('./helpers');
-const jsigs = require('jsonld-signatures');
-const jsonld = require('bedrock').jsonld;
 const mockData = require('./mock.data');
-const uuid = require('uuid/v4');
-
-jsigs.use('jsonld', jsonld);
+const {util: {uuid}} = require('bedrock');
 
 let signedConfig;
 
@@ -22,10 +18,10 @@ describe('Ledger API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
-      callback => jsigs.sign(mockData.ledgerConfiguration, {
-        algorithm: 'RsaSignature2018',
+      callback => helpers.signDocument({
+        doc: mockData.ledgerConfiguration,
+        creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
         privateKeyPem: mockData.groups.authorized.privateKey,
-        creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       }, (err, result) => {
         signedConfig = result;
         callback(err);

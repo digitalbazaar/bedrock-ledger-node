@@ -1,8 +1,9 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2019 Digital Bazaar, Inc. All rights reserved.
  */
+'use strict';
 
-const config = require('bedrock').config;
+const {config} = require('bedrock');
 const path = require('path');
 require('bedrock-permission');
 
@@ -26,6 +27,3 @@ roles['bedrock-ledger.test'] = {
     permissions.LEDGER_NODE_REMOVE.id
   ]
 };
-
-config['did-client'].methods['veres-one'].hostname =
-  'genesis.testnet.veres.one';

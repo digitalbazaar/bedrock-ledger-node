@@ -3,15 +3,10 @@
  */
 'use strict';
 
-const bedrock = require('bedrock');
 const brLedgerNode = require('bedrock-ledger-node');
 const async = require('async');
 const helpers = require('./helpers');
-const jsigs = require('jsonld-signatures')();
-const jsonld = bedrock.jsonld;
 const mockData = require('./mock.data');
-
-jsigs.use('jsonld', jsonld);
 
 // NOTE: these tests are designed to be run in sequence, not not use .only
 // TODO: remove these tests, these are largely duplicated in
@@ -26,8 +21,8 @@ describe.skip('Performance tests', () => {
   let storage;
   before(done => async.auto({
     prepare: callback => helpers.prepareDatabase(mockData, callback),
-    sign: callback => jsigs.sign(mockData.ledgerConfiguration, {
-      algorithm: 'RsaSignature2018',
+    sign: callback => helpers.signDocument({
+      doc: mockData.ledgerConfiguration,
       privateKeyPem: mockData.groups.authorized.privateKey,
       creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
     }, callback),

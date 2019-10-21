@@ -26,21 +26,22 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
     "async": "^2.4.0",
-    "bedrock": "^1.8.0",
-    "bedrock-did-client": "digitalbazaar/bedrock-did-client#testnet_v2",
-    "bedrock-identity": "^6.0.0",
+    "bedrock": "^2.0.0",
+    "bedrock-identity": "^7.0.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^3.0.0",
+    "bedrock-jsonld-document-loader": "^1.0.0",
     "bedrock-ledger-consensus-uni": "^2.0.0",
-    "bedrock-ledger-context": "^12.0.0",
+    "bedrock-ledger-context": "^13.0.0",
     "bedrock-ledger-node": "file:..",
-    "bedrock-ledger-storage-mongodb": "^2.0.0",
-    "bedrock-ledger-validator-signature": "^3.0.0",
+    "bedrock-ledger-storage-mongodb": "^3.0.0",
+    "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#bedrock-2",
     "bedrock-mongodb": "^6.0.0",
     "bedrock-permission": "^2.5.3",
-    "bedrock-test": "^2.0.0",
+    "bedrock-security-context": "^2.0.0",
+    "bedrock-test": "^4.0.0",
     "bedrock-validation": "^4.1.0",
     "grunt": "^1.0.1",
-    "jsonld-signatures": "^2.1.4"
+    "jsonld-signatures": "^4.4.0"
   }
 }

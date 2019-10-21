@@ -1,41 +1,27 @@
 /*
- * Copyright (c) 2016-2018 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2016-2019 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
 const async = require('async');
 const bedrock = require('bedrock');
-const config = bedrock.config;
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
+const {callbackify} = require('util');
 const crypto = require('crypto');
 const database = require('bedrock-mongodb');
-const jsonld = bedrock.jsonld;
-const jsigs = require('jsonld-signatures')();
-const uuid = require('uuid/v4');
+const jsigs = require('jsonld-signatures');
+const {util: {uuid}} = bedrock;
+const {
+  purposes: {AssertionProofPurpose},
+  suites: {RsaSignature2018},
+  RSAKeyPair
+} = jsigs;
+const {documentLoader} = require('bedrock-jsonld-document-loader');
 
 const api = {};
 module.exports = api;
 
-// FIXME: Do not use an insecure document loader in production
-const nodeDocumentLoader = jsonld.documentLoaders.node({
-  secure: false,
-  strictSSL: false
-});
-jsonld.documentLoader = (url, callback) => {
-  if(url in config.constants.CONTEXTS) {
-    return callback(
-      null, {
-        contextUrl: null,
-        document: config.constants.CONTEXTS[url],
-        documentUrl: url
-      });
-  }
-  nodeDocumentLoader(url, callback);
-};
-
-// use local JSON-LD processor for checking signatures
-jsigs.use('jsonld', jsonld);
 // test hashing function
 api.testHasher = brLedgerNode.consensus._hasher;
 
@@ -240,3 +226,15 @@ function insertTestData(mockData, callback) {
     callback();
   }, callback);
 }
+
+api.signDocument = callbackify(async ({creator, doc, privateKeyPem}) => {
+  return jsigs.sign(doc, {
+    documentLoader,
+    // FIXME: is this the right purpose?
+    purpose: new AssertionProofPurpose(),
+    suite: new RsaSignature2018({
+      creator,
+      key: new RSAKeyPair({privateKeyPem})
+    }),
+  });
+});

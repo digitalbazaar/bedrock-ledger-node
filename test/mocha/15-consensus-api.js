@@ -7,7 +7,7 @@ const async = require('async');
 const bedrock = require('bedrock');
 const brLedgerNode = require('bedrock-ledger-node');
 const mockData = require('./mock.data');
-const uuid = require('uuid/v4');
+const {util: {uuid}} = bedrock;
 
 describe('Consensus API', () => {
   describe('hasher API', () => {

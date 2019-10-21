@@ -21,17 +21,18 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
     "fast-json-patch": "^2.0.6",
+    "jsonld": "^1.8.0",
     "lodash": "^4.17.10",
     "multibase": "^0.6.0",
     "multihashes": "^0.4.14",
-    "serialize-error": "^3.0.0",
-    "uuid": "^3.0.1"
+    "serialize-error": "^3.0.0"
   },
   "peerDependencies": {
-    "bedrock": "^1.12.0",
+    "bedrock": "^2.0.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^3.0.0",
-    "bedrock-ledger-context": "^12.0.0",
+    "bedrock-jsonld-document-loader": "^1.0.0",
+    "bedrock-ledger-context": "^13.0.0",
     "bedrock-mongodb": "5.5.0 - 6",
     "bedrock-permission": "^2.5.1",
     "bedrock-validation": "^4.1.0"

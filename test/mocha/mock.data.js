@@ -289,7 +289,7 @@ mock.ldDocuments[mock.authorizedSignerUrl] = {
 mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838'] = {
   "@context": constants.SECURITY_CONTEXT_V2_URL,
   "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
-  "publicKey": [{
+  "assertionMethod": [{
     "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144",
     "type": "RsaVerificationKey2018",
     "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
@@ -299,7 +299,7 @@ mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838'] = {
 mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'] = {
   "@context": constants.SECURITY_CONTEXT_V2_URL,
   "type": "RsaVerificationKey2018",
-  "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
+  "controller": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
   "id": 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
   "publicKeyPem": mock.groups.authorized.publicKey
 };

@@ -9,12 +9,8 @@ const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
 const {_hasher: hasher} = brLedgerNode.consensus;
 const helpers = require('./helpers');
-const jsonld = bedrock.jsonld;
-const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
-const uuid = require('uuid/v4');
-
-jsigs.use('jsonld', jsonld);
+const {util: {uuid}} = bedrock;
 
 let signedConfig;
 
@@ -22,8 +18,8 @@ describe('Events API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
-      callback => jsigs.sign(mockData.ledgerConfiguration, {
-        algorithm: 'RsaSignature2018',
+      callback => helpers.signDocument({
+        doc: mockData.ledgerConfiguration,
         privateKeyPem: mockData.groups.authorized.privateKey,
         creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       }, (err, result) => {
@@ -67,8 +63,8 @@ describe('Events API', () => {
         }
       };
       async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
+        sign: callback => helpers.signDocument({
+          doc: testOperation,
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),

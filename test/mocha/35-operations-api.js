@@ -4,16 +4,11 @@
 'use strict';
 
 const async = require('async');
-const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
-const jsonld = bedrock.jsonld;
-const jsigs = require('jsonld-signatures');
 const mockData = require('./mock.data');
-const uuid = require('uuid/v4');
-
-jsigs.use('jsonld', jsonld);
+const {util: {uuid}} = require('bedrock');
 
 let signedConfig;
 
@@ -21,8 +16,8 @@ describe('Operations API', () => {
   before(done => {
     async.series([
       callback => helpers.prepareDatabase(mockData, callback),
-      callback => jsigs.sign(mockData.ledgerConfiguration, {
-        algorithm: 'RsaSignature2018',
+      callback => helpers.signDocument({
+        doc: mockData.ledgerConfiguration,
         privateKeyPem: mockData.groups.authorized.privateKey,
         creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
       }, (err, result) => {
@@ -66,8 +61,8 @@ describe('Operations API', () => {
         }
       };
       async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
+        sign: callback => helpers.signDocument({
+          doc: testOperation,
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
@@ -91,13 +86,13 @@ describe('Operations API', () => {
         }
       };
       async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
+        sign: callback => helpers.signDocument({
+          doc: testOperation,
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
         add: ['sign', (results, callback) => {
-          ledgerNode.operations.add({operation: results.sign}, (err) => {
+          ledgerNode.operations.add({operation: results.sign}, err => {
             assertNoError(err);
             callback();
           });
@@ -116,13 +111,13 @@ describe('Operations API', () => {
         }
       };
       async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
+        sign: callback => helpers.signDocument({
+          doc: testOperation,
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
         add: ['sign', (results, callback) => {
-          ledgerNode.operations.add({operation: results.sign}, (err) => {
+          ledgerNode.operations.add({operation: results.sign}, err => {
             err.name.should.equal('SyntaxError');
             err.message.should.equal(
               'Operation context must be "https://w3id.org/webledger/v1"');
@@ -143,13 +138,13 @@ describe('Operations API', () => {
         }
       };
       async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
+        sign: callback => helpers.signDocument({
+          doc: testOperation,
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
         add: ['sign', (results, callback) => {
-          ledgerNode.operations.add({operation: results.sign}, (err) => {
+          ledgerNode.operations.add({operation: results.sign}, err => {
             err.name.should.equal('SyntaxError');
             err.message.should.equal('Operation context must contain ' +
               '"https://w3id.org/webledger/v1" as the first element.');
@@ -170,8 +165,8 @@ describe('Operations API', () => {
         }
       };
       async.auto({
-        sign: callback => jsigs.sign(testOperation, {
-          algorithm: 'RsaSignature2018',
+        sign: callback => helpers.signDocument({
+          doc: testOperation,
           privateKeyPem: mockData.groups.authorized.privateKey,
           creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
         }, callback),
