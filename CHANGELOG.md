@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 9.0.1 - TBD
+
+### Changed
+- Replace `hasValue` helper API with `bedrock.util.hasValue`.
+
 ## 9.0.0 - 2019-10-22
 
 ### Changed
