@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 9.0.0 - 2019-10-22
+
+### Changed
+- **BREAKING**: Refactor for use with bedrock@2.
+
 ## 8.0.3 - 2019-10-15
 
 ### Changed
