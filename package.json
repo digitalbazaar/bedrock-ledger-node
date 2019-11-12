@@ -2,6 +2,7 @@
   "name": "bedrock-ledger-node",
   "version": "9.0.2-0",
   "description": "Bedrock ledger node",
+  "license": "SEE LICENSE IN LICENSE.md",
   "main": "./lib",
   "scripts": {
     "lint": "eslint lib"
