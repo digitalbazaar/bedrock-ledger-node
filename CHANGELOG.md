@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 9.0.2 - 2019-11-12
+
+### Changed
+- Specify peer dep bedrock-ledger-context@14.
+
 ## 9.0.1 - 2019-10-22
 
 ### Changed
