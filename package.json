@@ -29,7 +29,7 @@
     "serialize-error": "^3.0.0"
   },
   "peerDependencies": {
-    "bedrock": "^2.0.0",
+    "bedrock": "2.0.0 - 3.x",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^3.0.0",
     "bedrock-jsonld-document-loader": "^1.0.0",
