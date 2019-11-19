@@ -1,5 +1,14 @@
 # bedrock-ledger ChangeLog
 
+## 9.1.0 - TBD
+
+### Added
+- Implement getLatestBlockHeight API with a cache option.
+
+### Changed
+- Use getLatestBlockHeight API to populate the basisBlockHeight property
+  for new operations.
+
 ## 9.0.2 - 2019-11-12
 
 ### Changed
