@@ -38,7 +38,7 @@
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#bedrock-2",
     "bedrock-mongodb": "^6.0.0",
     "bedrock-permission": "^2.5.3",
-    "bedrock-security-context": "^2.0.0",
+    "bedrock-security-context": "^3.0.0",
     "bedrock-test": "^4.0.0",
     "bedrock-validation": "^4.1.0",
     "grunt": "^1.0.1",
