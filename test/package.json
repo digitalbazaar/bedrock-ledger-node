@@ -26,7 +26,7 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
     "async": "^2.4.0",
-    "bedrock": "^2.0.0",
+    "bedrock": "^3.0.0",
     "bedrock-identity": "^7.0.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^3.0.0",
