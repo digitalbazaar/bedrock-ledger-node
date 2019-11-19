@@ -64,5 +64,19 @@ describe('Blocks API', () => {
         done();
       });
     });
+    describe('getLatestBlockHeight', () => {
+      it('gets the blockHeight', async () => {
+        let error;
+        let result;
+        try {
+          result = await ledgerNode.blocks.getLatestBlockHeight();
+        } catch(e) {
+          error = e;
+        }
+        assertNoError(error);
+        should.exist(result);
+        result.should.equal(0);
+      });
+    }); // end getLatestBlockHeight
   });
 });
