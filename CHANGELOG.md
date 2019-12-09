@@ -1,5 +1,11 @@
 # bedrock-ledger ChangeLog
 
+## 10.0.0 -2019-12-09
+
+### Changed
+- **BREAKING**: Use bedrock-ledger-context@15.
+- Use jsonld@2.
+
 ## 9.0.2 - 2019-11-12
 
 ### Changed
