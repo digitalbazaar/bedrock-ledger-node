@@ -34,19 +34,13 @@ const createOperation = {
       enum: ['CreateWebLedgerRecord'],
     },
     record: {
-      required: ['@context', 'id'],
-      // additional properties are allowed here
       type: 'object',
+      // additional properties are allowed here
+      additionalProperties: true,
+      // generally @context is not required, but specific ledger validators
+      // may add this requirement
+      required: ['id'],
       properties: {
-        '@context': {
-          anyOf: [
-            schemas.url(), {
-              type: 'array',
-              minItems: 1,
-              items: schemas.url(),
-            }
-          ]
-        },
         id: schemas.url()
       }
     },
