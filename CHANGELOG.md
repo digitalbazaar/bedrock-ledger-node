@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 10.1.0 - TBD
+## 10.1.0 - 2019-12-11
 
 ### Added
 - Implement getLatestBlockHeight API.
@@ -8,6 +8,7 @@
 ### Changed
 - Use getLatestBlockHeight API to populate the basisBlockHeight property
   for new operations.
+- Do not require `record['@context']` in `CreateWebLedgerRecord` documents.  
 
 ## 10.0.0 -2019-12-09
 
