@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 10.1.1 - TBD
+## 10.1.1 - 2019-12-11
 
 ### Changed
 - Update jsonld.js related deps.
