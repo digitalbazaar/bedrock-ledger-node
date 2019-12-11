@@ -42,6 +42,6 @@
     "bedrock-test": "^4.0.0",
     "bedrock-validation": "^4.1.0",
     "grunt": "^1.0.1",
-    "jsonld-signatures": "^4.4.0"
+    "jsonld-signatures": "^4.5.1"
   }
 }
