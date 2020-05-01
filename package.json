@@ -5,7 +5,9 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "main": "./lib",
   "scripts": {
-    "lint": "eslint lib"
+    "lint": "eslint lib",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -26,7 +28,8 @@
     "lodash": "^4.17.10",
     "multibase": "^0.6.0",
     "multihashes": "^0.4.14",
-    "serialize-error": "^3.0.0"
+    "serialize-error": "^3.0.0",
+    "snyk": "^1.316.1"
   },
   "peerDependencies": {
     "bedrock": "2.0.0 - 3.x",
@@ -44,5 +47,6 @@
   "devDependencies": {
     "eslint": "^6.5.1",
     "eslint-config-digitalbazaar": "^2.0.1"
-  }
+  },
+  "snyk": true
 }
