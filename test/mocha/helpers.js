@@ -114,7 +114,7 @@ api.removeCollections = function(collections, callback) {
       if(!database.collections[collectionName]) {
         return callback();
       }
-      database.collections[collectionName].remove({}, callback);
+      database.collections[collectionName].deleteMany({}, callback);
     }, function(err) {
       callback(err);
     });
