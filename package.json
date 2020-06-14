@@ -42,7 +42,7 @@
     "node": ">=8.9.0"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
+    "eslint": "^7.2.0",
     "eslint-config-digitalbazaar": "^2.0.1"
   }
 }
