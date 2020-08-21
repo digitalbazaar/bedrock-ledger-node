@@ -1,5 +1,17 @@
 # bedrock-ledger ChangeLog
 
+## 11.0.0 -
+
+### Changed
+- Updated usage of MongoDB api to version 3.5.
+- Updated `bedrock-mongodb` to 7.0.0.
+- Use `collection.{updateOne, updateMany}` over `collection.update`.
+- Pass `{projection}` to various methods as an option.
+
+### Added
+- Istanbul (nyc) code coverage
+- Github Actions CI tests
+
 ## 10.1.1 - 2019-12-11
 
 ### Changed
