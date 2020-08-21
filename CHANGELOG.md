@@ -9,8 +9,8 @@
 - Pass `{projection}` to various methods as an option.
 
 ### Added
-- Istanbul (nyc) code coverage
-- Github Actions CI tests
+- Istanbul (nyc) code coverage.
+- Github Actions CI tests.
 
 ## 10.1.1 - 2019-12-11
 
