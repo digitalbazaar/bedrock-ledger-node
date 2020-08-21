@@ -38,7 +38,7 @@
     "bedrock-ledger-consensus-uni": "^2.0.0",
     "bedrock-ledger-context": "^15.0.0",
     "bedrock-ledger-node": "file:..",
-    "bedrock-ledger-storage-mongodb": "^3.1.0",
+    "bedrock-ledger-storage-mongodb": "github:digitalbazaar/bedrock-ledger-storage-mongodb#mongo-version-3",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#bedrock-2",
     "bedrock-mongodb": "^7.0.0",
     "bedrock-permission": "^3.0.0",
