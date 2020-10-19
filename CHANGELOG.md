@@ -3,7 +3,7 @@
 ## 11.0.0 -
 
 ### Changed
-- **BREAKING**: Use `bedrock-mongodb` 7.0.0.
+- **BREAKING**: Use `bedrock-mongodb` 7.x-8.x.
 - Updated usage of MongoDB api to version 3.5.
 - Use `collection.{updateOne, updateMany}` over `collection.update`.
 - Pass `{projection}` to various methods as an option.
