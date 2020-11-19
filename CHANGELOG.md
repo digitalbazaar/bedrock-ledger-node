@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 10.1.2 - 2020-11-xx
+## 10.1.2 - 2020-11-19
 
 ### Changed
 - Name `rdfCanonizeAndHash` for easier profiling.
@@ -18,7 +18,7 @@
 ### Changed
 - Use getLatestBlockHeight API to populate the basisBlockHeight property
   for new operations.
-- Do not require `record['@context']` in `CreateWebLedgerRecord` documents.  
+- Do not require `record['@context']` in `CreateWebLedgerRecord` documents.
 
 ## 10.0.0 -2019-12-09
 
