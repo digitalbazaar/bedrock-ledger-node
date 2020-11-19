@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 10.1.2 - 2020-11-xx
+
+### Changed
+- Name `rdfCanonizeAndHash` for easier profiling.
+
 ## 10.1.1 - 2019-12-11
 
 ### Changed
