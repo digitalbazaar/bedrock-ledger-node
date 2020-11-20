@@ -443,6 +443,61 @@ describe('Ledger API', () => {
           })]
       }, done));
     }); // end adminUser as actor
+    describe('null as actor', () => {
+      let actor;
+      let ledgerConfiguration;
+      before(async () => {
+        ledgerConfiguration = signedConfig;
+        const {id} = mockData.identities.adminUser.identity;
+        actor = await brIdentity.getCapabilities({id});
+      });
+      it('gets a ledger with no owner', async () => {
+        const ledgerNode = await brLedgerNode.add(actor, {ledgerConfiguration});
+        let err;
+        let result;
+        try {
+          result = await brLedgerNode.get(null, ledgerNode.id);
+        } catch(error) {
+          err = error;
+        }
+        assertNoError(err);
+        assertNoError(err);
+        expect(result).to.be.ok;
+        expect(result.meta).to.exist;
+        expect(result.blocks).to.exist;
+        expect(result.events).to.exist;
+      });
+      it('gets a ledger with no owner from the cache', async () => {
+        const ledgerNode = await brLedgerNode.add(actor, {ledgerConfiguration});
+        let err;
+        let result;
+        try {
+          result = await brLedgerNode.get(null, ledgerNode.id);
+        } catch(error) {
+          err = error;
+        }
+        assertNoError(err);
+        assertNoError(err);
+        expect(result).to.be.ok;
+        expect(result.meta).to.exist;
+        expect(result.blocks).to.exist;
+        expect(result.events).to.exist;
+
+        err = undefined;
+        result = undefined;
+        try {
+          result = await brLedgerNode.get(null, ledgerNode.id);
+        } catch(error) {
+          err = error;
+        }
+        assertNoError(err);
+        assertNoError(err);
+        expect(result).to.be.ok;
+        expect(result.meta).to.exist;
+        expect(result.blocks).to.exist;
+        expect(result.events).to.exist;
+      });
+    });
   }); // end get API
   describe('delete API', () => {
     beforeEach(done => {
