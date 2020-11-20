@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
+    "@digitalbazaar/lru-memoize": "^1.0.0",
     "fast-json-patch": "^2.0.6",
     "jsonld": "^2.0.1",
     "lodash": "^4.17.10",
@@ -42,7 +43,7 @@
     "node": ">=8.9.0"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
+    "eslint": "^7.13.0",
     "eslint-config-digitalbazaar": "^2.0.1"
   }
 }
