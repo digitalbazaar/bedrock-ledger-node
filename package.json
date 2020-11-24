@@ -22,6 +22,7 @@
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
     "@digitalbazaar/lru-memoize": "^1.1.0",
+    "bnid": "^2.0.0",
     "fast-json-patch": "^2.0.6",
     "jsonld": "^2.0.1",
     "lodash": "^4.17.10",
@@ -32,7 +33,6 @@
   "peerDependencies": {
     "bedrock": "2.0.0 - 3.x",
     "bedrock-injector": "^1.0.0",
-    "bedrock-jobs": "^3.0.0",
     "bedrock-jsonld-document-loader": "^1.0.0",
     "bedrock-ledger-context": "^15.0.0",
     "bedrock-mongodb": "5.5.0 - 6",
