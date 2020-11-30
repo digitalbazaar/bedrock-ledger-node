@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2020 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -19,22 +19,17 @@ describe.skip('Performance tests', () => {
   const passNum = 10;
   let ledgerNode;
   let storage;
-  before(done => async.auto({
-    prepare: callback => helpers.prepareDatabase(mockData, callback),
-    sign: callback => helpers.signDocument({
+  before(async function() {
+    await helpers.prepareDatabase(mockData);
+    const ledgerConfiguration = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
+      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
       privateKeyPem: mockData.groups.authorized.privateKey,
-      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-    }, callback),
-    addLedger: ['prepare', 'sign', (results, callback) => brLedgerNode.add(
-      null, {ledgerConfiguration: results.sign}, (err, result) => {
-        ledgerNode = result;
-        storage = ledgerNode.storage;
-        callback(err, result);
-      })]
-  }, done));
+    });
+    ledgerNode = await brLedgerNode.add(null, {ledgerConfiguration});
+    storage = ledgerNode.storage;
+  });
   describe('Prepare', () => {
-
     let blocksAndEvents;
     it(`generating ${blockNum} blocks`, function(done) {
       this.timeout(120000);
