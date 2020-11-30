@@ -1,16 +1,15 @@
 /*
- * Copyright (c) 2016-2019 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2016-2020 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
-const async = require('async');
 const bedrock = require('bedrock');
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
-const {callbackify} = require('util');
 const crypto = require('crypto');
 const database = require('bedrock-mongodb');
 const jsigs = require('jsonld-signatures');
+const {promisify} = require('util');
 const {util: {uuid}} = bedrock;
 const {
   purposes: {AssertionProofPurpose},
@@ -25,13 +24,13 @@ module.exports = api;
 // test hashing function
 api.testHasher = brLedgerNode.consensus._hasher;
 
-api.addEvent = ({
+api.addEvent = async ({
   consensus = false, count = 1, eventTemplate, ledgerStorage, opTemplate,
   recordId, startBlockHeight = 1
-}, callback) => {
+}) => {
   const events = {};
   let operations;
-  async.timesSeries(count, (i, callback) => {
+  for(let i = 0; i < count; ++i) {
     const testEvent = bedrock.util.clone(eventTemplate);
     const operation = bedrock.util.clone(opTemplate);
     const testRecordId = recordId || `https://example.com/event/${uuid()}`;
@@ -41,54 +40,35 @@ api.addEvent = ({
     if(operation.type === 'UpdateWebLedgerRecord') {
       operation.recordPatch.target = testRecordId;
     }
-    async.auto({
-      operationHash: callback => api.testHasher(operation, (err, opHash) => {
-        if(err) {
-          return callback(err);
-        }
+    const operationHash = await api.testHasher(operation);
+    // NOTE: nonce is added here to avoid duplicate errors
+    testEvent.nonce = uuid();
+    testEvent.operationHash = [operationHash];
+    const eventHash = await api.testHasher(testEvent);
 
-        // NOTE: nonce is added here to avoid duplicate errors
-        testEvent.nonce = uuid();
+    operations = [{
+      meta: {eventHash, eventOrder: 0, operationHash},
+      operation,
+      recordId: database.hash(testRecordId),
+    }];
+    await ledgerStorage.operations.addMany({operations});
 
-        testEvent.operationHash = [opHash];
-        callback(null, opHash);
-      }),
-      eventHash: ['operationHash', (results, callback) => api.testHasher(
-        testEvent, callback)],
-      operation: ['eventHash', (results, callback) => {
-        const {eventHash, operationHash} = results;
-        operations = [{
-          meta: {eventHash, eventOrder: 0, operationHash},
-          operation,
-          recordId: database.hash(testRecordId),
-        }];
-        ledgerStorage.operations.addMany({operations}, callback);
-      }],
-      event: ['operation', (results, callback) => {
-        const {eventHash} = results;
-        const meta = {eventHash};
-        if(consensus) {
-          const blockHeight = i + startBlockHeight;
-          meta.blockHeight = blockHeight;
-          meta.blockOrder = 0;
-          meta.consensus = true;
-          meta.consensusDate = Date.now();
-        }
-        ledgerStorage.events.add(
-          {event: testEvent, meta}, (err, result) => {
-            if(err) {
-              return callback(err);
-            }
-            // NOTE: operations are added to events object in full here so they
-            // may be inspected in tests. This does not represent the event
-            // in the database
-            result.operations = operations;
-            events[result.meta.eventHash] = result;
-            callback();
-          });
-      }]
-    }, callback);
-  }, err => callback(err, events));
+    const meta = {eventHash};
+    if(consensus) {
+      const blockHeight = i + startBlockHeight;
+      meta.blockHeight = blockHeight;
+      meta.blockOrder = 0;
+      meta.consensus = true;
+      meta.consensusDate = Date.now();
+    }
+    const result = await ledgerStorage.events.add({event: testEvent, meta});
+    // NOTE: operations are added to events object in full here so they
+    // may be inspected in tests. This does not represent the event
+    // in the database
+    result.operations = operations;
+    events[result.meta.eventHash] = result;
+  }
+  return events;
 };
 
 api.createIdentity = function(userName, userId) {
@@ -107,31 +87,21 @@ api.createIdentity = function(userName, userId) {
 };
 
 // collections may be a string or array
-api.removeCollections = function(collections, callback) {
+api.removeCollections = async function(collections) {
   const collectionNames = [].concat(collections);
-  database.openCollections(collectionNames, () => {
-    async.each(collectionNames, function(collectionName, callback) {
-      if(!database.collections[collectionName]) {
-        return callback();
-      }
-      database.collections[collectionName].deleteMany({}, callback);
-    }, function(err) {
-      callback(err);
-    });
-  });
+  await promisify(database.openCollections)(collectionNames);
+  for(const collectionName of collectionNames) {
+    if(!database.collections[collectionName]) {
+      continue;
+    }
+    await database.collections[collectionName].deleteMany({});
+  }
 };
 
-api.prepareDatabase = function(mockData, callback) {
-  async.series([
-    callback => {
-      api.removeCollections([
-        'identity', 'eventLog', 'ledger', 'ledgerNode'
-      ], callback);
-    },
-    callback => {
-      insertTestData(mockData, callback);
-    }
-  ], callback);
+api.prepareDatabase = async function(mockData) {
+  await api.removeCollections(
+    ['identity', 'eventLog', 'ledger', 'ledgerNode']);
+  await insertTestData(mockData);
 };
 
 api.getEventNumber = function(eventId) {
@@ -140,12 +110,12 @@ api.getEventNumber = function(eventId) {
 
 api.average = arr => Math.round(arr.reduce((p, c) => p + c, 0) / arr.length);
 
-api.createBlocks = (
-  {blockTemplate, eventTemplate, blockNum = 1, eventNum = 1}, callback) => {
+api.createBlocks = async (
+  {blockTemplate, eventTemplate, blockNum = 1, eventNum = 1}) => {
   const blocks = [];
   const events = [];
   const startTime = Date.now();
-  async.timesLimit(blockNum, 100, (i, callback) => {
+  for(let i = 0; i < blockNum; ++i) {
     const block = bedrock.util.clone(blockTemplate);
     block.id = uuid();
     block.blockHeight = i + 1;
@@ -159,75 +129,57 @@ api.createBlocks = (
       consensus: true,
       consensusDate: time
     };
-    async.auto({
-      events: callback => api.createEvent(
-        {eventTemplate, eventNum}, (err, result) => {
-          if(err) {
-            return callback(err);
-          }
-          // must hash with the real events
-          block.event = result.map(e => e.event);
-          events.push(...result);
-          callback(null, result);
-        }),
-      hash: ['events', (results, callback) => {
-        api.testHasher(block, (err, result) => {
-          if(err) {
-            return callback(err);
-          }
-          meta.blockHash = result;
-          // block is stored with the eventHashes
-          block.event = results.events.map(e => e.meta.eventHash);
-          blocks.push({block, meta});
-          callback();
-        });
-      }]
-    }, callback);
-  }, err => {
-    if(err) {
-      return callback(err);
-    }
-    callback(null, {blocks, events});
-  });
+    const result = await api.createEvent({eventTemplate, eventNum});
+    // must hash with the real events
+    block.event = result.map(e => e.event);
+    events.push(...result);
+
+    const blockHash = await api.testHasher(block);
+    meta.blockHash = blockHash;
+
+    // block is stored with the eventHashes
+    block.event = events.map(e => e.meta.eventHash);
+    blocks.push({block, meta});
+  }
+  return {blocks, events};
 };
 
-api.createEvent = ({eventTemplate, eventNum, consensus = true}, callback) => {
+api.createEvent = async ({eventTemplate, eventNum, consensus = true}) => {
   const events = [];
-  async.timesLimit(eventNum, 100, (i, callback) => {
+  for(let i = 0; i < eventNum; ++i) {
     const event = bedrock.util.clone(eventTemplate);
     event.id = `https://example.com/events/${uuid()}`;
     // events.push(event);
-    api.testHasher(event, (err, result) => {
-      const meta = {eventHash: result};
-      if(consensus) {
-        meta.consensus = true;
-        meta.consensusDate = Date.now();
-      }
-      events.push({event, meta});
-      callback();
-    });
-  }, err => callback(err, events));
+    const result = await api.testHasher(event);
+    const meta = {eventHash: result};
+    if(consensus) {
+      meta.consensus = true;
+      meta.consensusDate = Date.now();
+    }
+    events.push({event, meta});
+  }
+  return events;
 };
 
-api.hasher = (data, callback) => callback(
-  null, crypto.createHash('sha256').update(JSON.stringify(data)).digest());
+api.hasher = async data =>
+  crypto.createHash('sha256').update(JSON.stringify(data)).digest();
 
 // Insert identities and public keys used for testing into database
-function insertTestData(mockData, callback) {
-  async.forEachOf(mockData.identities, ({identity, meta}, key, callback) => {
-    brIdentity.insert({actor: null, identity, meta}, callback);
-  }, err => {
-    if(err) {
-      if(!database.isDuplicateError(err)) {
-        // duplicate error means test data is already loaded
-        return callback(err);
+async function insertTestData(mockData) {
+  for(const key in mockData.identities) {
+    const {identity, meta} = mockData.identities[key];
+    try {
+      await brIdentity.insert({actor: null, identity, meta});
+    } catch(e) {
+      // duplicate error means test data is already loaded
+      if(!database.isDuplicateError(e)) {
+        throw e;
       }
     }
-    callback();
-  }, callback);
+  }
 }
 
-api.signDocument = callbackify(async ({creator, doc, privateKeyPem}) => {
+api.signDocument = async ({creator, doc, privateKeyPem}) => {
   return jsigs.sign(doc, {
     documentLoader,
     // FIXME: is this the right purpose?
@@ -237,4 +189,4 @@ api.signDocument = callbackify(async ({creator, doc, privateKeyPem}) => {
       key: new RSAKeyPair({privateKeyPem})
     }),
   });
-});
+};

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2020 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -8,20 +8,17 @@ const helpers = require('./helpers');
 const mockData = require('./mock.data');
 
 describe.skip('Metadata API', () => {
-  before(done => {
-    helpers.prepareDatabase(mockData, done);
+  before(async function() {
+    await helpers.prepareDatabase(mockData);
   });
-  beforeEach(done => {
-    helpers.removeCollection('ledger_testLedger', done);
+  beforeEach(async function() {
+    await helpers.removeCollections(['ledger', 'ledgerNode']);
   });
   describe('regularUser as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
     let actor;
-    before(done => {
-      brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
-        actor = result;
-        done(err);
-      });
+    before(async function() {
+      actor = await brIdentity.get(null, mockIdentity.identity.id);
     });
     it.skip('should get ledger metadata', done => {
       // TODO: use `actor`
@@ -31,11 +28,8 @@ describe.skip('Metadata API', () => {
   describe('admin as actor', () => {
     const mockIdentity = mockData.identities.regularUser;
     let actor;
-    before(done => {
-      brIdentity.get(null, mockIdentity.identity.id, (err, result) => {
-        actor = result;
-        done(err);
-      });
+    before(async function() {
+      actor = await brIdentity.get(null, mockIdentity.identity.id);
     });
     it.skip('should get ledger metadata for any ledger', done => {
       // TODO: use `actor`
