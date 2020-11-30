@@ -1,71 +1,50 @@
 /*
- * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2020 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
-const async = require('async');
 const brIdentity = require('bedrock-identity');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
+const {promisify} = require('util');
 const mockData = require('./mock.data');
 
 let signedConfig;
 
 describe('Blocks API', () => {
-  before(done => {
-    async.series([
-      callback => helpers.prepareDatabase(mockData, callback),
-      callback => helpers.signDocument({
-        doc: mockData.ledgerConfiguration,
-        privateKeyPem: mockData.groups.authorized.privateKey,
-        creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
-      }, (err, result) => {
-        signedConfig = result;
-        callback(err);
-      })
-    ], done);
+  before(async function() {
+    await helpers.prepareDatabase(mockData);
+    signedConfig = await helpers.signDocument({
+      doc: mockData.ledgerConfiguration,
+      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+      privateKeyPem: mockData.groups.authorized.privateKey,
+    });
   });
-  beforeEach(done => {
-    helpers.removeCollections('ledger_testLedger', done);
+  beforeEach(async function() {
+    await helpers.removeCollections(['ledger', 'ledgerNode']);
   });
-  describe('regularUser as actor', () => {
+  describe('regularUser as actor', async function() {
     let configBlockId;
     let ledgerNode;
     let actor;
-    before(done => async.auto({
-      getActor: callback => {
-        const {id} = mockData.identities.regularUser.identity;
-        brIdentity.getCapabilities({id}, (err, result) => {
-          actor = result;
-          assertNoError(err);
-          callback();
-        });
-      },
-      addLedger: callback => brLedgerNode.add(
-        actor, {ledgerConfiguration: signedConfig}, (err, result) => {
-          ledgerNode = result;
-          callback(err, result);
-        }),
-      addBlock: ['addLedger', (results, callback) => {
-        results.addLedger.storage.blocks.getLatest((err, result) => {
-          configBlockId = result.eventBlock.block.id;
-          callback();
-        });
-      }]
-    }, done));
-    it('should get block', done => {
-      ledgerNode.blocks.get({blockId: configBlockId}, (err, result) => {
-        assertNoError(err);
-        should.exist(result);
-        result.block.should.be.an('object');
-        const block = result.block;
-        block.id.should.equal(configBlockId);
-        result.meta.should.be.an('object');
-        done();
-      });
+    before(async function() {
+      const {id} = mockData.identities.regularUser.identity;
+      actor = await promisify(brIdentity.getCapabilities)({id});
+      ledgerNode = await brLedgerNode.add(
+        actor, {ledgerConfiguration: signedConfig});
+      const result = await ledgerNode.storage.blocks.getLatest();
+      configBlockId = result.eventBlock.block.id;
+    });
+    it('should get block', async function() {
+      const result = await ledgerNode.blocks.get({blockId: configBlockId});
+      should.exist(result);
+      result.block.should.be.an('object');
+      const block = result.block;
+      block.id.should.equal(configBlockId);
+      result.meta.should.be.an('object');
     });
     describe('getLatestBlockHeight', () => {
-      it('gets the blockHeight', async () => {
+      it('gets the blockHeight', async function() {
         let error;
         let result;
         try {
