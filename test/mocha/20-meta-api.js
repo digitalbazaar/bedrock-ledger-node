@@ -20,9 +20,8 @@ describe.skip('Metadata API', () => {
     before(async function() {
       actor = await brIdentity.get(null, mockIdentity.identity.id);
     });
-    it.skip('should get ledger metadata', done => {
+    it.skip('should get ledger metadata', async () => {
       // TODO: use `actor`
-      done();
     });
   });
   describe('admin as actor', () => {
@@ -31,9 +30,8 @@ describe.skip('Metadata API', () => {
     before(async function() {
       actor = await brIdentity.get(null, mockIdentity.identity.id);
     });
-    it.skip('should get ledger metadata for any ledger', done => {
+    it.skip('should get ledger metadata for any ledger', async () => {
       // TODO: use `actor`
-      done();
     });
   });
 });

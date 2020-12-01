@@ -4,7 +4,6 @@
 'use strict';
 
 const brLedgerNode = require('bedrock-ledger-node');
-const async = require('async');
 const helpers = require('./helpers');
 const mockData = require('./mock.data');
 
@@ -31,76 +30,61 @@ describe.skip('Performance tests', () => {
   });
   describe('Prepare', () => {
     let blocksAndEvents;
-    it(`generating ${blockNum} blocks`, function(done) {
+    it(`generating ${blockNum} blocks`, async function() {
       this.timeout(120000);
-      helpers.createBlocks({
+      blocksAndEvents = await helpers.createBlocks({
         blockNum,
         blockTemplate: mockData.eventBlocks.alpha,
         eventNum,
         eventTemplate: mockData.events.alpha
-      }, (err, result) => {
-        assertNoError(err);
-        blocksAndEvents = result;
-        done();
       });
     });
-    it(`events.add events`, function(done) {
+    it(`events.add events`, async function() {
       this.timeout(120000);
       console.log(`Adding ${blocksAndEvents.events.length} events.`);
-      async.eachLimit(
-        blocksAndEvents.events, 100, ({event, meta}, callback) => {
-          storage.events.add({event, meta}, err => {
-            assertNoError(err);
-            callback();
-          });
-        }, err => {
-          assertNoError(err);
-          done();
-        });
+      await Promise.all(blocksAndEvents.events.map(
+        ({event, meta}) => storage.events.add({event, meta})));
     });
-    it(`blocks.add ${blockNum} blocks`, function(done) {
+    it(`blocks.add ${blockNum} blocks`, async function() {
       this.timeout(120000);
-      async.eachLimit(
-        blocksAndEvents.blocks, 100, ({block, meta}, callback) => {
-          storage.blocks.add({block, meta}, err => {
-            assertNoError(err);
-            callback();
-          });
-        }, done);
+      await Promise.all(blocksAndEvents.blocks.map(
+        ({block, meta}) => storage.blocks.add({block, meta})));
     });
   });
   describe('get API', () => {
-    it(`does get ${opNum} times`, function(done) {
+    it(`does get ${opNum} times`, async function() {
       this.timeout(120000);
-      runPasses({
+      await runPasses({
         func: brLedgerNode.get,
         id: ledgerNode.id,
         passNum,
         opNum,
-      }, done);
+      });
     });
   });
 });
 
-function runPasses({
-  func, passNum, id, opNum, concurrency = 100
-}, callback) {
+async function runPasses({func, passNum, id, opNum, concurrency = 100}) {
+  const actor = null;
   const passes = [];
-  async.timesSeries(passNum, (i, callback) => {
+  for(let i = 0; i < passNum; ++i) {
     const start = Date.now();
-    const actor = null;
-    async.timesLimit(
-      opNum, concurrency,
-      (i, callback) => func.call(null, actor, id, callback), err => {
-        const stop = Date.now();
-        assertNoError(err);
-        passes.push(Math.round(opNum / (stop - start) * 1000));
-        callback();
-      });
-  }, err => {
-    assertNoError(err);
-    console.log('ops/sec passes', passes);
-    console.log('average ops/sec', helpers.average(passes));
-    callback();
-  });
+    let remainingOps = opNum;
+    while(remainingOps > 0) {
+      const promises = [];
+      let count = remainingOps - concurrency;
+      if(count < 0) {
+        count = remainingOps;
+      }
+      remainingOps -= count;
+      for(let j = 0; j < count; ++j) {
+        promises.push(func.call(null, actor, id));
+      }
+      await promises;
+    }
+    const stop = Date.now();
+    passes.push(Math.round(opNum / (stop - start) * 1000));
+  }
+  console.log('ops/sec passes', passes);
+  console.log('average ops/sec', helpers.average(passes));
 }
