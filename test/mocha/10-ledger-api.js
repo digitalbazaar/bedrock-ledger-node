@@ -541,8 +541,8 @@ describe('Ledger API', () => {
 
   // FIXME: see https://github.com/digitalbazaar/bedrock-ledger-node/issues/17
   describe.skip('getNodeIterator API', () => {
-    beforeEach(done => {
-      helpers.removeCollections(['ledger', 'ledgerNode'], done);
+    beforeEach(async () => {
+      await helpers.removeCollections(['ledger', 'ledgerNode']);
     });
     describe('regularUser as actor', () => {
       let actor;
