@@ -1,9 +1,9 @@
 # bedrock-ledger ChangeLog
 
-## 11.0.0 -
+## 11.0.0 - 2020-12-xx
 
 ### Changed
-- **BREAKING**: Use `bedrock-mongodb` 7.x-8.x.
+- **BREAKING**: Use `bedrock-mongodb` 8.1.x.
 - **BREAKING**: Remove callback version of the API (now promises only).
 - **BREAKING**: Update consensus ledger work scheduler API to address
   potential race conditions that impact performance.
