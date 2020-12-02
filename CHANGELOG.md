@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 11.0.0 - 2020-12-xx
+## 11.0.0 - 2020-12-01
 
 ### Changed
 - **BREAKING**: Use `bedrock-mongodb` 8.1.x.
