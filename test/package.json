@@ -39,7 +39,7 @@
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "github:digitalbazaar/bedrock-ledger-storage-mongodb#rebased-mongo-3",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#bedrock-2",
-    "bedrock-mongodb": "^8.0.1",
+    "bedrock-mongodb": "^8.1.0",
     "bedrock-permission": "^3.0.0",
     "bedrock-security-context": "^3.0.0",
     "bedrock-test": "^5.3.0",
