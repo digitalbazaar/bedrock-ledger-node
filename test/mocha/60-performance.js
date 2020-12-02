@@ -14,7 +14,6 @@ describe.skip('Performance tests', () => {
   const blockNum = 1000;
   const eventNum = 10;
   const opNum = 2500;
-  const opNumLow = 250;
   const passNum = 10;
   let ledgerNode;
   let storage;
