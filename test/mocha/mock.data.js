@@ -94,8 +94,10 @@ operations.alpha = {
   proof: {
     type: 'RsaSignature2018',
     created: '2017-05-10T19:47:13Z',
-    creator: "https://bedrock.local:18443/consensus/continuity2017/voters/57565658-0d8a-4668-b734-e801aeaa6472#key",
-    signatureValue: "nlx8c9uFI8Ur/h57F5AeHHrKPSKiiGJmN6APRnYesQPK4LXftnm2lzqpWzsvKGDPzH6QfoOIktQu2Ax0pj/Bi6Oa4/Na75HuoRGppaHCqlyrgbr5EUPRCiYSjlsYKBhEN6ITdmR/O8iGz9WZi4PQjSW9XrrP8bQLeu9Kzsu5hdkzmgS4f3PCXpImwpKFttyF7xARvSQxrgRxZrqWPIGtD9sghRY2/Zn3T2npTaOTXMhgW9Lc7uEpjThnCEsrKflshbLGevZglc/njBp5SoEgon8CuzQIkMBFjCTEdJYBtTuk0AF5BcVyoxPDfH9bdUYOIMFaDhZBQKM5tQEU2GqE/g=="
+    // eslint-disable-next-line max-len
+    creator: 'https://bedrock.local:18443/consensus/continuity2017/voters/57565658-0d8a-4668-b734-e801aeaa6472#key',
+    // eslint-disable-next-line max-len
+    signatureValue: 'nlx8c9uFI8Ur/h57F5AeHHrKPSKiiGJmN6APRnYesQPK4LXftnm2lzqpWzsvKGDPzH6QfoOIktQu2Ax0pj/Bi6Oa4/Na75HuoRGppaHCqlyrgbr5EUPRCiYSjlsYKBhEN6ITdmR/O8iGz9WZi4PQjSW9XrrP8bQLeu9Kzsu5hdkzmgS4f3PCXpImwpKFttyF7xARvSQxrgRxZrqWPIGtD9sghRY2/Zn3T2npTaOTXMhgW9Lc7uEpjThnCEsrKflshbLGevZglc/njBp5SoEgon8CuzQIkMBFjCTEdJYBtTuk0AF5BcVyoxPDfH9bdUYOIMFaDhZBQKM5tQEU2GqE/g=='
   }
 };
 operations.beta = {
@@ -189,7 +191,7 @@ mock.authorizedSignerUrl = 'https://example.com/keys/authorized-key-1';
 
 // all mock keys for all groups
 mock.groups = {
-  'authorized': {
+  authorized: {
     publicKey: '-----BEGIN PUBLIC KEY-----\n' +
       'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAskcRISeoOvgQM8KxMEzP\n' +
       'DMSfcw9NKJRvXNoFnxS0j7DcTPvi0zMXKAY5smANZ1iz9jQ43X/EUDNyjaWkiDUr\n' +
@@ -227,7 +229,7 @@ mock.groups = {
       '42EADs/ajTEckTxULdirbEk2rINRwQC5kWMde3fcwAnn6xt3wvOyuwg=\n' +
       '-----END RSA PRIVATE KEY-----'
   },
-  'unauthorized': { // unauthorized group
+  unauthorized: { // unauthorized group
     publicKey: '-----BEGIN PUBLIC KEY-----\n' +
       'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlretzNDRSy2Dmr8xywmP\n' +
       '5BCE8LnFhfl7QB+7gsZSVANeoASk7l++JXM0nv/PJMuq9R8arekQ2tEGA53w1TU8\n' +
@@ -270,36 +272,36 @@ mock.groups = {
 mock.ldDocuments = {};
 
 mock.ldDocuments['https://example.com/i/alpha'] = {
-  "@context": constants.SECURITY_CONTEXT_V2_URL,
-  "id": "https://example.com/i/alpha",
-  "publicKey": [{
-    "id": mock.authorizedSignerUrl,
-    "type": "RsaVerificationKey2018",
-    "owner": "https://example.com/i/alpha",
-    "publicKeyPem": mock.groups.authorized.publicKey
+  '@context': constants.SECURITY_CONTEXT_V2_URL,
+  id: 'https://example.com/i/alpha',
+  publicKey: [{
+    id: mock.authorizedSignerUrl,
+    type: 'RsaVerificationKey2018',
+    owner: 'https://example.com/i/alpha',
+    publicKeyPem: mock.groups.authorized.publicKey
   }]
 };
 mock.ldDocuments[mock.authorizedSignerUrl] = {
-  "@context": constants.SECURITY_CONTEXT_V2_URL,
-  "type": "RsaVerificationKey2018",
-  "owner": "https://example.com/i/alpha",
-  "id": mock.authorizedSignerUrl,
-  "publicKeyPem": mock.groups.authorized.publicKey
+  '@context': constants.SECURITY_CONTEXT_V2_URL,
+  type: 'RsaVerificationKey2018',
+  owner: 'https://example.com/i/alpha',
+  id: mock.authorizedSignerUrl,
+  publicKeyPem: mock.groups.authorized.publicKey
 };
 mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838'] = {
-  "@context": constants.SECURITY_CONTEXT_V2_URL,
-  "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
-  "assertionMethod": [{
-    "id": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144",
-    "type": "RsaVerificationKey2018",
-    "owner": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
-    "publicKeyPem": mock.groups.authorized.publicKey
+  '@context': constants.SECURITY_CONTEXT_V2_URL,
+  id: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838',
+  assertionMethod: [{
+    id: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+    type: 'RsaVerificationKey2018',
+    owner: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838',
+    publicKeyPem: mock.groups.authorized.publicKey
   }]
 };
 mock.ldDocuments['did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'] = {
-  "@context": constants.SECURITY_CONTEXT_V2_URL,
-  "type": "RsaVerificationKey2018",
-  "controller": "did:v1:53ebca61-5687-4558-b90a-03167e4c2838",
-  "id": 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-  "publicKeyPem": mock.groups.authorized.publicKey
+  '@context': constants.SECURITY_CONTEXT_V2_URL,
+  type: 'RsaVerificationKey2018',
+  controller: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838',
+  id: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+  publicKeyPem: mock.groups.authorized.publicKey
 };

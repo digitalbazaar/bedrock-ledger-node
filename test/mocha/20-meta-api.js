@@ -18,6 +18,7 @@ describe.skip('Metadata API', () => {
     const mockIdentity = mockData.identities.regularUser;
     let actor;
     before(async function() {
+      // eslint-disable-next-line no-unused-vars
       actor = await brIdentity.get(null, mockIdentity.identity.id);
     });
     it.skip('should get ledger metadata', async () => {
@@ -28,6 +29,7 @@ describe.skip('Metadata API', () => {
     const mockIdentity = mockData.identities.regularUser;
     let actor;
     before(async function() {
+      // eslint-disable-next-line no-unused-vars
       actor = await brIdentity.get(null, mockIdentity.identity.id);
     });
     it.skip('should get ledger metadata for any ledger', async () => {
