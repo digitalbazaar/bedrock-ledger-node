@@ -1,10 +1,5 @@
 # bedrock-ledger ChangeLog
 
-## 11.0.1 - 2020-TBD
-
-### Changed
-- Remove `bedrock-identity` and use `bedrock-account` in tests.
-
 ## 11.0.0 - 2020-12-01
 
 ### Changed
