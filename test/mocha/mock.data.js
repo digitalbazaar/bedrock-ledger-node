@@ -16,7 +16,7 @@ let userName;
 userName = 'regularUser';
 accounts[userName] = {};
 accounts[userName].account = helpers.createAccount(
-  userName, 'did:v1:28b26664-8f0f-4727-b771-864e1a241f48');
+  userName, 'urn:uuid:28b26664-8f0f-4727-b771-864e1a241f48');
 accounts[userName].meta = {
   sysResourceRole: [{
     sysRole: 'bedrock-ledger.test',
@@ -27,7 +27,7 @@ accounts[userName].meta = {
 userName = 'adminUser';
 accounts[userName] = {};
 accounts[userName].account = helpers.createAccount(
-  userName, 'did:v1:cbcee289-2484-48bd-a54e-55f50cfc9dfc');
+  userName, 'urn:uuid:cbcee289-2484-48bd-a54e-55f50cfc9dfc');
 accounts[userName].meta = {
   sysResourceRole: [{
     sysRole: 'bedrock-ledger.test'

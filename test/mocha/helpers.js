@@ -72,16 +72,11 @@ api.addEvent = async ({
 };
 
 api.createAccount = function(userName, userId) {
-  userId = userId || 'did:v1:' + uuid();
+  userId = userId || 'urn:uuid:' + uuid();
   const newAccount = {
     id: userId,
     type: 'Account',
-    sysSlug: userName,
-    label: userName,
     email: userName + '@bedrock.dev',
-    sysPublic: ['label', 'url', 'description'],
-    url: 'https://example.com',
-    description: userName,
   };
   return newAccount;
 };
