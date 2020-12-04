@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 12.0.0 - TBD
+
+### Changed
+- **BREAKING**: Drop support for node 10.
+
 ## 11.0.0 - 2020-12-01
 
 ### Changed
