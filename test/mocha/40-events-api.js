@@ -4,7 +4,7 @@
 'use strict';
 
 const bedrock = require('bedrock');
-const brIdentity = require('bedrock-identity');
+const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const {_hasher: hasher} = brLedgerNode.consensus;
 const helpers = require('./helpers');
@@ -29,8 +29,8 @@ describe('Events API', () => {
     let actor;
     let ledgerNode;
     before(async () => {
-      const {id} = mockData.identities.regularUser.identity;
-      actor = await brIdentity.getCapabilities({id});
+      const {id} = mockData.accounts.regularUser.account;
+      actor = await brAccount.getCapabilities({id});
       ledgerNode = await brLedgerNode.add(
         actor, {ledgerConfiguration: signedConfig});
     });

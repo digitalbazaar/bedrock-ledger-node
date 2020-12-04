@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const brIdentity = require('bedrock-identity');
+const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const database = require('bedrock-mongodb');
 const expect = global.chai.expect;
@@ -29,8 +29,8 @@ describe('Ledger API', () => {
     describe('regularUser as actor', () => {
       let actor;
       before(async function() {
-        const {id} = mockData.identities.regularUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.regularUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('should create a ledger with no owner', async () => {
         const ledgerConfiguration = signedConfig;
@@ -117,8 +117,8 @@ describe('Ledger API', () => {
     describe('admin as actor', () => {
       let actor;
       before(async () => {
-        const {id} = mockData.identities.adminUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('should create a ledger with no owner', async () => {
         const ledgerConfiguration = signedConfig;
@@ -181,7 +181,7 @@ describe('Ledger API', () => {
         const created = await brLedgerNode.add(
           actor, {
             ledgerConfiguration,
-            owner: mockData.identities.regularUser.identity.id
+            owner: mockData.accounts.regularUser.account.id
           });
         expect(created).to.be.ok;
         const result = await database.collections.ledgerNode.findOne({
@@ -194,7 +194,7 @@ describe('Ledger API', () => {
         ledgerNode.id.should.equal(created.id);
         ledgerNode.ledger.should.equal(ledgerConfiguration.ledger);
         ledgerNode.owner.should.equal(
-          mockData.identities.regularUser.identity.id);
+          mockData.accounts.regularUser.account.id);
         ledgerNode.storage.should.be.an('object');
         ledgerNode.storage.id.should.be.a('string');
         ledgerNode.storage.plugin.should.equal('mongodb');
@@ -226,8 +226,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.regularUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.regularUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('gets a ledger with no owner', async () => {
         const created = await brLedgerNode.add(
@@ -301,8 +301,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.adminUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('gets a ledger with no owner', async () => {
         const created = await brLedgerNode.add(actor, {ledgerConfiguration});
@@ -324,7 +324,7 @@ describe('Ledger API', () => {
       it('gets a ledger with a different owner', async () => {
         const created = await brLedgerNode.add(actor, {
           ledgerConfiguration,
-          owner: mockData.identities.regularUser.identity.id
+          owner: mockData.accounts.regularUser.account.id
         });
         const result = await brLedgerNode.get(actor, created.id);
         expect(result).to.be.ok;
@@ -369,8 +369,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.adminUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('gets a ledger with no owner', async () => {
         const ledgerNode = await brLedgerNode.add(actor, {ledgerConfiguration});
@@ -429,8 +429,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.regularUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.regularUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('should delete a ledger if actor is owner', async () => {
         const created = await brLedgerNode.add(
@@ -486,8 +486,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.adminUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('should delete a ledger if actor is owner', async () => {
         const created = await brLedgerNode.add(
@@ -502,7 +502,7 @@ describe('Ledger API', () => {
       it('should delete a ledger with a different owner', async () => {
         const created = await brLedgerNode.add(actor, {
           ledgerConfiguration,
-          owner: mockData.identities.regularUser.identity.id
+          owner: mockData.accounts.regularUser.account.id
         });
         await brLedgerNode.remove(actor, created.id);
         const result = await database.collections.ledgerNode.findOne({
@@ -549,8 +549,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.regularUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.regularUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('iterates over public ledgers', async function() {
         this.timeout(60000);
@@ -602,7 +602,7 @@ describe('Ledger API', () => {
         this.timeout(60000);
         const testLedgers = [];
         const iteratorLedgers = [];
-        // create 5 ledgers owned by actor and 3 owned by another identity
+        // create 5 ledgers owned by actor and 3 owned by another account
         for(let i = 0; i < 5; ++i) {
           const created = await brLedgerNode.add(actor, {
             ledgerConfiguration,
@@ -631,7 +631,7 @@ describe('Ledger API', () => {
           this.timeout(60000);
           const testLedgers = [];
           const iteratorLedgers = [];
-          // create 5 ledgers owned by actor and 3 owned by another identity,
+          // create 5 ledgers owned by actor and 3 owned by another account,
           // and 2 public ledgers
           for(let i = 0; i < 5; ++i) {
             const created = await brLedgerNode.add(actor, {
@@ -666,8 +666,8 @@ describe('Ledger API', () => {
       let ledgerConfiguration;
       before(async () => {
         ledgerConfiguration = signedConfig;
-        const {id} = mockData.identities.adminUser.identity;
-        actor = await brIdentity.getCapabilities({id});
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
       });
       it('iterates over public ledgers', async function() {
         this.timeout(60000);
@@ -689,7 +689,7 @@ describe('Ledger API', () => {
         this.timeout(60000);
         const testLedgers = [];
         const iteratorLedgers = [];
-        // create 5 ledgers owned by actor and 3 owned by another identity
+        // create 5 ledgers owned by actor and 3 owned by another account
         // private ledgers owned by actor
         for(let i = 0; i < 5; ++i) {
           const created = await brLedgerNode.add(actor, {
@@ -715,7 +715,7 @@ describe('Ledger API', () => {
         this.timeout(60000);
         const testLedgers = [];
         const iteratorLedgers = [];
-        // create 5 ledgers owned by actor, 3 owned by another identity,
+        // create 5 ledgers owned by actor, 3 owned by another account,
         // and 3 public ledgers
         for(let i = 0; i < 5; ++i) {
           const created = await brLedgerNode.add(actor, {

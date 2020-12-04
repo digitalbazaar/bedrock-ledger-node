@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const brIdentity = require('bedrock-identity');
+const brAccount = require('bedrock-account');
 const helpers = require('./helpers');
 const mockData = require('./mock.data');
 
@@ -15,22 +15,22 @@ describe.skip('Metadata API', () => {
     await helpers.removeCollections(['ledger', 'ledgerNode']);
   });
   describe('regularUser as actor', () => {
-    const mockIdentity = mockData.identities.regularUser;
+    const mockAccount = mockData.accounts.regularUser;
     let actor;
     before(async function() {
       // eslint-disable-next-line no-unused-vars
-      actor = await brIdentity.get(null, mockIdentity.identity.id);
+      actor = await brAccount.get(null, mockAccount.account.id);
     });
     it.skip('should get ledger metadata', async () => {
       // TODO: use `actor`
     });
   });
   describe('admin as actor', () => {
-    const mockIdentity = mockData.identities.regularUser;
+    const mockAccount = mockData.accounts.regularUser;
     let actor;
     before(async function() {
       // eslint-disable-next-line no-unused-vars
-      actor = await brIdentity.get(null, mockIdentity.identity.id);
+      actor = await brAccount.get(null, mockAccount.account.id);
     });
     it.skip('should get ledger metadata for any ledger', async () => {
       // TODO: use `actor`

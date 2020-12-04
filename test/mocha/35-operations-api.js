@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const brIdentity = require('bedrock-identity');
+const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
 const mockData = require('./mock.data');
@@ -27,8 +27,8 @@ describe('Operations API', () => {
     let actor;
     let ledgerNode;
     before(async () => {
-      const {id} = mockData.identities.regularUser.identity;
-      actor = await brIdentity.getCapabilities({id});
+      const {id} = mockData.accounts.regularUser.account;
+      actor = await brAccount.getCapabilities({id});
       ledgerNode = await brLedgerNode.add(
         actor, {ledgerConfiguration: signedConfig});
     });
