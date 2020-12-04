@@ -4,7 +4,7 @@
 'use strict';
 
 const bedrock = require('bedrock');
-const brIdentity = require('bedrock-identity');
+const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const crypto = require('crypto');
 const database = require('bedrock-mongodb');
@@ -71,11 +71,11 @@ api.addEvent = async ({
   return events;
 };
 
-api.createIdentity = function(userName, userId) {
+api.createAccount = function(userName, userId) {
   userId = userId || 'did:v1:' + uuid();
-  const newIdentity = {
+  const newAccount = {
     id: userId,
-    type: 'Identity',
+    type: 'Account',
     sysSlug: userName,
     label: userName,
     email: userName + '@bedrock.dev',
@@ -83,7 +83,7 @@ api.createIdentity = function(userName, userId) {
     url: 'https://example.com',
     description: userName,
   };
-  return newIdentity;
+  return newAccount;
 };
 
 // collections may be a string or array
@@ -100,7 +100,7 @@ api.removeCollections = async function(collections) {
 
 api.prepareDatabase = async function(mockData) {
   await api.removeCollections(
-    ['identity', 'eventLog', 'ledger', 'ledgerNode']);
+    ['account', 'eventLog', 'ledger', 'ledgerNode']);
   await insertTestData(mockData);
 };
 
@@ -164,12 +164,12 @@ api.createEvent = async ({eventTemplate, eventNum, consensus = true}) => {
 api.hasher = async data =>
   crypto.createHash('sha256').update(JSON.stringify(data)).digest();
 
-// Insert identities and public keys used for testing into database
+// Insert accounts and public keys used for testing into database
 async function insertTestData(mockData) {
-  for(const key in mockData.identities) {
-    const {identity, meta} = mockData.identities[key];
+  for(const key in mockData.accounts) {
+    const {account, meta} = mockData.accounts[key];
     try {
-      await brIdentity.insert({actor: null, identity, meta});
+      await brAccount.insert({actor: null, account, meta});
     } catch(e) {
       // duplicate error means test data is already loaded
       if(!database.isDuplicateError(e)) {

@@ -3,10 +3,9 @@
  */
 'use strict';
 
-const brIdentity = require('bedrock-identity');
+const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
-const {promisify} = require('util');
 const mockData = require('./mock.data');
 
 let signedConfig;
@@ -28,8 +27,8 @@ describe('Blocks API', () => {
     let ledgerNode;
     let actor;
     before(async function() {
-      const {id} = mockData.identities.regularUser.identity;
-      actor = await promisify(brIdentity.getCapabilities)({id});
+      const {id} = mockData.accounts.regularUser.account;
+      actor = await brAccount.getCapabilities({id});
       ledgerNode = await brLedgerNode.add(
         actor, {ledgerConfiguration: signedConfig});
       const result = await ledgerNode.storage.blocks.getLatest();

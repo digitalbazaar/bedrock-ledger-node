@@ -9,15 +9,15 @@ const helpers = require('./helpers');
 const mock = {};
 module.exports = mock;
 
-const identities = mock.identities = {};
+const accounts = mock.accounts = {};
 let userName;
 
 // has permission to access its own resources
 userName = 'regularUser';
-identities[userName] = {};
-identities[userName].identity = helpers.createIdentity(
+accounts[userName] = {};
+accounts[userName].account = helpers.createAccount(
   userName, 'did:v1:28b26664-8f0f-4727-b771-864e1a241f48');
-identities[userName].meta = {
+accounts[userName].meta = {
   sysResourceRole: [{
     sysRole: 'bedrock-ledger.test',
     generateResource: 'id'
@@ -25,18 +25,13 @@ identities[userName].meta = {
 
 // has admin permissions
 userName = 'adminUser';
-identities[userName] = {};
-identities[userName].identity = helpers.createIdentity(
+accounts[userName] = {};
+accounts[userName].account = helpers.createAccount(
   userName, 'did:v1:cbcee289-2484-48bd-a54e-55f50cfc9dfc');
-identities[userName].meta = {
+accounts[userName].meta = {
   sysResourceRole: [{
     sysRole: 'bedrock-ledger.test'
   }]};
-
-// // identity with no permissions
-// userName = 'noPermission';
-// identities[userName] = {};
-// identities[userName].identity = helpers.createIdentity(userName);
 
 const ledgerConfiguration = mock.ledgerConfiguration = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
