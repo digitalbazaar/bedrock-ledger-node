@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 11.1.0 - 2021-01-11
+
+### Added
+- Implement LedgerNodePeers API.
+
 ## 11.0.0 - 2020-12-01
 
 ### Changed
