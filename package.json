@@ -31,7 +31,7 @@
     "serialize-error": "^3.0.0"
   },
   "peerDependencies": {
-    "bedrock": "2.0.0 - 3.x",
+    "bedrock": "2.0.0 - 4.x",
     "bedrock-injector": "^1.0.0",
     "bedrock-jsonld-document-loader": "^1.0.0",
     "bedrock-ledger-context": "^15.0.0",
