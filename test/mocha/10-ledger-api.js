@@ -263,7 +263,7 @@ describe('Ledger API', () => {
         expect(result).not.to.be.ok;
         err.name.should.equal('PermissionDenied');
       });
-      it('returns NotFound on a non-exsistent ledger', async () => {
+      it('returns NotFound on a non-existent ledger', async () => {
         const unknownLedger = 'did:v1:' + uuid();
         let result;
         let err;
@@ -332,7 +332,7 @@ describe('Ledger API', () => {
         expect(result.blocks).to.exist;
         expect(result.events).to.exist;
       });
-      it('returns NotFound on a non-exsistent ledger', async () => {
+      it('returns NotFound on a non-existent ledger', async () => {
         const unknownLedger = 'did:v1:' + uuid();
         let result;
         let err;
@@ -442,7 +442,7 @@ describe('Ledger API', () => {
         expect(result).to.be.ok;
         result.meta.deleted.should.be.a('number');
       });
-      it('returns NotFound on a non-exsistent ledger', async () => {
+      it('returns NotFound on a non-existent ledger', async () => {
         const unknownLedger = 'urn:uuid:' + uuid();
         let result;
         let err;
@@ -511,7 +511,7 @@ describe('Ledger API', () => {
         expect(result).to.be.ok;
         result.meta.deleted.should.be.a('number');
       });
-      it('returns NotFound on a non-exsistent ledger', async () => {
+      it('returns NotFound on a non-existent ledger', async () => {
         const unknownLedger = 'urn:uuid:' + uuid();
         let result;
         let err;
