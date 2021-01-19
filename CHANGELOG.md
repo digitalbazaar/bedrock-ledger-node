@@ -1,5 +1,15 @@
 # bedrock-ledger ChangeLog
 
+## 12.0.0 - 2021-xx-xx
+
+### Changed
+- **BREAKING**: Remove option to set work scheduler concurrency to more than
+  one per instance. This simplifies the design; there are very few (if any)
+  use cases for servicing more than one ledger node per core.
+- **BREAKING**: `meta.deleted` is set to `-1` on records that have not been
+  deleted to enable covered queries.
+- **BREAKING**: Indexes have been changed to enable better coverage.
+
 ## 11.1.0 - 2021-01-11
 
 ### Added
