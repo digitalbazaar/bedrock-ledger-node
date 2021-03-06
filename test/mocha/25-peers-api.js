@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2020 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2021 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -76,7 +76,20 @@ describe('Peers API', () => {
           ['created', 'updated', 'ledgerNodeId']);
         findResult.meta.ledgerNodeId.should.equal(ledgerNode.id);
         should.exist(findResult.peer);
-        findResult.peer.should.eql({id: testId});
+        findResult.peer.should.eql({
+          id: testId,
+          // these are all defaults that should be set
+          recommended: false,
+          reputation: 0,
+          sequence: 0,
+          status: {
+            backoffUntil: 0,
+            consecutiveFailures: 0,
+            lastPullAt: 0,
+            lastPushAt: 0,
+            requiredBlockHeight: 0
+          }
+        });
       });
       it('adds a recommended peer', async () => {
         const testId = `urn:uuid:${uuid()}`;
@@ -94,7 +107,20 @@ describe('Peers API', () => {
         const collection = database.collections[COLLECTION_NAME];
         const findResult = await collection.findOne(
           {'peer.id': testId}, {projection: {_id: 0}});
-        findResult.peer.should.eql({id: testId, recommended: true});
+        findResult.peer.should.eql({
+          id: testId,
+          recommended: true,
+          // these are all defaults that should be set
+          reputation: 0,
+          sequence: 0,
+          status: {
+            backoffUntil: 0,
+            consecutiveFailures: 0,
+            lastPullAt: 0,
+            lastPushAt: 0,
+            requiredBlockHeight: 0
+          }
+        });
       });
       it('returns DuplicateError for a duplicate peer', async () => {
         const testId = `urn:uuid:${uuid()}`;
@@ -140,7 +166,20 @@ describe('Peers API', () => {
         }
         assertNoError(err);
         should.exist(result);
-        result.should.eql({id: testId});
+        result.should.eql({
+          id: testId,
+          // these are all defaults that should be set
+          recommended: false,
+          reputation: 0,
+          sequence: 0,
+          status: {
+            backoffUntil: 0,
+            consecutiveFailures: 0,
+            lastPullAt: 0,
+            lastPushAt: 0,
+            requiredBlockHeight: 0
+          }
+        });
       });
       it('returns NonFoundError on an unknown peer', async () => {
         // this ID does not exist
@@ -194,7 +233,20 @@ describe('Peers API', () => {
 
         result.should.be.an('array');
         result.should.have.length(1);
-        result[0].should.eql({id: testId});
+        result[0].should.eql({
+          id: testId,
+          // these are all defaults that should be set
+          recommended: false,
+          reputation: 0,
+          sequence: 0,
+          status: {
+            backoffUntil: 0,
+            consecutiveFailures: 0,
+            lastPullAt: 0,
+            lastPushAt: 0,
+            requiredBlockHeight: 0
+          }
+        });
       });
       it('returns four peers', async () => {
         // add one non-recommended peer
@@ -260,7 +312,20 @@ describe('Peers API', () => {
 
         result.should.be.an('array');
         result.should.have.length(1);
-        result[0].should.eql({id: recommendedId, recommended: true});
+        result[0].should.eql({
+          id: recommendedId,
+          recommended: true,
+          // these are all defaults that should be set
+          reputation: 0,
+          sequence: 0,
+          status: {
+            backoffUntil: 0,
+            consecutiveFailures: 0,
+            lastPullAt: 0,
+            lastPushAt: 0,
+            requiredBlockHeight: 0
+          }
+        });
       });
       it('returns three recommended peers', async () => {
         // add one non-recommended peer
@@ -360,7 +425,20 @@ describe('Peers API', () => {
         const collection = database.collections[COLLECTION_NAME];
         const findResult = await collection.findOne(
           {'peer.id': testId}, {projection: {_id: 0}});
-        findResult.peer.should.eql({id: testId, recommended: true});
+        findResult.peer.should.eql({
+          id: testId,
+          recommended: true,
+          // these are all defaults that should be set
+          reputation: 0,
+          sequence: 0,
+          status: {
+            backoffUntil: 0,
+            consecutiveFailures: 0,
+            lastPullAt: 0,
+            lastPushAt: 0,
+            requiredBlockHeight: 0
+          }
+        });
         // meta.updated should have been updated
         findResult.meta.created.should.be.lt(findResult.meta.updated);
       });
