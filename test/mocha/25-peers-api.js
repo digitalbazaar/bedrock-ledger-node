@@ -73,7 +73,7 @@ describe('Peers API', () => {
           {'peer.id': testId}, {projection: {_id: 0}});
         should.exist(findResult.meta);
         findResult.meta.should.have.keys(
-          ['created', 'updated', 'ledgerNodeId']);
+          ['created', 'updated', 'pulledAfterPush', 'ledgerNodeId']);
         findResult.meta.ledgerNodeId.should.equal(ledgerNode.id);
         should.exist(findResult.peer);
         findResult.peer.should.eql({
