@@ -9,6 +9,11 @@
 - **BREAKING**: `meta.deleted` is set to `-1` on records that have not been
   deleted to enable covered queries.
 - **BREAKING**: Indexes have been changed to enable better coverage.
+- Change default work session grace period to 1 minute.
+
+### Added
+- Add cache for LedgerNodeConfig.get API.
+- Add cache for LedgerNodeOperations.exists API.
 
 ## 11.1.0 - 2021-01-11
 
