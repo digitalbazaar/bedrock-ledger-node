@@ -1,6 +1,6 @@
 # bedrock-ledger ChangeLog
 
-## 12.0.0 - 2021-xx-xx
+## 12.0.0 - 2021-04-29
 
 ### Changed
 - **BREAKING**: Remove option to set work scheduler concurrency to more than
