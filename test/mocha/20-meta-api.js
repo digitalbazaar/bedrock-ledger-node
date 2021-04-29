@@ -16,6 +16,7 @@ describe.skip('Metadata API', () => {
   });
   describe('regularUser as actor', () => {
     const mockAccount = mockData.accounts.regularUser;
+    // eslint-disable-next-line no-unused-vars
     let actor;
     before(async function() {
       // eslint-disable-next-line no-unused-vars
@@ -27,6 +28,7 @@ describe.skip('Metadata API', () => {
   });
   describe('admin as actor', () => {
     const mockAccount = mockData.accounts.regularUser;
+    // eslint-disable-next-line no-unused-vars
     let actor;
     before(async function() {
       // eslint-disable-next-line no-unused-vars
