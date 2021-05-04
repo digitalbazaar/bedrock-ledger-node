@@ -1,5 +1,10 @@
 # bedrock-ledger ChangeLog
 
+## 12.1.0 - TBD
+
+### Added
+- Add `getNodeRecord` API.
+
 ## 12.0.0 - 2021-04-29
 
 ### Changed
