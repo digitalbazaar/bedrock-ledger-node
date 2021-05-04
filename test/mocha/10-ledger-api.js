@@ -420,6 +420,231 @@ describe('Ledger API', () => {
       });
     });
   }); // end get API
+  describe('getNodeRecord API', () => {
+    beforeEach(async () => {
+      helpers.removeCollections(['ledger', 'ledgerNode']);
+    });
+    describe('regularUser as actor', () => {
+      let actor;
+      let ledgerConfiguration;
+      before(async () => {
+        ledgerConfiguration = signedConfig;
+        const {id} = mockData.accounts.regularUser.account;
+        actor = await brAccount.getCapabilities({id});
+      });
+      it('gets a ledger node record with no owner', async () => {
+        const created = await brLedgerNode.add(
+          actor, {ledgerConfiguration});
+        const result = await brLedgerNode.getNodeRecord(actor, created.id);
+        expect(result).to.be.ok;
+        expect(result.id).to.exist;
+        expect(result.ledger).to.exist;
+        expect(result.storage).to.exist;
+        expect(result.owner).to.be.null;
+        expect(result.ledgerNode).to.exist;
+        expect(result.meta).to.exist;
+        expect(result.meta.created).to.exist;
+        expect(result.meta.updated).to.exist;
+        expect(result.meta.deleted).to.exist;
+        expect(result.meta.workSession).to.exist;
+        expect(result.meta.workSession.id).to.exist;
+        expect(result.meta.workSession.expires).to.exist;
+      });
+      it('gets a ledger node record with actor as owner', async () => {
+        const created = await brLedgerNode.add(
+          actor, {owner: actor.id, ledgerConfiguration});
+        const result = await brLedgerNode.getNodeRecord(actor, created.id);
+        expect(result).to.be.ok;
+        expect(result.id).to.exist;
+        expect(result.ledger).to.exist;
+        expect(result.storage).to.exist;
+        expect(result.owner).to.exist;
+        expect(result.ledgerNode).to.exist;
+        expect(result.meta).to.exist;
+        expect(result.meta.created).to.exist;
+        expect(result.meta.updated).to.exist;
+        expect(result.meta.deleted).to.exist;
+        expect(result.meta.workSession).to.exist;
+        expect(result.meta.workSession.id).to.exist;
+        expect(result.meta.workSession.expires).to.exist;
+      });
+      it('returns PermissionDenied if actor not ledger owner', async () => {
+        const someOwner = uuid();
+        const created = await brLedgerNode.add(
+          null, {owner: someOwner, ledgerConfiguration});
+        let result;
+        let err;
+        try {
+          result = await brLedgerNode.getNodeRecord(actor, created.id);
+        } catch(e) {
+          err = e;
+        }
+        expect(err).to.be.ok;
+        expect(result).not.to.be.ok;
+        err.name.should.equal('PermissionDenied');
+      });
+      it('returns NotFound on a non-existent ledger node record', async () => {
+        const unknownLedger = 'did:v1:' + uuid();
+        let result;
+        let err;
+        try {
+          result = await brLedgerNode.getNodeRecord(actor, unknownLedger);
+        } catch(e) {
+          err = e;
+        }
+        expect(err).to.be.ok;
+        expect(result).not.to.be.ok;
+        err.name.should.equal('NotFound');
+        err.details.ledger.should.equal(unknownLedger);
+      });
+      it('returns NotFound on a deleted ledger node record', async () => {
+        const created = await brLedgerNode.add(
+          actor, {owner: actor.id, ledgerConfiguration});
+        await brLedgerNode.remove(actor, created.id);
+        let result;
+        let err;
+        try {
+          result = await brLedgerNode.getNodeRecord(
+            actor, ledgerConfiguration.ledger);
+        } catch(e) {
+          err = e;
+        }
+        expect(err).to.be.ok;
+        expect(result).not.to.be.ok;
+        err.name.should.equal('NotFound');
+        err.details.ledger.should.equal(ledgerConfiguration.ledger);
+      });
+    }); // end regularUser as actor
+    describe('adminUser as actor', () => {
+      let actor;
+      let ledgerConfiguration;
+      before(async () => {
+        ledgerConfiguration = signedConfig;
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
+      });
+      it('gets a ledger node record with no owner', async () => {
+        const created = await brLedgerNode.add(actor, {ledgerConfiguration});
+        const result = await brLedgerNode.getNodeRecord(actor, created.id);
+        expect(result).to.be.ok;
+        expect(result.id).to.exist;
+        expect(result.ledger).to.exist;
+        expect(result.storage).to.exist;
+        expect(result.owner).to.be.null;
+        expect(result.ledgerNode).to.exist;
+        expect(result.meta).to.exist;
+        expect(result.meta.created).to.exist;
+        expect(result.meta.updated).to.exist;
+        expect(result.meta.deleted).to.exist;
+        expect(result.meta.workSession).to.exist;
+        expect(result.meta.workSession.id).to.exist;
+        expect(result.meta.workSession.expires).to.exist;
+      });
+      it('gets a ledger node record with actor as owner', async () => {
+        const created = await brLedgerNode.add(
+          actor, {owner: actor.id, ledgerConfiguration});
+        const result = await brLedgerNode.getNodeRecord(actor, created.id);
+        expect(result).to.be.ok;
+        expect(result.id).to.exist;
+        expect(result.ledger).to.exist;
+        expect(result.storage).to.exist;
+        expect(result.owner).to.exist;
+        expect(result.ledgerNode).to.exist;
+        expect(result.meta).to.exist;
+        expect(result.meta.created).to.exist;
+        expect(result.meta.updated).to.exist;
+        expect(result.meta.deleted).to.exist;
+        expect(result.meta.workSession).to.exist;
+        expect(result.meta.workSession.id).to.exist;
+        expect(result.meta.workSession.expires).to.exist;
+      });
+      it('gets a ledger node record with a different owner', async () => {
+        const created = await brLedgerNode.add(actor, {
+          ledgerConfiguration,
+          owner: mockData.accounts.regularUser.account.id
+        });
+        const result = await brLedgerNode.getNodeRecord(actor, created.id);
+        expect(result).to.be.ok;
+        expect(result.id).to.exist;
+        expect(result.ledger).to.exist;
+        expect(result.storage).to.exist;
+        expect(result.owner).to.exist;
+        expect(result.ledgerNode).to.exist;
+        expect(result.meta).to.exist;
+        expect(result.meta.created).to.exist;
+        expect(result.meta.updated).to.exist;
+        expect(result.meta.deleted).to.exist;
+        expect(result.meta.workSession).to.exist;
+        expect(result.meta.workSession.id).to.exist;
+        expect(result.meta.workSession.expires).to.exist;
+      });
+      it('returns NotFound on a non-existent ledger node record', async () => {
+        const unknownLedger = 'did:v1:' + uuid();
+        let result;
+        let err;
+        try {
+          result = await brLedgerNode.getNodeRecord(actor, unknownLedger);
+        } catch(e) {
+          err = e;
+        }
+        expect(err).to.be.ok;
+        expect(result).not.to.be.ok;
+        err.name.should.equal('NotFound');
+        err.details.ledger.should.equal(unknownLedger);
+      });
+      it('returns NotFound on a deleted ledger node record', async () => {
+        const created = await brLedgerNode.add(
+          actor, {owner: actor.id, ledgerConfiguration});
+        await brLedgerNode.remove(actor, created.id);
+        let result;
+        let err;
+        try {
+          result = await brLedgerNode.getNodeRecord(
+            actor, ledgerConfiguration.ledger);
+        } catch(e) {
+          err = e;
+        }
+        expect(err).to.be.ok;
+        expect(result).not.to.be.ok;
+        err.name.should.equal('NotFound');
+        err.details.ledger.should.equal(ledgerConfiguration.ledger);
+      });
+    }); // end adminUser as actor
+    describe('null as actor', () => {
+      let actor;
+      let ledgerConfiguration;
+      before(async () => {
+        ledgerConfiguration = signedConfig;
+        const {id} = mockData.accounts.adminUser.account;
+        actor = await brAccount.getCapabilities({id});
+      });
+      it('gets a ledger node record with no owner', async () => {
+        const ledgerNode = await brLedgerNode.add(actor, {ledgerConfiguration});
+        let err;
+        let result;
+        try {
+          result = await brLedgerNode.getNodeRecord(null, ledgerNode.id);
+        } catch(error) {
+          err = error;
+        }
+        assertNoError(err);
+        assertNoError(err);
+        expect(result).to.be.ok;
+        expect(result.id).to.exist;
+        expect(result.ledger).to.exist;
+        expect(result.storage).to.exist;
+        expect(result.owner).to.be.null;
+        expect(result.ledgerNode).to.exist;
+        expect(result.meta).to.exist;
+        expect(result.meta.created).to.exist;
+        expect(result.meta.updated).to.exist;
+        expect(result.meta.deleted).to.exist;
+        expect(result.meta.workSession).to.exist;
+        expect(result.meta.workSession.id).to.exist;
+        expect(result.meta.workSession.expires).to.exist;
+      });
+    });
+  }); // end get API
   describe('delete API', () => {
     beforeEach(async () => {
       helpers.removeCollections(['ledger', 'ledgerNode']);
