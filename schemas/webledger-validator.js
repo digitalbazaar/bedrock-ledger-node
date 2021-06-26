@@ -44,7 +44,7 @@ const createOperation = {
         id: schemas.url()
       }
     },
-    proof: schemas.linkedDataSignature2018()
+    proof: schemas.linkedDataSignature2020()
   },
   additionalProperties: false
 };
@@ -106,7 +106,7 @@ const updateOperation = {
       enum: ['UpdateWebLedgerRecord'],
     },
     recordPatch,
-    proof: schemas.linkedDataSignature2018(),
+    proof: schemas.linkedDataSignature2020(),
   },
 };
 
@@ -125,7 +125,10 @@ const ledgerConfiguration = {
   ],
   type: 'object',
   properties: {
-    '@context': schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL),
+    '@context': schemas.jsonldContext([
+      constants.WEB_LEDGER_CONTEXT_V1_URL,
+      constants.ED25519_2020_CONTEXT_V1_URL
+    ]),
     consensusMethod: {
       type: 'string',
     },
@@ -235,7 +238,7 @@ const ledgerConfiguration = {
         }
       }
     },
-    proof: schemas.linkedDataSignature2018(),
+    proof: schemas.linkedDataSignature2020(),
     sequence: {
       type: 'integer',
       minimum: 0,
