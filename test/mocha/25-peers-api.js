@@ -407,6 +407,9 @@ describe('Peers API', () => {
         const peer = {id: testId};
         await ledgerNode.peers.add({peer});
 
+        // this 1ms sleep is needed on fast machines
+        await bedrock.util.delay(1);
+
         let result;
         let err;
         try {
