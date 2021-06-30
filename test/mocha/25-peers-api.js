@@ -407,7 +407,8 @@ describe('Peers API', () => {
         const peer = {id: testId};
         await ledgerNode.peers.add({peer});
 
-        // this 1ms sleep is needed on fast machines
+        // this 1ms sleep is needed on fast machines because create + update
+        // can take less than 1ms on machines using NVMe storage.
         await bedrock.util.delay(1);
 
         let result;
