@@ -34,10 +34,12 @@
     "bedrock": "2.0.0 - 4.x",
     "bedrock-injector": "^1.0.0",
     "bedrock-jsonld-document-loader": "^1.0.0",
-    "bedrock-ledger-context": "^15.0.0",
+    "bedrock-ledger-context": "^18.1.0",
     "bedrock-mongodb": "^8.1.0",
     "bedrock-permission": "^3.0.0",
-    "bedrock-validation": "^4.1.0"
+    "bedrock-validation": "^5.1.0",
+    "ed25519-signature-2020-context": "^1.1.0",
+    "x25519-key-agreement-2020-context": "^1.0.0"
   },
   "engines": {
     "node": ">=12"

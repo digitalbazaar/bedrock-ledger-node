@@ -29,13 +29,14 @@
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
+    "@digitalbazaar/zcapld": "^4.0.0",
     "bedrock": "^3.0.0",
     "bedrock-account": "^4.2.0",
     "bedrock-injector": "^1.0.0",
     "bedrock-jobs": "^3.0.0",
     "bedrock-jsonld-document-loader": "^1.0.0",
     "bedrock-ledger-consensus-uni": "^2.0.0",
-    "bedrock-ledger-context": "^15.0.0",
+    "bedrock-ledger-context": "^18.1.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "^5.0.0",
     "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#bedrock-2",
@@ -43,10 +44,12 @@
     "bedrock-permission": "^3.0.0",
     "bedrock-security-context": "^3.0.0",
     "bedrock-test": "^5.3.0",
-    "bedrock-validation": "^4.1.0",
+    "bedrock-validation": "^5.1.0",
     "cross-env": "^7.0.2",
+    "ed25519-signature-2020-context": "^1.1.0",
     "grunt": "^1.0.1",
-    "jsonld-signatures": "^4.5.1",
-    "nyc": "^15.1.0"
+    "jsonld-signatures": "^9.0.0",
+    "nyc": "^15.1.0",
+    "x25519-key-agreement-2020-context": "^1.0.0"
   }
 }

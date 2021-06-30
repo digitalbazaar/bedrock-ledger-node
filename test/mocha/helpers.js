@@ -11,12 +11,9 @@ const database = require('bedrock-mongodb');
 const jsigs = require('jsonld-signatures');
 const {promisify} = require('util');
 const {util: {uuid}} = bedrock;
-const {
-  purposes: {AssertionProofPurpose},
-  suites: {RsaSignature2018},
-  RSAKeyPair
-} = jsigs;
+const {Ed25519Signature2020} = jsigs.suites;
 const {documentLoader} = require('bedrock-jsonld-document-loader');
+const {CapabilityInvocation} = require('@digitalbazaar/zcapld');
 
 const api = {};
 module.exports = api;
@@ -174,14 +171,14 @@ async function insertTestData(mockData) {
   }
 }
 
-api.signDocument = async ({creator, doc, privateKeyPem}) => {
+api.signDocument = async ({doc, verificationMethod, key}) => {
   return jsigs.sign(doc, {
     documentLoader,
     // FIXME: is this the right purpose?
-    purpose: new AssertionProofPurpose(),
-    suite: new RsaSignature2018({
-      creator,
-      key: new RSAKeyPair({privateKeyPem})
+    purpose: new CapabilityInvocation(),
+    suite: new Ed25519Signature2020({
+      verificationMethod,
+      key
     }),
   });
 };
