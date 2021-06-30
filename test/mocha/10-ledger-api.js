@@ -18,8 +18,9 @@ describe('Ledger API', () => {
     await helpers.prepareDatabase(mockData);
     signedConfig = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
-      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-      privateKeyPem: mockData.groups.authorized.privateKey,
+      verificationMethod:
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+      key: mockData.groups.authorized.key,
     });
   });
   describe('create API', () => {
