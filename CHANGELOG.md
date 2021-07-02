@@ -1,4 +1,4 @@
-# bedrock-ledger ChangeLog
+# bedrock-ledger-node ChangeLog
 
 ## 13.0.0 - 2021-xx-xx
 
