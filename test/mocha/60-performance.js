@@ -26,7 +26,7 @@ describe.skip('Performance tests', () => {
     const ledgerConfiguration = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
       verificationMethod:
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+        'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838#keys-144',
       key
     });
     ledgerNode = await brLedgerNode.add(null, {ledgerConfiguration});
