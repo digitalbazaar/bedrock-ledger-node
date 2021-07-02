@@ -84,15 +84,6 @@ operations.alpha = {
       priceCurrency: 'USD',
       url: `https://example.org/purchase/a05bebf8-c966-427f-92f2-ff9060f4bd23`,
     }
-  },
-  // using verbose signature for performance tests
-  proof: {
-    type: 'RsaSignature2018',
-    created: '2017-05-10T19:47:13Z',
-    // eslint-disable-next-line max-len
-    creator: 'https://bedrock.local:18443/consensus/continuity2017/voters/57565658-0d8a-4668-b734-e801aeaa6472#key',
-    // eslint-disable-next-line max-len
-    signatureValue: 'nlx8c9uFI8Ur/h57F5AeHHrKPSKiiGJmN6APRnYesQPK4LXftnm2lzqpWzsvKGDPzH6QfoOIktQu2Ax0pj/Bi6Oa4/Na75HuoRGppaHCqlyrgbr5EUPRCiYSjlsYKBhEN6ITdmR/O8iGz9WZi4PQjSW9XrrP8bQLeu9Kzsu5hdkzmgS4f3PCXpImwpKFttyF7xARvSQxrgRxZrqWPIGtD9sghRY2/Zn3T2npTaOTXMhgW9Lc7uEpjThnCEsrKflshbLGevZglc/njBp5SoEgon8CuzQIkMBFjCTEdJYBtTuk0AF5BcVyoxPDfH9bdUYOIMFaDhZBQKM5tQEU2GqE/g=='
   }
 };
 operations.beta = {
@@ -164,7 +155,7 @@ eventBlocks.alpha = {
 const blocks = mock.blocks = {};
 blocks.config = {
   '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
-  id: 'did:v1:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/',
+  id: 'did:v1:uuid:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59/blocks/',
   type: 'WebLedgerEventBlock',
   event: [events.config]
 };
@@ -202,42 +193,4 @@ mock.keys = {
     privateKeyMultibase: 'zrv1cGnBy3PWkxii4xPSbmpR3bei1eZWTZ9qnBWW4NQE2YCS' +
       'ZFc3ov2zTE23fpvaUhmqJjcXYvVqMdRja6kFKEsmHBB'
   }
-};
-
-mock.ldDocuments = {};
-
-mock.ldDocuments['https://good.example/i/alpha'] = {
-  '@context': constants.SECURITY_CONTEXT_V2_URL,
-  id: 'https://good.example/i/alpha',
-  publicKey: [{
-    id: mock.authorizedSignerUrl,
-    type: 'Ed25519VerificationKey2020',
-    owner: 'https://good.example/i/alpha',
-    publicKeyPem: mock.keys.authorized.publicKeyMultibase
-  }]
-};
-mock.ldDocuments[mock.authorizedSignerUrl] = {
-  '@context': constants.SECURITY_CONTEXT_V2_URL,
-  type: 'Ed25519VerificationKey2020',
-  owner: 'https://good.example/i/alpha',
-  id: mock.authorizedSignerUrl,
-  publicKeyPem: mock.keys.authorized.publicKeyMultibase
-};
-mock.ldDocuments['did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838'] = {
-  '@context': constants.SECURITY_CONTEXT_V2_URL,
-  id: 'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838',
-  assertionMethod: [{
-    id: 'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838#keys-144',
-    type: 'Ed25519VerificationKey2020',
-    owner: 'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838',
-    publicKeyPem: mock.keys.authorized.publicKeyMultibase
-  }]
-};
-mock.ldDocuments[
-  'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838#keys-144'] = {
-  '@context': constants.SECURITY_CONTEXT_V2_URL,
-  type: 'Ed25519VerificationKey2020',
-  controller: 'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838',
-  id: 'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838#keys-144',
-  publicKeyPem: mock.keys.authorized.publicKeyMultibase
 };

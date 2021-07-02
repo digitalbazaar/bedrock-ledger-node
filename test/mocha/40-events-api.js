@@ -23,7 +23,7 @@ describe('Events API', () => {
     signedConfig = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
       verificationMethod:
-        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+        'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838#keys-144',
       key
     });
   });
@@ -55,7 +55,7 @@ describe('Events API', () => {
       const operation = await helpers.signDocument({
         doc: testOperation,
         verificationMethod:
-          'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+          'did:v1:uuid:53ebca61-5687-4558-b90a-03167e4c2838#keys-144',
         key
       });
       const operationHash = await hasher(operation);
