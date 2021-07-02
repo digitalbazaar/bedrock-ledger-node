@@ -1,6 +1,10 @@
 # bedrock-ledger ChangeLog
 
-## 12.1.0 - TBD
+## 13.0.0 - 2021-xx-xx
+
+### Changed
+- **BREAKING**: Upgrade to 2020 cryptosuites.
+- Update to latest lru-memoize@2.
 
 ### Added
 - Add `getNodeRecord` API.
