@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const {Ed25519VerificationKey2020} =
+  require('@digitalbazaar/ed25519-verification-key-2020');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
 const mockData = require('./mock.data');
@@ -19,10 +21,13 @@ describe.skip('Performance tests', () => {
   let storage;
   before(async function() {
     await helpers.prepareDatabase(mockData);
+    const key =
+      await Ed25519VerificationKey2020.from(mockData.keys.authorized);
     const ledgerConfiguration = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
-      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-      privateKeyPem: mockData.groups.authorized.privateKey,
+      verificationMethod:
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+      key
     });
     ledgerNode = await brLedgerNode.add(null, {ledgerConfiguration});
     storage = ledgerNode.storage;

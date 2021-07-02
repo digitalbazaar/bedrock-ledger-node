@@ -11,7 +11,7 @@ const database = require('bedrock-mongodb');
 const jsigs = require('jsonld-signatures');
 const {promisify} = require('util');
 const {util: {uuid}} = bedrock;
-const {Ed25519Signature2020} = jsigs.suites;
+const {Ed25519Signature2020} = require('@digitalbazaar/ed25519-signature-2020');
 const {documentLoader} = require('bedrock-jsonld-document-loader');
 const {CapabilityInvocation} = require('@digitalbazaar/zcapld');
 
@@ -175,7 +175,10 @@ api.signDocument = async ({doc, verificationMethod, key}) => {
   return jsigs.sign(doc, {
     documentLoader,
     // FIXME: is this the right purpose?
-    purpose: new CapabilityInvocation(),
+    purpose: new CapabilityInvocation({
+      capability: doc.id || doc.ledger || doc.record.id,
+      capabilityAction: 'create'
+    }),
     suite: new Ed25519Signature2020({
       verificationMethod,
       key

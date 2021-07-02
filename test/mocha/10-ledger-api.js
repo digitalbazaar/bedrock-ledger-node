@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const {Ed25519VerificationKey2020} =
+  require('@digitalbazaar/ed25519-verification-key-2020');
 const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const database = require('bedrock-mongodb');
@@ -16,11 +18,13 @@ let signedConfig;
 describe('Ledger API', () => {
   before(async function() {
     await helpers.prepareDatabase(mockData);
+    const key =
+      await Ed25519VerificationKey2020.from(mockData.keys.authorized);
     signedConfig = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
       verificationMethod:
         'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-      key: mockData.groups.authorized.key,
+      key
     });
   });
   describe('create API', () => {
