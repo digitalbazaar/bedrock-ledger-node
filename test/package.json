@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/digitalbazaar/bedrock-ledger-node",
   "dependencies": {
+    "@digitalbazaar/ed25519-signature-2020": "^3.0.0",
     "@digitalbazaar/zcapld": "^4.0.0",
     "bedrock": "^3.0.0",
     "bedrock-account": "^4.2.0",
@@ -39,7 +40,7 @@
     "bedrock-ledger-context": "^18.1.0",
     "bedrock-ledger-node": "file:..",
     "bedrock-ledger-storage-mongodb": "^5.0.0",
-    "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#bedrock-2",
+    "bedrock-ledger-validator-signature": "digitalbazaar/bedrock-ledger-validator-signature#disable-signature-check",
     "bedrock-mongodb": "^8.1.0",
     "bedrock-permission": "^3.0.0",
     "bedrock-security-context": "^3.0.0",

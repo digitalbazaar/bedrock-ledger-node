@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const {Ed25519VerificationKey2020} =
+  require('@digitalbazaar/ed25519-verification-key-2020');
 const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
@@ -14,10 +16,13 @@ let signedConfig;
 describe('Operations API', () => {
   before(async function() {
     await helpers.prepareDatabase(mockData);
+    const key =
+      await Ed25519VerificationKey2020.from(mockData.keys.authorized);
     signedConfig = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
-      creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
-      privateKeyPem: mockData.groups.authorized.privateKey,
+      verificationMethod:
+        'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+      key
     });
   });
   beforeEach(async function() {
@@ -45,11 +50,15 @@ describe('Operations API', () => {
             value: uuid()
           }
         };
+        const key =
+          await Ed25519VerificationKey2020.from(mockData.keys.authorized);
         const operation = await helpers.signDocument({
           doc: testOperation,
-          privateKeyPem: mockData.groups.authorized.privateKey,
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+          verificationMethod:
+            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+          key
         });
+
         await ledgerNode.operations.add({operation});
       });
       it('should add operation without optional creator', async function() {
@@ -63,10 +72,13 @@ describe('Operations API', () => {
             value: uuid()
           }
         };
+        const key =
+          await Ed25519VerificationKey2020.from(mockData.keys.authorized);
         const operation = await helpers.signDocument({
           doc: testOperation,
-          privateKeyPem: mockData.groups.authorized.privateKey,
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+          verificationMethod:
+            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+          key
         });
         await ledgerNode.operations.add({operation});
       });
@@ -81,10 +93,13 @@ describe('Operations API', () => {
             value: uuid()
           }
         };
+        const key =
+          await Ed25519VerificationKey2020.from(mockData.keys.authorized);
         const operation = await helpers.signDocument({
           doc: testOperation,
-          privateKeyPem: mockData.groups.authorized.privateKey,
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+          verificationMethod:
+            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+          key
         });
         let err;
         try {
@@ -94,7 +109,8 @@ describe('Operations API', () => {
         }
         err.name.should.equal('SyntaxError');
         err.message.should.equal(
-          'Operation context must be "https://w3id.org/webledger/v1"');
+          'Operation context must contain "https://w3id.org/webledger/v1" ' +
+          'as the first element.');
       });
       it('should fail to add operation w/ incorrect context order',
         async () => {
@@ -108,10 +124,13 @@ describe('Operations API', () => {
               value: uuid()
             }
           };
+          const key =
+            await Ed25519VerificationKey2020.from(mockData.keys.authorized);
           const operation = await helpers.signDocument({
             doc: testOperation,
-            privateKeyPem: mockData.groups.authorized.privateKey,
-            creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+            verificationMethod:
+              'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+            key
           });
           let err;
           try {
@@ -134,10 +153,13 @@ describe('Operations API', () => {
             value: uuid()
           }
         };
+        const key =
+          await Ed25519VerificationKey2020.from(mockData.keys.authorized);
         const operation = await helpers.signDocument({
           doc: testOperation,
-          privateKeyPem: mockData.groups.authorized.privateKey,
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+          verificationMethod:
+            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+          key
         });
         await ledgerNode.operations.add({operation});
         // unilateral consensus allows immediate retrieval of an event with
@@ -171,10 +193,13 @@ describe('Operations API', () => {
             value: uuid()
           }
         };
+        const key =
+          await Ed25519VerificationKey2020.from(mockData.keys.authorized);
         const operation = await helpers.signDocument({
           doc: testOperation,
-          privateKeyPem: mockData.groups.authorized.privateKey,
-          creator: 'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144'
+          verificationMethod:
+            'did:v1:53ebca61-5687-4558-b90a-03167e4c2838/keys/144',
+          key
         });
 
         await ledgerNode.operations.add({operation});
