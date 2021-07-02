@@ -1,6 +1,6 @@
 # bedrock-ledger-node ChangeLog
 
-## 13.0.0 - 2021-xx-xx
+## 13.0.0 - 2021-07-02
 
 ### Changed
 - **BREAKING**: Upgrade to 2020 cryptosuites.
