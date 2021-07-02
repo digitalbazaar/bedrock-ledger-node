@@ -20,8 +20,8 @@ let signedConfig;
 describe('Records API', () => {
   before(async function() {
     await helpers.prepareDatabase(mockData);
-    const key =
-      await Ed25519VerificationKey2020.from(mockData.keys.authorized);
+    const key = await Ed25519VerificationKey2020.from(
+      mockData.keys.authorized);
     signedConfig = await helpers.signDocument({
       doc: mockData.ledgerConfiguration,
       verificationMethod:
