@@ -116,10 +116,7 @@ const ledgerConfiguration = {
   required: [
     '@context',
     'consensusMethod',
-    // 'electorSelectionMethod',
     'ledger',
-    // 'ledgerConfigurationValidator',
-    // 'operationValidator',
     'sequence',
     'type',
   ],
@@ -135,7 +132,7 @@ const ledgerConfiguration = {
     creator: {
       type: 'string'
     },
-    electorSelectionMethod: {
+    witnessSelectionMethod: {
       type: 'object',
     },
     ledger: {
