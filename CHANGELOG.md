@@ -1,5 +1,11 @@
 # bedrock-ledger-node ChangeLog
 
+## 14.0.0 - 2021-07-xx
+
+### Changed
+- **BREAKING**: Upgrade to witness selection.
+- Fix latest block caching bug that resulted in failed witness pool upgrades.
+
 ## 13.0.0 - 2021-07-02
 
 ### Changed
