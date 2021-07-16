@@ -38,6 +38,7 @@ describe('Records API', () => {
       let ledgerNode;
       let ledgerStorage;
       let originalGetLatestSummary;
+      let testState;
       before(async () => {
         const {id} = mockData.accounts.regularUser.account;
         actor = await brAccount.getCapabilities({id});
@@ -45,7 +46,11 @@ describe('Records API', () => {
           actor, {ledgerConfiguration: signedConfig});
         ledgerStorage = ledgerNode.storage;
         originalGetLatestSummary = ledgerStorage.blocks.getLatestSummary;
-        ledgerStorage.blocks.getLatestSummary = helpers.getLatestBlockSummary;
+        testState = {blockHeight: 0};
+        ledgerStorage.blocks.getLatestSummary = async () => {
+          const {blockHeight} = testState;
+          return {eventBlock: {block: {blockHeight}}};
+        };
       });
       after(async () => {
         ledgerNode.storage.blocks.getLatestSummary = originalGetLatestSummary;
@@ -59,7 +64,7 @@ describe('Records API', () => {
           consensus: true, eventTemplate, ledgerStorage, opTemplate,
           recordId: testRecordId
         });
-        await helpers.updateBlockHeight({blockHeight: 1});
+        testState.blockHeight = 1;
         const result = await ledgerNode.records.get({recordId: testRecordId});
         should.exist(result);
         const eventHash = Object.keys(events)[0];
@@ -87,7 +92,7 @@ describe('Records API', () => {
           opTemplate: updateOpTemplate, recordId: testRecordId,
           startBlockHeight: 3
         });
-        await helpers.updateBlockHeight({blockHeight: 3});
+        testState.blockHeight = 3;
         const result = await ledgerNode.records.get({
           maxBlockHeight: 3, recordId: testRecordId});
         should.exist(result);
@@ -131,7 +136,7 @@ describe('Records API', () => {
         }
 
         // create the latest block
-        await helpers.updateBlockHeight({blockHeight: 6});
+        testState.blockHeight = 6;
         const result = await ledgerNode.records.get({
           maxBlockHeight: 6, recordId: testRecordId});
         should.exist(result);
@@ -182,7 +187,7 @@ describe('Records API', () => {
         }
 
         // get latest record data
-        await helpers.updateBlockHeight({blockHeight: 9});
+        testState.blockHeight = 9;
         const result = await ledgerNode.records.get({
           maxBlockHeight: 9, recordId: testRecordId});
         should.exist(result);
@@ -236,7 +241,7 @@ describe('Records API', () => {
           i++;
         }
 
-        await helpers.updateBlockHeight({blockHeight: 12});
+        testState.blockHeight = 12;
         const result = await ledgerNode.records.get({
           maxBlockHeight: 12, recordId: testRecordId});
         should.exist(result);
@@ -285,7 +290,7 @@ describe('Records API', () => {
           });
           i++;
         }
-        await helpers.updateBlockHeight({blockHeight: 15});
+        testState.blockHeight = 15;
 
         // check data on block 13
         let result = await ledgerNode.records.get({
