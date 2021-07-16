@@ -37,12 +37,18 @@ describe('Records API', () => {
       let actor;
       let ledgerNode;
       let ledgerStorage;
+      let originalGetLatestSummary;
       before(async () => {
         const {id} = mockData.accounts.regularUser.account;
         actor = await brAccount.getCapabilities({id});
         ledgerNode = await brLedgerNode.add(
           actor, {ledgerConfiguration: signedConfig});
         ledgerStorage = ledgerNode.storage;
+        originalGetLatestSummary = ledgerStorage.blocks.getLatestSummary;
+        ledgerStorage.blocks.getLatestSummary = helpers.getLatestBlockSummary;
+      });
+      after(async () => {
+        ledgerNode.storage.blocks.getLatestSummary = originalGetLatestSummary;
       });
       it('get an existing record', async () => {
         const opTemplate = mockData.operations.beta;
@@ -53,6 +59,7 @@ describe('Records API', () => {
           consensus: true, eventTemplate, ledgerStorage, opTemplate,
           recordId: testRecordId
         });
+        await helpers.updateBlockHeight({blockHeight: 1});
         const result = await ledgerNode.records.get({recordId: testRecordId});
         should.exist(result);
         const eventHash = Object.keys(events)[0];
@@ -80,7 +87,9 @@ describe('Records API', () => {
           opTemplate: updateOpTemplate, recordId: testRecordId,
           startBlockHeight: 3
         });
-        const result = await ledgerNode.records.get({recordId: testRecordId});
+        await helpers.updateBlockHeight({blockHeight: 3});
+        const result = await ledgerNode.records.get({
+          maxBlockHeight: 3, recordId: testRecordId});
         should.exist(result);
         const eventHash = Object.keys(events)[0];
         const testRecord = bedrock.util.clone(events[eventHash]
@@ -94,14 +103,17 @@ describe('Records API', () => {
         should.exist(meta.sequence);
         meta.sequence.should.equal(1);
       });
+      // FIXME: helper functions need to be updated to support generating real
+      // history. This test will take effort to get working again.
       it('get a record that was updated twice', async () => {
         const opTemplate = mockData.operations.beta;
         const opUpdates = [
           mockData.operations.gamma, mockData.operations.delta
         ];
-        const eventTemplate = mockData.events.alpha;
+        const eventTemplate = bedrock.util.clone(mockData.events.alpha);
         const testRecordId = `https://example.com/event/${uuid()}`;
         const startBlockHeight = 4;
+
         // the helper creates events without consensus by default
         const events = await helpers.addEvent({
           consensus: true, eventTemplate, ledgerStorage, opTemplate,
@@ -117,7 +129,11 @@ describe('Records API', () => {
           });
           i++;
         }
-        const result = await ledgerNode.records.get({recordId: testRecordId});
+
+        // create the latest block
+        await helpers.updateBlockHeight({blockHeight: 6});
+        const result = await ledgerNode.records.get({
+          maxBlockHeight: 6, recordId: testRecordId});
         should.exist(result);
         const eventHash = Object.keys(events)[0];
         const testRecord = bedrock.util.clone(events[eventHash]
@@ -164,7 +180,11 @@ describe('Records API', () => {
           });
           i++;
         }
-        const result = await ledgerNode.records.get({recordId: testRecordId});
+
+        // get latest record data
+        await helpers.updateBlockHeight({blockHeight: 9});
+        const result = await ledgerNode.records.get({
+          maxBlockHeight: 9, recordId: testRecordId});
         should.exist(result);
         const eventHash = Object.keys(events)[0];
         const testRecord = bedrock.util.clone(events[eventHash]
@@ -215,7 +235,10 @@ describe('Records API', () => {
           });
           i++;
         }
-        const result = await ledgerNode.records.get({recordId: testRecordId});
+
+        await helpers.updateBlockHeight({blockHeight: 12});
+        const result = await ledgerNode.records.get({
+          maxBlockHeight: 12, recordId: testRecordId});
         should.exist(result);
         const eventHash = Object.keys(events)[0];
         const testRecord = bedrock.util.clone(events[eventHash]
@@ -245,13 +268,13 @@ describe('Records API', () => {
         const eventTemplate = mockData.events.alpha;
         const testRecordId = `https://example.com/event/${uuid()}`;
         const startBlockHeight = 13;
-        // the helper creates events without consensus by default
-        // block 1
+
+        // block 13
         const events = await helpers.addEvent({
           consensus: true, eventTemplate, ledgerStorage, opTemplate,
           recordId: testRecordId, startBlockHeight
         });
-        // blocks 2 and 3
+        // blocks 14 and 15
         let i = 0;
         for(const updateOpTemplate of opUpdates) {
           updateOpTemplate.recordPatch.sequence = i;
@@ -262,38 +285,39 @@ describe('Records API', () => {
           });
           i++;
         }
-        {
-          const result = await ledgerNode.records.get(
-            {maxBlockHeight: 13, recordId: testRecordId});
-          should.exist(result);
-          const eventHash = Object.keys(events)[0];
-          const testRecord = bedrock.util.clone(events[eventHash]
-            .operations[0].operation.record);
-          const {meta, record} = result;
-          should.exist(record);
-          // at blockHeight 13 the original record should be returned
-          record.should.eql(testRecord);
-          should.exist(meta);
-          should.exist(meta.sequence);
-          meta.sequence.should.equal(0);
-        }
-        {
-          const result = await ledgerNode.records.get(
-            {maxBlockHeight: 14, recordId: testRecordId});
-          should.exist(result);
-          const eventHash = Object.keys(events)[0];
-          const testRecord = bedrock.util.clone(events[eventHash]
-            .operations[0].operation.record);
-          // at blockHeight 14, the updated record is returned
-          // corresponds to mockData.operations.gamma;
-          testRecord.endDate = '2017-07-14T23:30';
-          const {meta, record} = result;
-          should.exist(record);
-          record.should.eql(testRecord);
-          should.exist(meta);
-          should.exist(meta.sequence);
-          meta.sequence.should.equal(1);
-        }
+        await helpers.updateBlockHeight({blockHeight: 15});
+
+        // check data on block 13
+        let result = await ledgerNode.records.get({
+          maxBlockHeight: 13, recordId: testRecordId});
+        should.exist(result);
+        let eventHash = Object.keys(events)[0];
+        let testRecord = bedrock.util.clone(events[eventHash]
+          .operations[0].operation.record);
+        let {meta, record} = result;
+        should.exist(record);
+        // at blockHeight 13 the original record should be returned
+        record.should.eql(testRecord);
+        should.exist(meta);
+        should.exist(meta.sequence);
+        meta.sequence.should.equal(0);
+
+        // check data on block 14
+        result = await ledgerNode.records.get(
+          {maxBlockHeight: 14, recordId: testRecordId});
+        should.exist(result);
+        eventHash = Object.keys(events)[0];
+        testRecord = bedrock.util.clone(events[eventHash]
+          .operations[0].operation.record);
+        // at blockHeight 14, the updated record is returned
+        // corresponds to mockData.operations.gamma;
+        testRecord.endDate = '2017-07-14T23:30';
+        ({meta, record} = result);
+        should.exist(record);
+        record.should.eql(testRecord);
+        should.exist(meta);
+        should.exist(meta.sequence);
+        meta.sequence.should.equal(1);
       });
     });
   });

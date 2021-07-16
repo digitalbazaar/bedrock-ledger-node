@@ -21,9 +21,24 @@ module.exports = api;
 // test hashing function
 api.testHasher = brLedgerNode.consensus._hasher;
 
+let latestBlockHeight = 0;
+api.updateBlockHeight = async ({blockHeight}) => {
+  latestBlockHeight = blockHeight;
+};
+
+api.getLatestBlockSummary = async () => {
+  return {
+    eventBlock: {
+      block: {
+        blockHeight: latestBlockHeight
+      }
+    }
+  };
+};
+
 api.addEvent = async ({
   consensus = false, count = 1, eventTemplate, ledgerStorage, opTemplate,
-  recordId, startBlockHeight = 1
+  recordId, startBlockHeight = 1, blockOrder = 0
 }) => {
   const events = {};
   let operations;
@@ -54,7 +69,7 @@ api.addEvent = async ({
     if(consensus) {
       const blockHeight = i + startBlockHeight;
       meta.blockHeight = blockHeight;
-      meta.blockOrder = 0;
+      meta.blockOrder = blockOrder;
       meta.consensus = true;
       meta.consensusDate = Date.now();
     }
