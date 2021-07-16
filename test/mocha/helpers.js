@@ -21,21 +21,6 @@ module.exports = api;
 // test hashing function
 api.testHasher = brLedgerNode.consensus._hasher;
 
-let latestBlockHeight = 0;
-api.updateBlockHeight = async ({blockHeight}) => {
-  latestBlockHeight = blockHeight;
-};
-
-api.getLatestBlockSummary = async () => {
-  return {
-    eventBlock: {
-      block: {
-        blockHeight: latestBlockHeight
-      }
-    }
-  };
-};
-
 api.addEvent = async ({
   consensus = false, count = 1, eventTemplate, ledgerStorage, opTemplate,
   recordId, startBlockHeight = 1, blockOrder = 0
