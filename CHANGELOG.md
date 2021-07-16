@@ -1,6 +1,6 @@
 # bedrock-ledger-node ChangeLog
 
-## 14.0.0 - 2021-07-xx
+## 14.0.0 - 2021-07-16
 
 ### Changed
 - **BREAKING**: Upgrade to witness selection.
