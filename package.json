@@ -34,7 +34,7 @@
     "bedrock": "2.0.0 - 4.x",
     "bedrock-injector": "^1.0.0",
     "bedrock-jsonld-document-loader": "^1.0.0",
-    "bedrock-ledger-context": "^18.1.0",
+    "bedrock-ledger-context": "^19.0.0",
     "bedrock-mongodb": "^8.1.0",
     "bedrock-permission": "^3.0.0",
     "bedrock-validation": "^5.1.0",
