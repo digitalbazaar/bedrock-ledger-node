@@ -174,7 +174,6 @@ async function insertTestData(mockData) {
 api.signDocument = async ({doc, verificationMethod, key}) => {
   return jsigs.sign(doc, {
     documentLoader,
-    // FIXME: is this the right purpose?
     purpose: new CapabilityInvocation({
       capability: doc.id || doc.ledger || doc.record.id,
       invocationTarget: doc.ledger || doc.record.id,
