@@ -34,7 +34,10 @@ accounts[userName].meta = {
   }]};
 
 const ledgerConfiguration = mock.ledgerConfiguration = {
-  '@context': constants.WEB_LEDGER_CONTEXT_V1_URL,
+  '@context': [
+    constants.WEB_LEDGER_CONTEXT_V1_URL,
+    constants.ZCAP_CONTEXT_V1_URL
+  ],
   type: 'WebLedgerConfiguration',
   ledger: 'did:v1:uuid:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
   consensusMethod: 'UnilateralConsensus2017',
