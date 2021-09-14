@@ -177,7 +177,8 @@ api.signDocument = async ({doc, verificationMethod, key}) => {
     // FIXME: is this the right purpose?
     purpose: new CapabilityInvocation({
       capability: doc.id || doc.ledger || doc.record.id,
-      capabilityAction: 'create'
+      invocationTarget: doc.ledger || doc.record.id,
+      capabilityAction: 'write'
     }),
     suite: new Ed25519Signature2020({
       verificationMethod,

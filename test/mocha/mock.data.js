@@ -38,6 +38,8 @@ const ledgerConfiguration = mock.ledgerConfiguration = {
   type: 'WebLedgerConfiguration',
   ledger: 'did:v1:uuid:eb8c22dc-bde6-4315-92e2-59bd3f3c7d59',
   consensusMethod: 'UnilateralConsensus2017',
+  /*
+   * FIXME uncomment and update when Signature Validators are updated
   ledgerConfigurationValidator: [{
     type: 'SignatureValidator2017',
     validatorFilter: [{
@@ -62,6 +64,7 @@ const ledgerConfiguration = mock.ledgerConfiguration = {
     ],
     minimumSignaturesRequired: 1
   }],
+  */
   sequence: 0,
 };
 
