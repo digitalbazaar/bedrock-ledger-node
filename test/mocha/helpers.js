@@ -177,7 +177,7 @@ api.signDocument = async ({doc, invocationTarget, key}) => {
   if(contextArray && !doc['@context'].includes(constants.ZCAP_CONTEXT_V1_URL)) {
     doc['@context'].push(constants.ZCAP_CONTEXT_V1_URL);
   }
-  // if the context isn't an array then make it an array with the ZCAP context
+  // if the context isn't an array, then make it an array with the ZCAP context
   // second
   if(!contextArray) {
     doc['@context'] = [
