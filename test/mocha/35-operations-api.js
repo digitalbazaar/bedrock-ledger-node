@@ -84,7 +84,7 @@ describe('Operations API', () => {
           record: {
             '@context': constants.TEST_CONTEXT_V1_URL,
             id: 'urn:uuid:' + uuid(),
-            value: uuid()
+            name: uuid()
           }
         };
         const key =
@@ -114,9 +114,9 @@ describe('Operations API', () => {
             type: 'CreateWebLedgerRecord',
             creator: 'https://example.com/someCreatorId',
             record: {
-              '@context': 'https://schema.org/',
+              '@context': constants.TEST_CONTEXT_V1_URL,
               id: 'urn:uuid:' + uuid(),
-              value: uuid()
+              name: uuid()
             }
           };
           const key =
