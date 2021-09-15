@@ -173,7 +173,7 @@ async function insertTestData(mockData) {
 
 api.signDocument = async ({doc, invocationTarget, key}) => {
   const contextArray = Array.isArray(doc['@context']);
-  // if the context is an array add the ZCAP context if it's not there
+  // if the context is an array and the ZCAP context isn't included, add it
   if(contextArray && !doc['@context'].includes(constants.ZCAP_CONTEXT_V1_URL)) {
     doc['@context'].push(constants.ZCAP_CONTEXT_V1_URL);
   }
