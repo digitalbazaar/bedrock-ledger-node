@@ -9,7 +9,7 @@ const brAccount = require('bedrock-account');
 const brLedgerNode = require('bedrock-ledger-node');
 const helpers = require('./helpers');
 const mockData = require('./mock.data');
-const {util: {uuid}} = require('bedrock');
+const {util: {uuid}, config: {constants}} = require('bedrock');
 
 let signedConfig;
 
@@ -78,11 +78,11 @@ describe('Operations API', () => {
       });
       it('should fail add operation with an incorrect context', async () => {
         const testOperation = {
-          '@context': 'https://w3id.org/test/v1',
+          '@context': constants.TEST_CONTEXT_V1_URL,
           type: 'CreateWebLedgerRecord',
           creator: 'https://example.com/someCreatorId',
           record: {
-            '@context': 'https://schema.org/',
+            '@context': constants.TEST_CONTEXT_V1_URL,
             id: 'urn:uuid:' + uuid(),
             value: uuid()
           }
@@ -107,7 +107,10 @@ describe('Operations API', () => {
       it('should fail to add operation w/ incorrect context order',
         async () => {
           const testOperation = {
-            '@context': ['https://w3id.org/test/v1'],
+            '@context': [
+              constants.ZCAP_CONTEXT_V1_URL,
+              constants.WEB_LEDGER_CONTEXT_V1_URL
+            ],
             type: 'CreateWebLedgerRecord',
             creator: 'https://example.com/someCreatorId',
             record: {

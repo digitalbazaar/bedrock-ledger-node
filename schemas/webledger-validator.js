@@ -123,11 +123,15 @@ const ledgerConfiguration = {
   type: 'object',
   properties: {
     '@context': {
-      type: 'array',
-      minItems: 2,
-      items: [
-        // first item must be the WEB_LEDGER_CONTEXT
-        schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL)
+      anyOf: [
+        schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL), {
+          type: 'array',
+          minItems: 1,
+          items: [
+            // first item must be the WEB_LEDGER_CONTEXT
+            schemas.jsonldContext(constants.WEB_LEDGER_CONTEXT_V1_URL)
+          ]
+        },
       ]
     },
     consensusMethod: {
