@@ -10,11 +10,11 @@ const crypto = require('crypto');
 const database = require('bedrock-mongodb');
 const jsigs = require('jsonld-signatures');
 const {promisify} = require('util');
-const {util: {uuid}} = bedrock;
 const {Ed25519Signature2020} = require('@digitalbazaar/ed25519-signature-2020');
 const {documentLoader} = require('bedrock-jsonld-document-loader');
 const {CapabilityInvocation} = require('@digitalbazaar/zcapld');
 
+const {util: {uuid}, config: {constants}} = bedrock;
 const api = {};
 module.exports = api;
 
@@ -171,17 +171,26 @@ async function insertTestData(mockData) {
   }
 }
 
-api.signDocument = async ({doc, verificationMethod, key}) => {
+api.signDocument = async ({doc, invocationTarget, key}) => {
+  const contextArray = Array.isArray(doc['@context']);
+  // if the context is an array add the ZCAP context if it's not there
+  if(contextArray && !doc['@context'].includes(constants.ZCAP_CONTEXT_V1_URL)) {
+    doc['@context'].push(constants.ZCAP_CONTEXT_V1_URL);
+  }
+  // if the context is not an array then make it one with the ZCAP context
+  if(!contextArray) {
+    doc['@context'] = [
+      doc['@context'],
+      constants.ZCAP_CONTEXT_V1_URL
+    ];
+  }
   return jsigs.sign(doc, {
     documentLoader,
     purpose: new CapabilityInvocation({
       capability: doc.id || doc.ledger || doc.record.id,
-      invocationTarget: doc.ledger || doc.record.id,
+      invocationTarget: invocationTarget || doc.ledger || doc.record.id,
       capabilityAction: 'write'
     }),
-    suite: new Ed25519Signature2020({
-      verificationMethod,
-      key
-    }),
+    suite: new Ed25519Signature2020({key})
   });
 };
