@@ -1,5 +1,12 @@
 # bedrock-ledger-node ChangeLog
 
+## 15.1.0 - TBD
+
+### Changed
+- Validator for `ledgerConfig.@context` is more lenient allowing more than 2 contexts
+  & no longer requiring an ed25519 2020 context.
+- Test project updated to more current dependencies.
+
 ## 15.0.0 - 2021-07-21
 
 ### Changed
