@@ -189,6 +189,9 @@ api.signDocument = async ({doc, invocationTarget, key}) => {
     documentLoader,
     purpose: new CapabilityInvocation({
       capability: doc.id || doc.ledger || doc.record.id,
+      // doing this sort of optionality would be dangerous in a real system
+      // (you want to be very deliberate about your invocation target)
+      // but this is just a helper for unit tests so it is considered acceptable
       invocationTarget: invocationTarget || doc.ledger || doc.record.id,
       capabilityAction: 'write'
     }),
