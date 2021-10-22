@@ -1,6 +1,7 @@
 *.py[co]
 *.sw[nop]
 *~
+*.log
 .cache
 .project
 .settings
