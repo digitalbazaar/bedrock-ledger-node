@@ -1,5 +1,10 @@
 # bedrock-ledger-node ChangeLog
 
+## 15.2.0 - TBD
+
+### Changed
+- Upgraded `jsonld` to `^5.2.0`.
+
 ## 15.1.0 - 2021-09-24
 
 ### Changed
