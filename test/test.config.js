@@ -13,7 +13,13 @@ const roles = config.permission.roles;
 config.mocha.tests.push(path.join(__dirname, 'mocha'));
 
 // MongoDB
-config.mongodb.name = 'bedrock_ledger_node_test';
+// Add unique db name extension when running tests in parallel for multiple
+// node versions. See .github/workflows/main.yml.
+let nameExt = '';
+if(process.env.TEST_NODE_VERSION) {
+  nameExt = '_' + process.env.TEST_NODE_VERSION.replace('.', '_');
+}
+config.mongodb.name = 'bedrock_ledger_node_test' + nameExt;
 config.mongodb.dropCollections.onInit = true;
 config.mongodb.dropCollections.collections = [];
 

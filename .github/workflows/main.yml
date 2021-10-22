@@ -25,6 +25,10 @@ jobs:
         cd test
         npm install
     - name: Run test with Node.js ${{ matrix.node-version }}
+      env:
+        # Used to create a unique database name extension.
+        # See test/test.config.js.
+        TEST_NODE_VERSION: ${{ matrix.node-version }}
       run: |
         cd test
         npm test
