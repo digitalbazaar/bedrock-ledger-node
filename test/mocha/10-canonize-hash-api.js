@@ -3,6 +3,7 @@
  */
 'use strict';
 
+const {util: {clone}} = require('bedrock');
 const brLedgerNode = require('bedrock-ledger-node');
 const mockData = require('./mock.data');
 
@@ -11,7 +12,7 @@ const rdfCanonizeAndHash = brLedgerNode.consensus._rdfCanonizeAndHash;
 describe('rdfCanonizeAndHash API', function() {
   describe('WebLedgerConfiguration', function() {
     it('should canonize & hash', async function() {
-      const data = {...mockData.ledgerConfiguration};
+      const data = clone(mockData.ledgerConfiguration);
       const result = await rdfCanonizeAndHash(data);
       should.exist(result);
       result.should.be.an('object');
@@ -20,7 +21,8 @@ describe('rdfCanonizeAndHash API', function() {
       result.should.eql(mockData.canonize.ledgerConfiguration);
     });
     it('should have a unique hash', async function() {
-      const data = {...mockData.ledgerConfiguration, ledger: 'foo'};
+      const data = clone(mockData.ledgerConfiguration);
+      data.ledger = 'foo';
       const result = await rdfCanonizeAndHash(data);
       should.exist(result);
       result.should.be.an('object');
@@ -31,7 +33,7 @@ describe('rdfCanonizeAndHash API', function() {
   });
   describe('CreateWebLedgerRecord', function() {
     it('should canonize & hash', async function() {
-      const data = {...mockData.operations.alpha};
+      const data = clone(mockData.operations.alpha);
       const result = await rdfCanonizeAndHash(data);
       should.exist(result);
       result.should.be.an('object');
@@ -40,7 +42,7 @@ describe('rdfCanonizeAndHash API', function() {
       result.should.eql(mockData.canonize.alpha);
     });
     it('should have a unique hash', async function() {
-      const data = {...mockData.operations.alpha};
+      const data = clone(mockData.operations.alpha);
       data.record.name = 'unique-hash-test-name';
       const result = await rdfCanonizeAndHash(data);
       should.exist(result);
@@ -53,7 +55,7 @@ describe('rdfCanonizeAndHash API', function() {
   });
   describe('UpdateWebLedgerRecord', function() {
     it('should canonize & hash ', async function() {
-      const data = {...mockData.operations.gamma};
+      const data = clone(mockData.operations.gamma);
       const result = await rdfCanonizeAndHash(data);
       should.exist(result);
       result.should.be.an('object');
@@ -62,7 +64,7 @@ describe('rdfCanonizeAndHash API', function() {
       result.should.eql(mockData.canonize.gamma);
     });
     it('should have a unique hash', async function() {
-      const data = {...mockData.operations.gamma};
+      const data = clone(mockData.operations.gamma);
       data.recordPatch.sequence = 10;
       const result = await rdfCanonizeAndHash(data);
       should.exist(result);
