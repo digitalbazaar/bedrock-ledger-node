@@ -45,12 +45,12 @@ describe('Records API', () => {
         ledgerStorage = ledgerNode.storage;
         originalGetLatestSummary = ledgerStorage.blocks.getLatestSummary;
         testState = {blockHeight: 0};
-        ledgerStorage.blocks.getLatestSummary = async () => {
+        ledgerStorage.blocks.getLatestSummary = () => {
           const {blockHeight} = testState;
           return {eventBlock: {block: {blockHeight}}};
         };
       });
-      after(async () => {
+      after(() => {
         ledgerNode.storage.blocks.getLatestSummary = originalGetLatestSummary;
       });
       it('get an existing record', async () => {
