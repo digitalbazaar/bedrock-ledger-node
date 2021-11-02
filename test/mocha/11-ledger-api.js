@@ -222,7 +222,7 @@ describe('Ledger API', () => {
   }); // end create API
   describe('get API', () => {
     beforeEach(async () => {
-      helpers.removeCollections(['ledger', 'ledgerNode']);
+      await helpers.removeCollections(['ledger', 'ledgerNode']);
     });
     describe('regularUser as actor', () => {
       let actor;
@@ -425,7 +425,7 @@ describe('Ledger API', () => {
   }); // end get API
   describe('getNodeRecord API', () => {
     beforeEach(async () => {
-      helpers.removeCollections(['ledger', 'ledgerNode']);
+      await helpers.removeCollections(['ledger', 'ledgerNode']);
     });
     describe('regularUser as actor', () => {
       let actor;
@@ -650,7 +650,7 @@ describe('Ledger API', () => {
   }); // end get API
   describe('delete API', () => {
     beforeEach(async () => {
-      helpers.removeCollections(['ledger', 'ledgerNode']);
+      await helpers.removeCollections(['ledger', 'ledgerNode']);
     });
     describe('regularUser as actor', () => {
       let actor;

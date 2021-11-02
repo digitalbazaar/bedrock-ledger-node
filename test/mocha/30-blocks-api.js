@@ -25,7 +25,7 @@ describe('Blocks API', () => {
   beforeEach(async function() {
     await helpers.removeCollections(['ledger', 'ledgerNode']);
   });
-  describe('regularUser as actor', async function() {
+  describe('regularUser as actor', function() {
     let configBlockId;
     let ledgerNode;
     let actor;
