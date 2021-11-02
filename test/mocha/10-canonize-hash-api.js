@@ -9,7 +9,7 @@ const mockData = require('./mock.data');
 
 const rdfCanonizeAndHash = brLedgerNode.consensus._rdfCanonizeAndHash;
 
-describe('rdfCanonizeAndHash API', function() {
+describe('Canonize And Hash API', function() {
   describe('WebLedgerConfiguration', function() {
     it('should canonize & hash', async function() {
       const data = clone(mockData.ledgerConfiguration);
@@ -29,6 +29,16 @@ describe('rdfCanonizeAndHash API', function() {
       result.should.have.property('canonizedBytes');
       result.should.have.property('hash');
       result.should.not.eql(mockData.canonize.ledgerConfiguration);
+    });
+    it('should drop terms not in the "@context"', async function() {
+      const data = clone(mockData.ledgerConfiguration);
+      data.newTerm = 'not in "@context"';
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.eql(mockData.canonize.ledgerConfiguration);
     });
   });
   describe('CreateWebLedgerRecord', function() {
@@ -51,7 +61,16 @@ describe('rdfCanonizeAndHash API', function() {
       result.should.have.property('hash');
       result.should.not.eql(mockData.canonize.alpha);
     });
-
+    it('should drop terms not in the "@context"', async function() {
+      const data = clone(mockData.operations.alpha);
+      data.newTerm = 'not in "@context"';
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.eql(mockData.canonize.alpha);
+    });
   });
   describe('UpdateWebLedgerRecord', function() {
     it('should canonize & hash ', async function() {
@@ -72,6 +91,16 @@ describe('rdfCanonizeAndHash API', function() {
       result.should.have.property('canonizedBytes');
       result.should.have.property('hash');
       result.should.not.eql(mockData.canonize.gamma);
+    });
+    it('should drop terms not in the "@context"', async function() {
+      const data = clone(mockData.operations.gamma);
+      data.newTerm = 'not in "@context"';
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.eql(mockData.canonize.gamma);
     });
   });
 });
