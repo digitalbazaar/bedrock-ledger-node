@@ -9,31 +9,67 @@ const mockData = require('./mock.data');
 const rdfCanonizeAndHash = brLedgerNode.consensus._rdfCanonizeAndHash;
 
 describe('rdfCanonizeAndHash API', function() {
-  it('should canonize & hash WebLedgerConfiguration', async function() {
-    const data = {...mockData.ledgerConfiguration};
-    const result = await rdfCanonizeAndHash(data);
-    should.exist(result);
-    result.should.be.an('object');
-    result.should.have.property('canonizedBytes');
-    result.should.have.property('hash');
-    result.should.eql(mockData.canonize.ledgerConfiguration);
+  describe('WebLedgerConfiguration', function() {
+    it('should canonize & hash', async function() {
+      const data = {...mockData.ledgerConfiguration};
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.eql(mockData.canonize.ledgerConfiguration);
+    });
+    it('should have a unique hash', async function() {
+      const data = {...mockData.ledgerConfiguration, ledger: 'foo'};
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.not.eql(mockData.canonize.ledgerConfiguration);
+    });
   });
-  it('should canonize & hash CreateWebLedgerRecord', async function() {
-    const data = {...mockData.operations.alpha};
-    const result = await rdfCanonizeAndHash(data);
-    should.exist(result);
-    result.should.be.an('object');
-    result.should.have.property('canonizedBytes');
-    result.should.have.property('hash');
-    result.should.eql(mockData.canonize.alpha);
+  describe('CreateWebLedgerRecord', function() {
+    it('should canonize & hash', async function() {
+      const data = {...mockData.operations.alpha};
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.eql(mockData.canonize.alpha);
+    });
+    it('should have a unique hash', async function() {
+      const data = {...mockData.operations.alpha};
+      data.record.name = 'unique-hash-test-name';
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.not.eql(mockData.canonize.alpha);
+    });
+
   });
-  it('should canonize & hash UpdateWebLedgerRecord', async function() {
-    const data = {...mockData.operations.gamma};
-    const result = await rdfCanonizeAndHash(data);
-    should.exist(result);
-    result.should.be.an('object');
-    result.should.have.property('canonizedBytes');
-    result.should.have.property('hash');
-    result.should.eql(mockData.canonize.gamma);
+  describe('UpdateWebLedgerRecord', function() {
+    it('should canonize & hash ', async function() {
+      const data = {...mockData.operations.gamma};
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.eql(mockData.canonize.gamma);
+    });
+    it('should have a unique hash', async function() {
+      const data = {...mockData.operations.gamma};
+      data.recordPatch.sequence = 10;
+      const result = await rdfCanonizeAndHash(data);
+      should.exist(result);
+      result.should.be.an('object');
+      result.should.have.property('canonizedBytes');
+      result.should.have.property('hash');
+      result.should.not.eql(mockData.canonize.gamma);
+    });
   });
 });
