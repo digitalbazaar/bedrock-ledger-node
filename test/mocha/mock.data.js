@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2017-2021 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
@@ -198,5 +198,20 @@ mock.keys = {
     publicKeyMultibase: 'z6Mkew1q8W3F8i3sgj1asCHZagjsNF5Y9ZRYHtCFJmvjq1o3',
     privateKeyMultibase: 'zrv1cGnBy3PWkxii4xPSbmpR3bei1eZWTZ9qnBWW4NQE2YCS' +
       'ZFc3ov2zTE23fpvaUhmqJjcXYvVqMdRja6kFKEsmHBB'
+  }
+};
+
+mock.canonize = {
+  ledgerConfiguration: {
+    canonizedBytes: 309,
+    hash: 'zQmSreEXfNXawuhpzQpPoakvTof8rPNdbL4j9Q46EH9Woax'
+  },
+  alpha: {
+    canonizedBytes: 625,
+    hash: 'zQmfLSzCkauJr1uSpErzKPjFSchW5qSnzAPsFsqMrjv4n9G'
+  },
+  gamma: {
+    canonizedBytes: 394,
+    hash: 'zQmWk93p6VKruoK1FGoVhhp4xrwwCChMuD8fTXf7shZ5gto'
   }
 };
