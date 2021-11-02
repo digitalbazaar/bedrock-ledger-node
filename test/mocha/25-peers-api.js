@@ -40,7 +40,7 @@ describe('Peers API', () => {
       ledgerNode = await brLedgerNode.add(
         actor, {ledgerConfiguration: signedConfig});
     });
-    it('LedgerNode peers API exists', async () => {
+    it('LedgerNode peers API exists', () => {
       should.exist(ledgerNode.peers);
       should.exist(ledgerNode.peers.add);
       ledgerNode.peers.add.should.be.a('function');
