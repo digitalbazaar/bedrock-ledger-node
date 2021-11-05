@@ -1,6 +1,6 @@
 # bedrock-ledger-node ChangeLog
 
-## 16.0.0 - TBD
+## 16.0.0 - 2021-11-05
 
 ### Changed
 - **BREAKING**: Upgraded `jsonld` to `^5.2.0`. Marked as a breaking major
