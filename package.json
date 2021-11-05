@@ -1,6 +1,6 @@
 {
   "name": "bedrock-ledger-node",
-  "version": "15.1.1-0",
+  "version": "16.0.0",
   "description": "Bedrock ledger node",
   "license": "SEE LICENSE IN LICENSE.md",
   "main": "./lib",
