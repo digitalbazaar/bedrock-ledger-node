@@ -1,6 +1,6 @@
 # Bedrock Ledger Node
 
-[![Build Status](https://ci.digitalbazaar.com/buildStatus/icon?job=bedrock-ledger-node)](https://ci.digitalbazaar.com/job/bedrock-ledger-node)
+[![Bedrock Node.js CI](https://github.com/digitalbazaar/bedrock-ledger-node/workflows/Bedrock%20Node.js%20CI/badge.svg)](https://github.com/digitalbazaar/bedrock-ledger-node/actions?query=workflow%3A%22Bedrock+Node.js+CI%22)
 
 A [bedrock][] module for the creation and management of
 [Web Ledgers](https://w3c.github.io/web-ledger/).
