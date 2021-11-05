@@ -3,8 +3,7 @@
 ## 16.0.0 - TBD
 
 ### Changed
-- **BREAKING**: Upgraded `jsonld` to `^5.2.0` this might cause the `canonizedBytes`
-  & `hash` of records to change.
+- **BREAKING**: Upgraded `jsonld` to `^5.2.0`. Marked as a breaking major change to help avoid any unknown upgrading issues in live systems due to potential JSON-LD edge case processing changes. No issues are expected in normal use cases. If such an issue exists, it might cause the `canonizedBytes` and `hash` of records to change.
 
 ## 15.1.0 - 2021-09-24
 
