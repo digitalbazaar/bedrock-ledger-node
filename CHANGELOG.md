@@ -3,13 +3,17 @@
 ## 16.0.0 - TBD
 
 ### Changed
-- **BREAKING**: Upgraded `jsonld` to `^5.2.0`. Marked as a breaking major change to help avoid any unknown upgrading issues in live systems due to potential JSON-LD edge case processing changes. No issues are expected in normal use cases. If such an issue exists, it might cause the `canonizedBytes` and `hash` of records to change.
+- **BREAKING**: Upgraded `jsonld` to `^5.2.0`. Marked as a breaking major
+  change to help avoid any unknown upgrading issues in live systems due to
+  potential JSON-LD edge case processing changes. No issues are expected in
+  normal use cases. If such an issue exists, it might cause the
+  `canonizedBytes` and `hash` of records to change.
 
 ## 15.1.0 - 2021-09-24
 
 ### Changed
-- Validator for `ledgerConfig.@context` is more lenient allowing more than 2 contexts
-  & no longer requiring an ed25519 2020 context.
+- Validator for `ledgerConfig.@context` is more lenient allowing more than 2
+  contexts & no longer requiring an ed25519 2020 context.
 - Test project updated to more current dependencies.
 
 ## 15.0.0 - 2021-07-21
