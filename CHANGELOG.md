@@ -1,9 +1,10 @@
 # bedrock-ledger-node ChangeLog
 
-## 15.2.0 - TBD
+## 16.0.0 - TBD
 
 ### Changed
-- Upgraded `jsonld` to `^5.2.0`.
+- **BREAKING**: Upgraded `jsonld` to `^5.2.0` this might cause the `canonizedBytes`
+  & `hash` of records to change.
 
 ## 15.1.0 - 2021-09-24
 
